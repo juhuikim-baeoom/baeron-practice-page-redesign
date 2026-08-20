@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>사회복지현장실습 개설반 안내 (개편 목업)</title>
+<style>
+:root{
+  --brand:#0093D0;
+  --brand-mid:#66BEE3;
+  --brand-sub:#DEEBF7;
+  --ink:#1b1f24;
+  --ink-2:#4a5561;
+  --ink-3:#7b8794;
+  --line:#dfe4ea;
+  --bg:#ffffff;
+  --bg-2:#f5f7f9;
+  --warn:#d64545;
+  --warn-bg:#fdeceb;
+  --radius:10px;
+}
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--bg-2);
+  color:var(--ink);
+  font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  line-height:1.6;
+  -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:24px 16px 80px;}
+
+/* 목업 안내 배너 */
+.mock-note{
+  background:#2b3440;color:#e8edf2;border-radius:var(--radius);
+  padding:14px 18px;font-size:14px;margin-bottom:28px;
+}
+.mock-note b{color:#fff;}
+.mock-note code{background:rgba(255,255,255,.12);padding:1px 5px;border-radius:4px;font-size:13px;}
+
+h2.sec-ttl{font-size:30px;font-weight:800;letter-spacing:-.02em;margin:0 0 6px;}
+p.sec-sub{margin:0 0 20px;color:var(--ink-2);font-size:15px;}
+
+/* 탭 */
+.tabs{display:flex;gap:8px;border-bottom:2px solid var(--line);}
+.tab{
+  appearance:none;border:0;background:none;cursor:pointer;
+  font:inherit;font-weight:700;font-size:17px;color:var(--ink-3);
+  padding:14px 22px;border-radius:var(--radius) var(--radius) 0 0;
+  display:flex;align-items:center;gap:8px;
+  margin-bottom:-2px;border-bottom:3px solid transparent;
+}
+.tab:hover{color:var(--ink);background:var(--bg);}
+.tab[aria-selected="true"]{color:var(--brand);border-bottom-color:var(--brand);background:var(--bg);}
+.tab .badge{
+  background:var(--line);color:var(--ink-2);
+  font-size:13px;font-weight:700;border-radius:999px;padding:1px 9px;min-width:26px;text-align:center;
+}
+.tab[aria-selected="true"] .badge{background:var(--brand);color:#fff;}
+
+/* 패널 */
+.panel{background:var(--bg);border:1px solid var(--line);border-top:0;border-radius:0 0 var(--radius) var(--radius);padding:0 0 8px;}
+.panel-head{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px;
+  padding:16px 20px;background:var(--brand-sub);border-bottom:1px solid var(--line);
+  font-size:15px;
+}
+.panel-head .place{font-weight:700;color:var(--ink);}
+.panel-head .fee{color:var(--ink-2);}
+.panel-head .fee b{color:var(--brand);font-size:17px;}
+
+/* 표 */
+table{width:100%;border-collapse:collapse;font-size:15px;}
+caption{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;}
+th,td{padding:14px 10px;text-align:center;border-bottom:1px solid var(--line);vertical-align:middle;}
+thead th{
+  font-size:13px;font-weight:700;color:var(--ink-2);background:var(--bg-2);
+  border-bottom:1px solid var(--line);white-space:nowrap;
+}
+tbody tr:last-child td{border-bottom:0;}
+tbody tr:hover{background:#fafcfe;}
+.col-start{font-weight:700;white-space:nowrap;}
+.col-start .sub{display:block;font-weight:400;font-size:12px;color:var(--ink-3);margin-top:2px;}
+.col-seminar{white-space:nowrap;}
+.col-seminar .tag{
+  display:inline-block;background:var(--bg-2);border:1px solid var(--line);
+  border-radius:999px;padding:1px 9px;font-size:12px;color:var(--ink-2);margin-top:3px;
+}
+.col-date{white-space:nowrap;color:var(--ink-2);}
+.col-period{white-space:nowrap;}
+
+/* 신청 셀 */
+.seats{display:block;font-size:12px;color:var(--ink-3);margin-bottom:5px;}
+.seats.low{color:var(--warn);font-weight:700;}
+.btn-apply{
+  display:inline-block;border:0;cursor:pointer;font:inherit;font-weight:700;font-size:14px;
+  background:var(--brand);color:#fff;border-radius:6px;padding:8px 16px;white-space:nowrap;
+}
+.btn-apply:hover{background:#007cb0;}
+.btn-closed{
+  display:inline-block;font-weight:700;font-size:14px;
+  background:var(--line);color:var(--ink-3);border-radius:6px;padding:8px 16px;white-space:nowrap;
+}
+tr.is-closed td{background:#fbfbfc;color:var(--ink-3);}
+tr.is-closed:hover{background:#fbfbfc;}
+
+/* 빈 상태 */
+.empty{padding:56px 20px;text-align:center;color:var(--ink-2);}
+.empty strong{display:block;font-size:17px;color:var(--ink);margin-bottom:6px;}
+.empty button{
+  margin-top:14px;border:1px solid var(--brand);background:#fff;color:var(--brand);
+  font:inherit;font-weight:700;border-radius:6px;padding:9px 18px;cursor:pointer;
+}
+
+/* 목업 제어판 */
+.controls{
+  margin-top:28px;padding:16px 18px;background:var(--bg);
+  border:1px dashed var(--line);border-radius:var(--radius);font-size:14px;
+}
+.controls h3{margin:0 0 10px;font-size:14px;color:var(--ink-3);font-weight:700;letter-spacing:.02em;}
+.controls label{display:inline-flex;align-items:center;gap:7px;margin-right:20px;cursor:pointer;}
+
+/* 안내 토스트 */
+.toast{
+  position:fixed;left:50%;bottom:28px;transform:translateX(-50%) translateY(120%);
+  background:#2b3440;color:#fff;padding:13px 20px;border-radius:8px;font-size:14px;
+  box-shadow:0 8px 24px rgba(0,0,0,.22);transition:transform .25s ease;z-index:50;max-width:90vw;
+}
+.toast.on{transform:translateX(-50%) translateY(0);}
+
+/* 모바일: 표를 카드로 */
+@media (max-width:768px){
+  h2.sec-ttl{font-size:24px;}
+  .tab{flex:1;justify-content:center;padding:13px 8px;font-size:15px;}
+  thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);}
+  table,tbody,tr,td{display:block;width:100%;}
+  tbody tr{
+    border:1px solid var(--line);border-radius:var(--radius);
+    margin:14px 12px;padding:6px 0;
+  }
+  tbody tr:last-child td{border-bottom:1px solid var(--line);}
+  td{
+    display:flex;justify-content:space-between;align-items:center;gap:14px;
+    text-align:right;padding:9px 14px;border-bottom:1px solid #eef1f4;
+  }
+  td:last-child{border-bottom:0;}
+  td::before{
+    content:attr(data-label);
+    font-size:13px;color:var(--ink-3);font-weight:700;text-align:left;flex:0 0 auto;
+  }
+  .col-start .sub{display:inline;margin-left:6px;}
+  .seats{display:inline-block;margin:0 10px 0 0;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="mock-note">
+    <b>개편 목업</b> — 배론 사회복지현장실습 <code>practice_socialwork.asp</code>의 개설반 영역입니다.
+    현행 <b>표 8개 · 소제목 4개</b>를 <b>탭 2개 · 표 1개</b>로 접었습니다.
+    데이터는 2026년 8월 20일 기준 실제 개설반 10건입니다. 신청 버튼은 동작하지 않습니다.
+  </div>
+
+  <h2 class="sec-ttl">개설반 안내</h2>
+  <p class="sec-sub">실습기관 소재지를 먼저 선택하세요. 지역에 따라 수강료가 다릅니다.</p>
+
+  <div class="tabs" role="tablist" aria-label="실습기관 소재지"></div>
+  <div class="panel">
+    <div class="panel-head"></div>
+    <div class="panel-body"></div>
+  </div>
+
+  <div class="controls">
+    <h3>목업 확인용 스위치 (실제 페이지에는 없습니다)</h3>
+    <label><input type="checkbox" id="sw-login"/> 로그인 상태로 보기</label>
+    <label><input type="checkbox" id="sw-empty"/> 개설반 0건 상태 보기</label>
+    <label><input type="checkbox" id="sw-low"/> 마감임박 강조 확인 (임계값 5석 → 25석)</label>
+  </div>
+
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ── 데이터: data/classes-2026-2.json 과 동일 ───────────────── */
+const DATA = {
+  term_nm: "2026학년도 2학기",
+  regions: [
+    { region_cd:"METRO",      region_nm:"수도권", region_desc:"서울·경기·인천 소재 실습기관", tuition_amt:300000 },
+    { region_cd:"NATIONWIDE", region_nm:"전국권", region_desc:"전국 소재 실습기관(섬 및 산간지역 제외)", tuition_amt:400000 }
+  ],
+  classes: [
+    { class_id:"2026-2-0904-M1", class_nm:"1분반", region_cd:"METRO", start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", seminar_day_nm:"금요일", seminar_time_nm:"14~16시", ot_dt:"2026-09-04", midterm_dt:"2026-10-23", final_dt:"2026-12-11", tuition_amt:300000, remaining_cnt:7 },
+    { class_id:"2026-2-0904-M2", class_nm:"2분반", region_cd:"METRO", start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", seminar_day_nm:"금요일", seminar_time_nm:"14~16시", ot_dt:"2026-09-04", midterm_dt:"2026-10-23", final_dt:"2026-12-11", tuition_amt:300000, remaining_cnt:26 },
+    { class_id:"2026-2-0904-M3", class_nm:null,   region_cd:"METRO", start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", seminar_day_nm:"수요일", seminar_time_nm:"09~11시", ot_dt:"2026-09-09", midterm_dt:"2026-10-28", final_dt:"2026-12-16", tuition_amt:300000, remaining_cnt:23 },
+    { class_id:"2026-2-0904-M4", class_nm:null,   region_cd:"METRO", start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", seminar_day_nm:"일요일", seminar_time_nm:"09~11시", ot_dt:"2026-09-06", midterm_dt:"2026-10-25", final_dt:"2026-12-13", tuition_amt:300000, remaining_cnt:0 },
+    { class_id:"2026-2-0904-N1", class_nm:null,   region_cd:"NATIONWIDE", start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", seminar_day_nm:"토요일", seminar_time_nm:"14~16시", ot_dt:"2026-09-05", midterm_dt:"2026-10-24", final_dt:"2026-12-12", tuition_amt:400000, remaining_cnt:15 },
+    { class_id:"2026-2-0910-M1", class_nm:null,   region_cd:"METRO", start_dt:"2026-09-10", course_end_dt:"2026-12-23", practicum_start_dt:"2026-09-21", practicum_end_dt:"2026-12-09", seminar_day_nm:"목요일", seminar_time_nm:"14~16시", ot_dt:"2026-09-10", midterm_dt:"2026-10-29", final_dt:"2026-12-17", tuition_amt:300000, remaining_cnt:24 },
+    { class_id:"2026-2-0917-M1", class_nm:null,   region_cd:"METRO", start_dt:"2026-09-17", course_end_dt:"2026-12-30", practicum_start_dt:"2026-09-28", practicum_end_dt:"2026-12-16", seminar_day_nm:"목요일", seminar_time_nm:"09~11시", ot_dt:"2026-09-17", midterm_dt:"2026-11-05", final_dt:"2026-12-24", tuition_amt:300000, remaining_cnt:18 },
+    { class_id:"2026-2-0917-N1", class_nm:null,   region_cd:"NATIONWIDE", start_dt:"2026-09-17", course_end_dt:"2026-12-30", practicum_start_dt:"2026-09-28", practicum_end_dt:"2026-12-16", seminar_day_nm:"목요일", seminar_time_nm:"09~11시", ot_dt:"2026-09-17", midterm_dt:"2026-11-05", final_dt:"2026-12-24", tuition_amt:400000, remaining_cnt:24 },
+    { class_id:"2026-2-1008-M1", class_nm:null,   region_cd:"METRO", start_dt:"2026-10-08", course_end_dt:"2027-01-20", practicum_start_dt:"2026-10-19", practicum_end_dt:"2027-01-06", seminar_day_nm:"목요일", seminar_time_nm:"09~11시", ot_dt:"2026-10-08", midterm_dt:"2026-11-26", final_dt:"2027-01-14", tuition_amt:300000, remaining_cnt:28 },
+    { class_id:"2026-2-1008-N1", class_nm:null,   region_cd:"NATIONWIDE", start_dt:"2026-10-08", course_end_dt:"2027-01-20", practicum_start_dt:"2026-10-19", practicum_end_dt:"2027-01-06", seminar_day_nm:"목요일", seminar_time_nm:"14~16시", ot_dt:"2026-10-08", midterm_dt:"2026-11-26", final_dt:"2027-01-14", tuition_amt:400000, remaining_cnt:30 }
+  ]
+};
+
+/* ── 상태 ─────────────────────────────────────────────────── */
+const state = {
+  region_cd: DATA.regions[0].region_cd,
+  logged_in: false,
+  force_empty: false,
+  low_seat_threshold: 5
+};
+
+/* ── 표시 헬퍼 ────────────────────────────────────────────── */
+const DAY = ["일","월","화","수","목","금","토"];
+const md   = s => { const d = new Date(s+"T00:00:00"); return `${String(d.getMonth()+1).padStart(2,"0")}.${String(d.getDate()).padStart(2,"0")}`; };
+const mdw  = s => `${md(s)}(${DAY[new Date(s+"T00:00:00").getDay()]})`;
+const won  = n => n.toLocaleString("ko-KR")+"원";
+const esc  = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+/* ApplyCell — 잔여석 판정 규칙을 단독으로 소유 */
+function applyCell(cls){
+  const left = cls.remaining_cnt;
+  if (left <= 0){
+    return `<span class="seats">잔여 0석</span><span class="btn-closed">신청마감</span>`;
+  }
+  const low = left <= state.low_seat_threshold;
+  return `<span class="seats${low ? " low" : ""}">잔여 ${left}석${low ? " · 마감임박" : ""}</span>`
+       + `<button type="button" class="btn-apply" data-id="${esc(cls.class_id)}">신청하기</button>`;
+}
+
+/* RegionTabs */
+function renderTabs(){
+  document.querySelector(".tabs").innerHTML = DATA.regions.map(r => {
+    const n = state.force_empty && r.region_cd === state.region_cd
+      ? 0
+      : DATA.classes.filter(c => c.region_cd === r.region_cd).length;
+    const on = r.region_cd === state.region_cd;
+    return `<button type="button" class="tab" role="tab" aria-selected="${on}" data-region="${r.region_cd}">`
+         + `${esc(r.region_nm)}<span class="badge">${n}</span></button>`;
+  }).join("");
+}
+
+/* ClassTable */
+function renderPanel(){
+  const region = DATA.regions.find(r => r.region_cd === state.region_cd);
+  document.querySelector(".panel-head").innerHTML =
+      `<span class="place">${esc(region.region_desc)}</span>`
+    + `<span class="fee">수강료 <b>${won(region.tuition_amt)}</b></span>`;
+
+  const rows = state.force_empty ? [] : DATA.classes
+    .filter(c => c.region_cd === state.region_cd)
+    .sort((a,b) => a.start_dt.localeCompare(b.start_dt)
+                || a.seminar_day_nm.localeCompare(b.seminar_day_nm,"ko"));
+
+  const body = document.querySelector(".panel-body");
+
+  if (!rows.length){
+    const other = DATA.regions.find(r => r.region_cd !== state.region_cd);
+    body.innerHTML =
+        `<div class="empty"><strong>현재 ${esc(region.region_nm)} 개설반이 없습니다.</strong>`
+      + `다음 학기 일정은 공지사항에서 안내드립니다.`
+      + `<br/><button type="button" data-goto="${other.region_cd}">${esc(other.region_nm)} 개설반 보기</button></div>`;
+    return;
+  }
+
+  body.innerHTML =
+    `<table><caption>${esc(DATA.term_nm)} ${esc(region.region_nm)} 개설반 목록</caption>`
+  + `<thead><tr>`
+  + `<th scope="col">개강일</th><th scope="col">세미나</th>`
+  + `<th scope="col">오리엔테이션</th><th scope="col">중간평가회</th><th scope="col">최종평가회</th>`
+  + `<th scope="col">실습가능기간</th><th scope="col">신청</th>`
+  + `</tr></thead><tbody>`
+  + rows.map(c => `
+      <tr class="${c.remaining_cnt <= 0 ? "is-closed" : ""}">
+        <td class="col-start" data-label="개강일">${mdw(c.start_dt)}
+          <span class="sub">수강 ~ ${md(c.course_end_dt)}</span></td>
+        <td class="col-seminar" data-label="세미나">${esc(c.seminar_day_nm)} ${esc(c.seminar_time_nm)}
+          ${c.class_nm ? `<span class="tag">${esc(c.class_nm)}</span>` : ""}</td>
+        <td class="col-date" data-label="오리엔테이션">${mdw(c.ot_dt)}</td>
+        <td class="col-date" data-label="중간평가회">${mdw(c.midterm_dt)}</td>
+        <td class="col-date" data-label="최종평가회">${mdw(c.final_dt)}</td>
+        <td class="col-period" data-label="실습가능기간">${md(c.practicum_start_dt)} ~ ${md(c.practicum_end_dt)}</td>
+        <td data-label="신청">${applyCell(c)}</td>
+      </tr>`).join("")
+  + `</tbody></table>`;
+}
+
+function render(){ renderTabs(); renderPanel(); }
+
+/* ── 이벤트 ───────────────────────────────────────────────── */
+let toastTimer;
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("on");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove("on"), 3200);
+}
+
+document.addEventListener("click", e => {
+  const tab = e.target.closest(".tab");
+  if (tab){ state.region_cd = tab.dataset.region; state.force_empty = false;
+            document.getElementById("sw-empty").checked = false; render(); return; }
+
+  const goto = e.target.closest("[data-goto]");
+  if (goto){ state.region_cd = goto.dataset.goto; state.force_empty = false;
+             document.getElementById("sw-empty").checked = false; render(); return; }
+
+  const btn = e.target.closest(".btn-apply");
+  if (btn){
+    // 실제 페이지: 비로그인이면 복귀 주소를 붙여 로그인으로 보낸다.
+    //   location.href = "/member/login.asp?returnUrl=" + encodeURIComponent(location.href);
+    toast(state.logged_in
+      ? `[목업] ${btn.dataset.id} 수강신청 화면으로 이동합니다.`
+      : "[목업] 로그인 페이지로 이동합니다. 로그인 후 이 페이지로 돌아옵니다.");
+  }
+});
+
+document.getElementById("sw-login").addEventListener("change", e => { state.logged_in = e.target.checked; });
+document.getElementById("sw-empty").addEventListener("change", e => { state.force_empty = e.target.checked; render(); });
+document.getElementById("sw-low").addEventListener("change",   e => { state.low_seat_threshold = e.target.checked ? 25 : 5; render(); });
+
+render();
+</script>
+</body>
+</html>
