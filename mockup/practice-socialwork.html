@@ -397,7 +397,8 @@ const DATA = {
 /* 2단 탭에서 "전체"를 가리키는 값. 실제 개강일과 겹치지 않는 문자열이면 된다. */
 const ALL = "ALL";
 
-const state = { region_cd:"METRO", start_dt:null, logged_in:false, force_empty:false, low_seat_threshold:5 };
+/* 기본 선택은 전체. 들어오자마자 그 지역의 모든 개강일을 비교할 수 있게 한다. */
+const state = { region_cd:"METRO", start_dt:ALL, logged_in:false, force_empty:false, low_seat_threshold:5 };
 
 const DAY = ["일","월","화","수","목","금","토"];
 const d    = s => new Date(s+"T00:00:00");
