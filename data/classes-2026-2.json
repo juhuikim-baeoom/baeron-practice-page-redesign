@@ -6,13 +6,13 @@
     {
       "region_cd": "METRO",
       "region_nm": "수도권",
-      "region_desc": "서울·경기·인천 소재 실습기관",
+      "region_desc": "서울, 경기, 인천 소재",
       "tuition_amt": 300000
     },
     {
       "region_cd": "NATIONWIDE",
       "region_nm": "전국권",
-      "region_desc": "전국 소재 실습기관(섬 및 산간지역 제외)",
+      "region_desc": "전국(섬 및 산간지역 제외) 소재",
       "tuition_amt": 400000
     }
   ],
