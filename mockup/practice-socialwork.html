@@ -209,8 +209,6 @@ tbody.grp:last-of-type tr:last-child td{border-bottom:0;}
 .col-date{white-space:nowrap;color:var(--ink-2);font-variant-numeric:tabular-nums;}
 
 /* 신청 */
-.seats{display:block;font-size:12px;color:var(--ink-3);margin-bottom:5px;font-variant-numeric:tabular-nums;}
-.seats.low{color:var(--warn);font-weight:700;}
 .btn-apply{
   display:inline-block;border:0;cursor:pointer;font:inherit;font-family:"Gothic A1",sans-serif;
   font-weight:700;font-size:13.5px;background:var(--accent);color:var(--accent-ink);
@@ -318,7 +316,6 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
   }
   .col-seminar .tag{margin-left:0;}
   .col-apply{grid-column:2;grid-row:1;text-align:right;justify-self:end;}
-  .col-apply .seats{margin:0 0 5px;}
   .col-apply .btn-apply,.col-apply .btn-closed{min-height:44px;display:inline-flex;align-items:center;}
 
   .btn-more{display:inline-flex;}
@@ -349,6 +346,12 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
     폭을 768px 이하로 줄이면 <b>1줄 카드 + 일정 펼치기</b>로 바뀝니다.</span>
   </div>
 
+  <div class="controls">
+    <h2>확인용 스위치 · 실제 페이지에는 없습니다</h2>
+    <label><input type="checkbox" id="sw-login"/> 로그인 상태로 보기</label>
+    <label><input type="checkbox" id="sw-empty"/> 개설반 0건 상태 보기</label>
+  </div>
+
   <div class="head">
     <h1>개설반 안내</h1>
     <p>실습기관 소재지와 개강일을 차례로 선택하세요. 지역에 따라 수강료가 다릅니다.</p>
@@ -363,12 +366,6 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
     </div>
   </div>
 
-  <div class="controls">
-    <h2>확인용 스위치 · 실제 페이지에는 없습니다</h2>
-    <label><input type="checkbox" id="sw-login"/> 로그인 상태로 보기</label>
-    <label><input type="checkbox" id="sw-empty"/> 개설반 0건 상태 보기</label>
-    <label><input type="checkbox" id="sw-low"/> 마감임박 강조 확인 (5석 → 25석)</label>
-  </div>
 
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -381,16 +378,16 @@ const DATA = {
     { region_cd:"NATIONWIDE", region_nm:"전국권", region_desc:"전국 소재 실습기관(섬 및 산간지역 제외)", tuition_amt:400000 }
   ],
   classes: [
-    { class_id:"2026-2-0904-M1", class_nm:"1분반", region_cd:"METRO", start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", seminar_day_nm:"금요일", seminar_time_nm:"14~16시", ot_dt:"2026-09-04", midterm_dt:"2026-10-23", final_dt:"2026-12-11", tuition_amt:300000, remaining_cnt:7 },
-    { class_id:"2026-2-0904-M2", class_nm:"2분반", region_cd:"METRO", start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", seminar_day_nm:"금요일", seminar_time_nm:"14~16시", ot_dt:"2026-09-04", midterm_dt:"2026-10-23", final_dt:"2026-12-11", tuition_amt:300000, remaining_cnt:26 },
-    { class_id:"2026-2-0904-M3", class_nm:null,   region_cd:"METRO", start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", seminar_day_nm:"수요일", seminar_time_nm:"09~11시", ot_dt:"2026-09-09", midterm_dt:"2026-10-28", final_dt:"2026-12-16", tuition_amt:300000, remaining_cnt:23 },
-    { class_id:"2026-2-0904-M4", class_nm:null,   region_cd:"METRO", start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", seminar_day_nm:"일요일", seminar_time_nm:"09~11시", ot_dt:"2026-09-06", midterm_dt:"2026-10-25", final_dt:"2026-12-13", tuition_amt:300000, remaining_cnt:0 },
-    { class_id:"2026-2-0904-N1", class_nm:null,   region_cd:"NATIONWIDE", start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", seminar_day_nm:"토요일", seminar_time_nm:"14~16시", ot_dt:"2026-09-05", midterm_dt:"2026-10-24", final_dt:"2026-12-12", tuition_amt:400000, remaining_cnt:15 },
-    { class_id:"2026-2-0910-M1", class_nm:null,   region_cd:"METRO", start_dt:"2026-09-10", course_end_dt:"2026-12-23", practicum_start_dt:"2026-09-21", practicum_end_dt:"2026-12-09", seminar_day_nm:"목요일", seminar_time_nm:"14~16시", ot_dt:"2026-09-10", midterm_dt:"2026-10-29", final_dt:"2026-12-17", tuition_amt:300000, remaining_cnt:24 },
-    { class_id:"2026-2-0917-M1", class_nm:null,   region_cd:"METRO", start_dt:"2026-09-17", course_end_dt:"2026-12-30", practicum_start_dt:"2026-09-28", practicum_end_dt:"2026-12-16", seminar_day_nm:"목요일", seminar_time_nm:"09~11시", ot_dt:"2026-09-17", midterm_dt:"2026-11-05", final_dt:"2026-12-24", tuition_amt:300000, remaining_cnt:18 },
-    { class_id:"2026-2-0917-N1", class_nm:null,   region_cd:"NATIONWIDE", start_dt:"2026-09-17", course_end_dt:"2026-12-30", practicum_start_dt:"2026-09-28", practicum_end_dt:"2026-12-16", seminar_day_nm:"목요일", seminar_time_nm:"09~11시", ot_dt:"2026-09-17", midterm_dt:"2026-11-05", final_dt:"2026-12-24", tuition_amt:400000, remaining_cnt:24 },
-    { class_id:"2026-2-1008-M1", class_nm:null,   region_cd:"METRO", start_dt:"2026-10-08", course_end_dt:"2027-01-20", practicum_start_dt:"2026-10-19", practicum_end_dt:"2027-01-06", seminar_day_nm:"목요일", seminar_time_nm:"09~11시", ot_dt:"2026-10-08", midterm_dt:"2026-11-26", final_dt:"2027-01-14", tuition_amt:300000, remaining_cnt:28 },
-    { class_id:"2026-2-1008-N1", class_nm:null,   region_cd:"NATIONWIDE", start_dt:"2026-10-08", course_end_dt:"2027-01-20", practicum_start_dt:"2026-10-19", practicum_end_dt:"2027-01-06", seminar_day_nm:"목요일", seminar_time_nm:"14~16시", ot_dt:"2026-10-08", midterm_dt:"2026-11-26", final_dt:"2027-01-14", tuition_amt:400000, remaining_cnt:30 }
+    { class_id:"2026-2-0904-M1", class_nm:"1분반", region_cd:"METRO", start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", seminar_day_nm:"금요일", seminar_time_nm:"14~16시", ot_dt:"2026-09-04", midterm_dt:"2026-10-23", final_dt:"2026-12-11", tuition_amt:300000, closed_flag:false },
+    { class_id:"2026-2-0904-M2", class_nm:"2분반", region_cd:"METRO", start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", seminar_day_nm:"금요일", seminar_time_nm:"14~16시", ot_dt:"2026-09-04", midterm_dt:"2026-10-23", final_dt:"2026-12-11", tuition_amt:300000, closed_flag:false },
+    { class_id:"2026-2-0904-M3", class_nm:null,   region_cd:"METRO", start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", seminar_day_nm:"수요일", seminar_time_nm:"09~11시", ot_dt:"2026-09-09", midterm_dt:"2026-10-28", final_dt:"2026-12-16", tuition_amt:300000, closed_flag:false },
+    { class_id:"2026-2-0904-M4", class_nm:null,   region_cd:"METRO", start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", seminar_day_nm:"일요일", seminar_time_nm:"09~11시", ot_dt:"2026-09-06", midterm_dt:"2026-10-25", final_dt:"2026-12-13", tuition_amt:300000, closed_flag:true },
+    { class_id:"2026-2-0904-N1", class_nm:null,   region_cd:"NATIONWIDE", start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", seminar_day_nm:"토요일", seminar_time_nm:"14~16시", ot_dt:"2026-09-05", midterm_dt:"2026-10-24", final_dt:"2026-12-12", tuition_amt:400000, closed_flag:false },
+    { class_id:"2026-2-0910-M1", class_nm:null,   region_cd:"METRO", start_dt:"2026-09-10", course_end_dt:"2026-12-23", practicum_start_dt:"2026-09-21", practicum_end_dt:"2026-12-09", seminar_day_nm:"목요일", seminar_time_nm:"14~16시", ot_dt:"2026-09-10", midterm_dt:"2026-10-29", final_dt:"2026-12-17", tuition_amt:300000, closed_flag:false },
+    { class_id:"2026-2-0917-M1", class_nm:null,   region_cd:"METRO", start_dt:"2026-09-17", course_end_dt:"2026-12-30", practicum_start_dt:"2026-09-28", practicum_end_dt:"2026-12-16", seminar_day_nm:"목요일", seminar_time_nm:"09~11시", ot_dt:"2026-09-17", midterm_dt:"2026-11-05", final_dt:"2026-12-24", tuition_amt:300000, closed_flag:false },
+    { class_id:"2026-2-0917-N1", class_nm:null,   region_cd:"NATIONWIDE", start_dt:"2026-09-17", course_end_dt:"2026-12-30", practicum_start_dt:"2026-09-28", practicum_end_dt:"2026-12-16", seminar_day_nm:"목요일", seminar_time_nm:"09~11시", ot_dt:"2026-09-17", midterm_dt:"2026-11-05", final_dt:"2026-12-24", tuition_amt:400000, closed_flag:false },
+    { class_id:"2026-2-1008-M1", class_nm:null,   region_cd:"METRO", start_dt:"2026-10-08", course_end_dt:"2027-01-20", practicum_start_dt:"2026-10-19", practicum_end_dt:"2027-01-06", seminar_day_nm:"목요일", seminar_time_nm:"09~11시", ot_dt:"2026-10-08", midterm_dt:"2026-11-26", final_dt:"2027-01-14", tuition_amt:300000, closed_flag:false },
+    { class_id:"2026-2-1008-N1", class_nm:null,   region_cd:"NATIONWIDE", start_dt:"2026-10-08", course_end_dt:"2027-01-20", practicum_start_dt:"2026-10-19", practicum_end_dt:"2027-01-06", seminar_day_nm:"목요일", seminar_time_nm:"14~16시", ot_dt:"2026-10-08", midterm_dt:"2026-11-26", final_dt:"2027-01-14", tuition_amt:400000, closed_flag:false }
   ]
 };
 
@@ -398,7 +395,7 @@ const DATA = {
 const ALL = "ALL";
 
 /* 기본 선택은 전체. 들어오자마자 그 지역의 모든 개강일을 비교할 수 있게 한다. */
-const state = { region_cd:"METRO", start_dt:ALL, logged_in:false, force_empty:false, low_seat_threshold:5 };
+const state = { region_cd:"METRO", start_dt:ALL, logged_in:false, force_empty:false };
 
 const DAY = ["일","월","화","수","목","금","토"];
 const d    = s => new Date(s+"T00:00:00");
@@ -408,13 +405,10 @@ const kdate= s => (d(s).getMonth()+1)+"월 "+d(s).getDate()+"일";
 const won  = n => n.toLocaleString("ko-KR")+"원";
 const esc  = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
-/* 잔여석 판정 규칙을 단독으로 소유 */
+/* 신청 버튼 상태를 단독으로 소유 */
 function applyCell(cls){
-  const left = cls.remaining_cnt;
-  if (left <= 0) return '<span class="seats">잔여 0석</span><span class="btn-closed">신청마감</span>';
-  const low = left <= state.low_seat_threshold;
-  return '<span class="seats'+(low?" low":"")+'">잔여 '+left+'석'+(low?" · 마감임박":"")+'</span>'
-       + '<button type="button" class="btn-apply" data-id="'+esc(cls.class_id)+'">신청하기</button>';
+  if (cls.closed_flag) return '<span class="btn-closed">신청마감</span>';
+  return '<button type="button" class="btn-apply" data-id="'+esc(cls.class_id)+'">신청하기</button>';
 }
 
 function regionRows(region_cd){
@@ -467,8 +461,7 @@ function renderSubtabs(){
 
   html += groups.map(function(g){
     const on = g.start_dt === state.start_dt;
-    const openCnt = g.items.filter(c => c.remaining_cnt > 0).length;
-    const full = openCnt === 0;
+    const full = g.items.every(c => c.closed_flag);
     return '<button type="button" class="subtab'+(full?" is-full":"")+'" role="tab"'
          + ' aria-selected="'+on+'" data-date="'+g.start_dt+'">'
          + kdate(g.start_dt)+' 개강'
@@ -484,7 +477,7 @@ function classRows(items){
   return items.slice()
     .sort((a,b) => a.seminar_day_nm.localeCompare(b.seminar_day_nm,"ko"))
     .map(function(c){ return ''
-      + '<tr class="'+(c.remaining_cnt <= 0 ? "is-closed" : "")+'">'
+      + '<tr class="'+(c.closed_flag ? "is-closed" : "")+'">'
       + '<td class="col-seminar" data-label="세미나"><span>'+esc(c.seminar_day_nm)+' '+esc(c.seminar_time_nm)+'</span>'
       +   (c.class_nm ? '<span class="tag">'+esc(c.class_nm)+'</span>' : '')
       +   '<button type="button" class="btn-more" aria-expanded="false" aria-label="세미나 3회 일정 보기"><span class="chev">▾</span></button></td>'
@@ -608,7 +601,6 @@ document.addEventListener("click", function(e){
 
 document.getElementById("sw-login").addEventListener("change", function(e){ state.logged_in = e.target.checked; });
 document.getElementById("sw-empty").addEventListener("change", function(e){ state.force_empty = e.target.checked; render(); });
-document.getElementById("sw-low").addEventListener("change",   function(e){ state.low_seat_threshold = e.target.checked ? 25 : 5; render(); });
 
 render();
 </script>

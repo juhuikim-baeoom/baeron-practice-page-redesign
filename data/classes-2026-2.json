@@ -31,7 +31,7 @@
       "midterm_dt": "2026-10-23",
       "final_dt": "2026-12-11",
       "tuition_amt": 300000,
-      "remaining_cnt": 7
+      "closed_flag": false
     },
     {
       "class_id": "2026-2-0904-M2",
@@ -47,7 +47,7 @@
       "midterm_dt": "2026-10-23",
       "final_dt": "2026-12-11",
       "tuition_amt": 300000,
-      "remaining_cnt": 26
+      "closed_flag": false
     },
     {
       "class_id": "2026-2-0904-M3",
@@ -63,7 +63,7 @@
       "midterm_dt": "2026-10-28",
       "final_dt": "2026-12-16",
       "tuition_amt": 300000,
-      "remaining_cnt": 23
+      "closed_flag": false
     },
     {
       "class_id": "2026-2-0904-M4",
@@ -79,7 +79,7 @@
       "midterm_dt": "2026-10-25",
       "final_dt": "2026-12-13",
       "tuition_amt": 300000,
-      "remaining_cnt": 0
+      "closed_flag": true
     },
     {
       "class_id": "2026-2-0904-N1",
@@ -95,7 +95,7 @@
       "midterm_dt": "2026-10-24",
       "final_dt": "2026-12-12",
       "tuition_amt": 400000,
-      "remaining_cnt": 15
+      "closed_flag": false
     },
     {
       "class_id": "2026-2-0910-M1",
@@ -111,7 +111,7 @@
       "midterm_dt": "2026-10-29",
       "final_dt": "2026-12-17",
       "tuition_amt": 300000,
-      "remaining_cnt": 24
+      "closed_flag": false
     },
     {
       "class_id": "2026-2-0917-M1",
@@ -127,7 +127,7 @@
       "midterm_dt": "2026-11-05",
       "final_dt": "2026-12-24",
       "tuition_amt": 300000,
-      "remaining_cnt": 18
+      "closed_flag": false
     },
     {
       "class_id": "2026-2-0917-N1",
@@ -143,7 +143,7 @@
       "midterm_dt": "2026-11-05",
       "final_dt": "2026-12-24",
       "tuition_amt": 400000,
-      "remaining_cnt": 24
+      "closed_flag": false
     },
     {
       "class_id": "2026-2-1008-M1",
@@ -159,7 +159,7 @@
       "midterm_dt": "2026-11-26",
       "final_dt": "2027-01-14",
       "tuition_amt": 300000,
-      "remaining_cnt": 28
+      "closed_flag": false
     },
     {
       "class_id": "2026-2-1008-N1",
@@ -175,7 +175,7 @@
       "midterm_dt": "2026-11-26",
       "final_dt": "2027-01-14",
       "tuition_amt": 400000,
-      "remaining_cnt": 30
+      "closed_flag": false
     }
   ]
 }
