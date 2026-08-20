@@ -105,7 +105,7 @@ body{
 }
 .head p{margin:0;color:var(--ink-2);font-size:15px;max-width:62ch;}
 
-/* 탭 */
+/* 1단 탭 — 지역 */
 .tabs{display:flex;gap:4px;background:var(--bg);}
 .tab{
   appearance:none;border:0;background:none;cursor:pointer;font:inherit;
@@ -120,7 +120,7 @@ body{
   color:var(--accent);background:var(--surface);border-bottom-color:var(--accent);
 }
 .tab .badge{
-  font-family:"IBM Plex Sans KR",sans-serif;font-variant-numeric:tabular-nums;
+  font-variant-numeric:tabular-nums;
   background:var(--line);color:var(--ink-2);
   font-size:12.5px;font-weight:600;border-radius:999px;padding:1px 9px;min-width:26px;text-align:center;
 }
@@ -131,13 +131,43 @@ body{
   background:var(--surface);border:1px solid var(--line);border-radius:0 12px 12px 12px;
   box-shadow:var(--shadow);overflow:hidden;margin-top:-1px;
 }
+
+/* 2단 탭 — 개강일 */
+.subtabs{
+  display:flex;flex-wrap:wrap;gap:6px;
+  padding:12px 16px;background:var(--band);border-bottom:1px solid var(--line);
+}
+.subtab{
+  appearance:none;cursor:pointer;font:inherit;
+  font-size:14px;font-weight:600;color:var(--ink-2);
+  background:var(--surface);border:1px solid var(--line);
+  border-radius:999px;padding:0 6px 0 14px;min-height:38px;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.subtab:hover{border-color:var(--accent);color:var(--ink);}
+.subtab:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+.subtab[aria-selected="true"]{
+  background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:700;
+}
+.subtab .cnt{
+  font-variant-numeric:tabular-nums;font-size:12px;font-weight:600;
+  background:var(--surface-2);color:var(--ink-3);
+  border-radius:999px;padding:1px 8px;
+}
+.subtab[aria-selected="true"] .cnt{background:rgba(255,255,255,.24);color:var(--accent-ink);}
+.subtab.is-full{color:var(--ink-3);}
+.subtab.is-full[aria-selected="true"]{background:var(--ink-3);border-color:var(--ink-3);color:#fff;}
+
+/* 선택한 개강일의 공통 정보 */
 .panel-head{
   display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 18px;
-  padding:15px 22px;background:var(--band);border-bottom:1px solid var(--line);
-  font-size:14.5px;
+  padding:14px 20px;border-bottom:1px solid var(--line);
+  font-size:14px;
 }
-.panel-head .place{font-weight:600;}
-.panel-head .fee{color:var(--ink-2);font-variant-numeric:tabular-nums;}
+.panel-head .place{font-weight:600;color:var(--ink);}
+.panel-head .meta{color:var(--ink-2);font-variant-numeric:tabular-nums;}
+.panel-head .meta b{font-weight:600;}
+.panel-head .fee{margin-left:auto;color:var(--ink-2);font-variant-numeric:tabular-nums;}
 .panel-head .fee b{color:var(--accent);font-size:16px;font-weight:700;}
 .panel-body{overflow-x:auto;}
 
@@ -150,26 +180,8 @@ thead th{
   color:var(--ink-3);background:var(--surface-2);white-space:nowrap;
   border-bottom:1px solid var(--line);padding:11px 10px;
 }
-
-/* 개강일 그룹 머리 — th 는 table-cell 을 유지해야 colspan 이 살아 있다 */
-.grp-head th{
-  text-align:left;font-weight:400;padding:0;
-  background:var(--surface-2);
-  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
-}
-.grp-inner{
-  display:flex;flex-wrap:wrap;align-items:baseline;gap:3px 14px;
-  padding:13px 18px;
-}
-tbody.grp:first-of-type .grp-head th{border-top:0;}
-.grp-date{
-  font-family:"Gothic A1",sans-serif;font-weight:800;font-size:16px;
-  color:var(--ink);letter-spacing:-.01em;
-}
-.grp-meta{font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums;}
-.grp-meta b{font-weight:600;color:var(--ink-2);}
-.grp-cnt{margin-left:auto;font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums;}
-tbody.grp:last-of-type tr:last-child td{border-bottom:0;}
+tbody tr:last-child td{border-bottom:0;}
+tbody tr:hover{background:var(--surface-2);}
 
 .col-seminar{white-space:nowrap;font-weight:500;}
 .col-seminar .tag{
@@ -177,7 +189,6 @@ tbody.grp:last-of-type tr:last-child td{border-bottom:0;}
   border-radius:999px;padding:0 9px;font-size:11.5px;font-weight:500;color:var(--ink-2);margin-left:6px;
 }
 .col-date{white-space:nowrap;color:var(--ink-2);font-variant-numeric:tabular-nums;}
-tbody tr:not(.grp-head):hover{background:var(--surface-2);}
 
 /* 신청 */
 .seats{display:block;font-size:12px;color:var(--ink-3);margin-bottom:5px;font-variant-numeric:tabular-nums;}
@@ -201,8 +212,7 @@ tr.is-closed .col-seminar{font-weight:400;}
   display:none;border:1px solid var(--line);background:var(--surface);color:var(--ink-2);
   font:inherit;font-size:13px;border-radius:999px;
   width:32px;height:32px;padding:0;flex:0 0 auto;
-  align-items:center;justify-content:center;cursor:pointer;
-  position:relative;
+  align-items:center;justify-content:center;cursor:pointer;position:relative;
 }
 /* 보이는 크기는 32px 로 두고 터치 영역만 44px 로 넓힌다 (설계문서 3.5) */
 .btn-more::after{content:"";position:absolute;inset:-6px;border-radius:50%;}
@@ -248,7 +258,7 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
 }
 @media (prefers-reduced-motion:reduce){.toast{transition:none;}}
 
-/* ── 모바일: 그룹 띠 + 1줄 카드 + 펼치기 ── */
+/* ── 모바일 ── */
 @media (max-width:768px){
   .wrap{padding:20px 12px 80px;gap:20px;}
   .tabs{position:sticky;top:0;z-index:20;padding-top:2px;}
@@ -256,22 +266,23 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
   .panel{border-radius:12px;}
   .panel-body{overflow-x:visible;}
 
+  .subtabs{padding:10px 12px;gap:6px;}
+  .subtab{font-size:13.5px;padding:0 5px 0 12px;min-height:36px;gap:6px;}
+  .subtab .cnt{padding:1px 7px;}
+
+  .panel-head{padding:12px 14px;gap:2px 14px;font-size:13.5px;}
+  .panel-head .fee{margin-left:0;width:100%;}
+
   thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);}
   table,tbody{display:block;width:100%;}
 
-  .grp-head{display:block;}
-  .grp-head th{display:block;padding:0;}
-  .grp-inner{padding:12px 15px;gap:2px 12px;}
-  .grp-date{font-size:15px;width:100%;}
-  .grp-cnt{margin-left:auto;}
-
-  tbody tr:not(.grp-head){
+  tbody tr{
     display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:12px;
     border:1px solid var(--line);border-radius:11px;
     margin:10px 12px;padding:12px 14px;background:var(--surface);
   }
-  tbody tr:not(.grp-head):hover{background:var(--surface);}
-  tbody td{display:block;border:0;padding:0;text-align:left;background:none;}
+  tbody tr:hover{background:var(--surface);}
+  tbody td,tbody tr:last-child td{display:block;border:0;padding:0;text-align:left;background:none;}
   td::before{content:none;}
 
   .col-seminar{
@@ -300,26 +311,26 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
 </style>
 </head>
 <body>
-
 <div class="wrap">
 
   <div class="note">
     <span class="eyebrow">개편 목업</span>
     <span>배론 사회복지현장실습 안내 페이지(<code>practice_socialwork.asp</code>)의 개설반 영역입니다.
-    현행 <b>표 8개 · 소제목 4개</b>를 <b>탭 2개 · 표 1개</b>로 접고, 표 안은 <b>개강일 그룹</b>으로 나눴습니다.
-    개강일에 종속된 값(수강기간·실습가능기간)은 그룹 머리에 한 번만 표기합니다.</span>
+    현행 <b>표 8개 · 소제목 4개</b>를 <b>2단 탭 + 표 1개</b>로 접었습니다.
+    1단은 실습기관 소재지, 2단은 개강일입니다.</span>
     <span>데이터는 2026년 8월 20일 기준 실제 개설반 10건이며, 신청 버튼은 동작하지 않습니다.
     폭을 768px 이하로 줄이면 <b>1줄 카드 + 일정 펼치기</b>로 바뀝니다.</span>
   </div>
 
   <div class="head">
     <h1>개설반 안내</h1>
-    <p>실습기관 소재지를 먼저 선택하세요. 지역에 따라 수강료가 다릅니다.</p>
+    <p>실습기관 소재지와 개강일을 차례로 선택하세요. 지역에 따라 수강료가 다릅니다.</p>
   </div>
 
   <div>
     <div class="tabs" role="tablist" aria-label="실습기관 소재지"></div>
     <div class="panel">
+      <div class="subtabs" role="tablist" aria-label="개강일"></div>
       <div class="panel-head"></div>
       <div class="panel-body"></div>
     </div>
@@ -356,7 +367,7 @@ const DATA = {
   ]
 };
 
-const state = { region_cd:"METRO", logged_in:false, force_empty:false, low_seat_threshold:5 };
+const state = { region_cd:"METRO", start_dt:null, logged_in:false, force_empty:false, low_seat_threshold:5 };
 
 const DAY = ["일","월","화","수","목","금","토"];
 const d    = s => new Date(s+"T00:00:00");
@@ -375,42 +386,67 @@ function applyCell(cls){
        + '<button type="button" class="btn-apply" data-id="'+esc(cls.class_id)+'">신청하기</button>';
 }
 
-/* 개강일 기준으로 묶는다. 개강일이 같으면 수강기간·실습가능기간도 같다. */
-function groupByStartDate(rows){
+function regionRows(region_cd){
+  return (state.force_empty && region_cd === state.region_cd)
+    ? [] : DATA.classes.filter(c => c.region_cd === region_cd);
+}
+
+/* 선택 지역의 개강일 목록. 개강일이 같으면 수강기간·실습가능기간도 같다. */
+function startDates(region_cd){
   const map = new Map();
-  rows.forEach(function(c){
+  regionRows(region_cd).forEach(function(c){
     if (!map.has(c.start_dt)) map.set(c.start_dt, []);
     map.get(c.start_dt).push(c);
   });
   return [...map.entries()]
     .sort((a,b) => a[0].localeCompare(b[0]))
-    .map(([start_dt, items]) => ({
-      start_dt: start_dt,
-      head: items[0],
-      items: items.sort((a,b) => a.seminar_day_nm.localeCompare(b.seminar_day_nm,"ko"))
-    }));
+    .map(([start_dt, items]) => ({ start_dt: start_dt, head: items[0], items: items }));
 }
 
+/* 선택한 개강일이 현재 지역에 없으면 그 지역의 가장 빠른 개강일로 되돌린다. */
+function normalizeStartDate(){
+  const dates = startDates(state.region_cd).map(g => g.start_dt);
+  if (!dates.length){ state.start_dt = null; return; }
+  if (!state.start_dt || dates.indexOf(state.start_dt) === -1) state.start_dt = dates[0];
+}
+
+/* 1단 — 지역 */
 function renderTabs(){
   document.querySelector(".tabs").innerHTML = DATA.regions.map(function(r){
-    const n = (state.force_empty && r.region_cd === state.region_cd)
-      ? 0 : DATA.classes.filter(c => c.region_cd === r.region_cd).length;
+    const n = regionRows(r.region_cd).length;
     const on = r.region_cd === state.region_cd;
     return '<button type="button" class="tab" role="tab" aria-selected="'+on+'" data-region="'+r.region_cd+'">'
          + esc(r.region_nm)+'<span class="badge">'+n+'</span></button>';
   }).join("");
 }
 
+/* 2단 — 개강일 */
+function renderSubtabs(){
+  const el = document.querySelector(".subtabs");
+  const groups = startDates(state.region_cd);
+  if (!groups.length){ el.innerHTML = ""; el.hidden = true; return; }
+  el.hidden = false;
+  el.innerHTML = groups.map(function(g){
+    const on = g.start_dt === state.start_dt;
+    const openCnt = g.items.filter(c => c.remaining_cnt > 0).length;
+    const full = openCnt === 0;
+    return '<button type="button" class="subtab'+(full?" is-full":"")+'" role="tab"'
+         + ' aria-selected="'+on+'" data-date="'+g.start_dt+'">'
+         + kdate(g.start_dt)+' 개강'
+         + '<span class="cnt">'+(full ? '마감' : g.items.length+'개 반')+'</span>'
+         + '</button>';
+  }).join("");
+}
+
+/* 선택한 개강일의 공통 정보 + 표 */
 function renderPanel(){
   const region = DATA.regions.find(r => r.region_cd === state.region_cd);
-  document.querySelector(".panel-head").innerHTML =
-      '<span class="place">'+esc(region.region_desc)+'</span>'
-    + '<span class="fee">수강료 <b>'+won(region.tuition_amt)+'</b></span>';
-
-  const rows = state.force_empty ? [] : DATA.classes.filter(c => c.region_cd === state.region_cd);
+  const g = startDates(state.region_cd).find(x => x.start_dt === state.start_dt);
+  const headEl = document.querySelector(".panel-head");
   const body = document.querySelector(".panel-body");
 
-  if (!rows.length){
+  if (!g){
+    headEl.hidden = true;
     const other = DATA.regions.find(r => r.region_cd !== state.region_cd);
     body.innerHTML = '<div class="empty"><strong>현재 '+esc(region.region_nm)+' 개설반이 없습니다.</strong>'
       + '다음 학기 일정은 공지사항에서 안내드립니다.'
@@ -418,36 +454,35 @@ function renderPanel(){
     return;
   }
 
+  const h = g.head;
+  headEl.hidden = false;
+  headEl.innerHTML =
+      '<span class="place">'+esc(region.region_desc)+'</span>'
+    + '<span class="meta">수강 <b>'+md(h.start_dt)+' ~ '+md(h.course_end_dt)+'</b></span>'
+    + '<span class="meta">실습가능 <b>'+md(h.practicum_start_dt)+' ~ '+md(h.practicum_end_dt)+'</b></span>'
+    + '<span class="fee">수강료 <b>'+won(region.tuition_amt)+'</b></span>';
+
+  const rows = g.items.slice().sort((a,b) => a.seminar_day_nm.localeCompare(b.seminar_day_nm,"ko"));
+
   body.innerHTML =
-    '<table><caption>'+esc(DATA.term_nm)+' '+esc(region.region_nm)+' 개설반 목록</caption>'
+    '<table><caption>'+esc(DATA.term_nm)+' '+esc(region.region_nm)+' '+kdate(g.start_dt)+' 개강반 목록</caption>'
   + '<thead><tr><th scope="col">세미나</th>'
   + '<th scope="col">오리엔테이션</th><th scope="col">중간평가회</th><th scope="col">최종평가회</th>'
-  + '<th scope="col">신청</th></tr></thead>'
-  + groupByStartDate(rows).map(function(g){
-      const h = g.head;
-      return '<tbody class="grp">'
-      + '<tr class="grp-head"><th colspan="5" scope="rowgroup"><div class="grp-inner">'
-      +   '<span class="grp-date">'+kdate(g.start_dt)+' 개강</span>'
-      +   '<span class="grp-meta">수강 <b>'+md(h.start_dt)+' ~ '+md(h.course_end_dt)+'</b></span>'
-      +   '<span class="grp-meta">실습가능 <b>'+md(h.practicum_start_dt)+' ~ '+md(h.practicum_end_dt)+'</b></span>'
-      +   '<span class="grp-cnt">'+g.items.length+'개 반</span>'
-      + '</div></th></tr>'
-      + g.items.map(function(c){ return ''
-        + '<tr class="'+(c.remaining_cnt <= 0 ? "is-closed" : "")+'">'
-        + '<td class="col-seminar" data-label="세미나"><span>'+esc(c.seminar_day_nm)+' '+esc(c.seminar_time_nm)+'</span>'
-        +   (c.class_nm ? '<span class="tag">'+esc(c.class_nm)+'</span>' : '')
-        +   '<button type="button" class="btn-more" aria-expanded="false" aria-label="세미나 3회 일정 보기"><span class="chev">▾</span></button></td>'
-        + '<td class="col-date is-detail" data-label="오리엔테이션">'+mdw(c.ot_dt)+'</td>'
-        + '<td class="col-date is-detail" data-label="중간평가회">'+mdw(c.midterm_dt)+'</td>'
-        + '<td class="col-date is-detail" data-label="최종평가회">'+mdw(c.final_dt)+'</td>'
-        + '<td class="col-apply" data-label="신청">'+applyCell(c)+'</td>'
-        + '</tr>'; }).join("")
-      + '</tbody>';
-    }).join("")
-  + '</table>';
+  + '<th scope="col">신청</th></tr></thead><tbody>'
+  + rows.map(function(c){ return ''
+    + '<tr class="'+(c.remaining_cnt <= 0 ? "is-closed" : "")+'">'
+    + '<td class="col-seminar" data-label="세미나"><span>'+esc(c.seminar_day_nm)+' '+esc(c.seminar_time_nm)+'</span>'
+    +   (c.class_nm ? '<span class="tag">'+esc(c.class_nm)+'</span>' : '')
+    +   '<button type="button" class="btn-more" aria-expanded="false" aria-label="세미나 3회 일정 보기"><span class="chev">▾</span></button></td>'
+    + '<td class="col-date is-detail" data-label="오리엔테이션">'+mdw(c.ot_dt)+'</td>'
+    + '<td class="col-date is-detail" data-label="중간평가회">'+mdw(c.midterm_dt)+'</td>'
+    + '<td class="col-date is-detail" data-label="최종평가회">'+mdw(c.final_dt)+'</td>'
+    + '<td class="col-apply" data-label="신청">'+applyCell(c)+'</td>'
+    + '</tr>'; }).join("")
+  + '</tbody></table>';
 }
 
-function render(){ renderTabs(); renderPanel(); }
+function render(){ normalizeStartDate(); renderTabs(); renderSubtabs(); renderPanel(); }
 
 let toastTimer;
 function toast(msg){
@@ -459,12 +494,19 @@ function toast(msg){
 
 document.addEventListener("click", function(e){
   const tab = e.target.closest(".tab");
-  if (tab){ state.region_cd = tab.dataset.region; state.force_empty = false;
-            document.getElementById("sw-empty").checked = false; render(); return; }
+  if (tab){
+    state.region_cd = tab.dataset.region; state.start_dt = null; state.force_empty = false;
+    document.getElementById("sw-empty").checked = false; render(); return;
+  }
+
+  const sub = e.target.closest(".subtab");
+  if (sub){ state.start_dt = sub.dataset.date; render(); return; }
 
   const goto = e.target.closest("[data-goto]");
-  if (goto){ state.region_cd = goto.dataset.goto; state.force_empty = false;
-             document.getElementById("sw-empty").checked = false; render(); return; }
+  if (goto){
+    state.region_cd = goto.dataset.goto; state.start_dt = null; state.force_empty = false;
+    document.getElementById("sw-empty").checked = false; render(); return;
+  }
 
   const more = e.target.closest(".btn-more");
   if (more){
