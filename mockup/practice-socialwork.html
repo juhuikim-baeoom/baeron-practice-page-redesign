@@ -42,7 +42,7 @@ h2.sec-ttl{font-size:30px;font-weight:800;letter-spacing:-.02em;margin:0 0 6px;}
 p.sec-sub{margin:0 0 20px;color:var(--ink-2);font-size:15px;}
 
 /* 탭 */
-.tabs{display:flex;gap:8px;border-bottom:2px solid var(--line);}
+.tabs{display:flex;gap:8px;border-bottom:2px solid var(--line);background:var(--bg-2);}
 .tab{
   appearance:none;border:0;background:none;cursor:pointer;
   font:inherit;font-weight:700;font-size:17px;color:var(--ink-3);
@@ -104,6 +104,15 @@ tbody tr:hover{background:#fafcfe;}
 tr.is-closed td{background:#fbfbfc;color:var(--ink-3);}
 tr.is-closed:hover{background:#fbfbfc;}
 
+/* 펼치기 버튼 — 모바일 전용 */
+.btn-more{
+  display:none;border:1px solid var(--line);background:#fff;color:var(--ink-2);
+  font:inherit;font-size:13px;font-weight:700;border-radius:6px;
+  padding:0 10px;height:44px;align-items:center;gap:5px;cursor:pointer;
+}
+.btn-more .chev{transition:transform .18s ease;}
+tr.is-open .btn-more .chev{transform:rotate(180deg);}
+
 /* 빈 상태 */
 .empty{padding:56px 20px;text-align:center;color:var(--ink-2);}
 .empty strong{display:block;font-size:17px;color:var(--ink);margin-bottom:6px;}
@@ -128,29 +137,58 @@ tr.is-closed:hover{background:#fbfbfc;}
 }
 .toast.on{transform:translateX(-50%) translateY(0);}
 
-/* 모바일: 표를 카드로 */
+/* 모바일: 표를 2줄 카드로 (설계문서 3.4) */
 @media (max-width:768px){
   h2.sec-ttl{font-size:24px;}
-  .tab{flex:1;justify-content:center;padding:13px 8px;font-size:15px;}
+  .tabs{position:sticky;top:0;z-index:20;}
+  .tab{flex:1;justify-content:center;padding:13px 8px;font-size:15px;min-height:44px;}
+
   thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);}
-  table,tbody,tr,td{display:block;width:100%;}
+  table,tbody{display:block;width:100%;}
+
   tbody tr{
-    border:1px solid var(--line);border-radius:var(--radius);
-    margin:14px 12px;padding:6px 0;
+    display:grid;
+    grid-template-columns:1fr auto;
+    align-items:center;
+    column-gap:12px;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    margin:12px;
+    padding:12px 14px;
   }
-  tbody tr:last-child td{border-bottom:1px solid var(--line);}
-  td{
-    display:flex;justify-content:space-between;align-items:center;gap:14px;
-    text-align:right;padding:9px 14px;border-bottom:1px solid #eef1f4;
+  tbody tr:hover{background:var(--bg);}
+  tbody td,tbody tr:last-child td{
+    display:block;border:0;padding:0;text-align:left;background:none;
   }
-  td:last-child{border-bottom:0;}
-  td::before{
-    content:attr(data-label);
-    font-size:13px;color:var(--ink-3);font-weight:700;text-align:left;flex:0 0 auto;
+  td::before{content:none;}
+
+  /* 앞면 2줄 */
+  .col-start{grid-column:1;grid-row:1;font-size:17px;line-height:1.35;}
+  .col-start .sub{display:inline;margin:0 0 0 7px;}
+  .col-seminar{grid-column:1;grid-row:2;display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+  .col-seminar .tag{margin-top:0;}
+  .col-apply{grid-column:2;grid-row:1 / span 2;text-align:right;justify-self:end;}
+  .col-apply .seats{display:block;margin:0 0 4px;}
+  .col-apply .btn-apply,.col-apply .btn-closed{min-height:44px;display:inline-flex;align-items:center;}
+
+  .btn-more{display:inline-flex;height:36px;}
+
+  /* 펼침 영역 */
+  td.is-detail{
+    grid-column:1 / -1;display:none;
+    padding:9px 2px;border-top:1px solid #eef1f4;
+    justify-content:space-between;align-items:center;text-align:right;
   }
-  .col-start .sub{display:inline;margin-left:6px;}
-  .seats{display:inline-block;margin:0 10px 0 0;}
+  tr.is-open td.is-detail{display:flex;}
+  tr.is-open td.is-detail::before{
+    content:attr(data-label);color:var(--ink-3);font-size:13px;font-weight:700;text-align:left;
+  }
+  tr.is-open .col-date:first-of-type{margin-top:6px;}
+
+  tr.is-closed{background:#fbfbfc;}
+  tr.is-closed .col-start,tr.is-closed .col-seminar{color:var(--ink-3);}
 }
+
 </style>
 </head>
 <body>
@@ -158,7 +196,7 @@ tr.is-closed:hover{background:#fbfbfc;}
 
   <div class="mock-note">
     <b>개편 목업</b> — 배론 사회복지현장실습 <code>practice_socialwork.asp</code>의 개설반 영역입니다.
-    현행 <b>표 8개 · 소제목 4개</b>를 <b>탭 2개 · 표 1개</b>로 접었습니다.
+    현행 <b>표 8개 · 소제목 4개</b>를 <b>탭 2개 · 표 1개</b>로 접었습니다. 창 너비를 768px 이하로 줄이면 모바일 카드(2줄 요약 + 일정 펼치기)로 바뀝니다.
     데이터는 2026년 8월 20일 기준 실제 개설반 10건입니다. 신청 버튼은 동작하지 않습니다.
   </div>
 
@@ -275,13 +313,14 @@ function renderPanel(){
       <tr class="${c.remaining_cnt <= 0 ? "is-closed" : ""}">
         <td class="col-start" data-label="개강일">${mdw(c.start_dt)}
           <span class="sub">수강 ~ ${md(c.course_end_dt)}</span></td>
-        <td class="col-seminar" data-label="세미나">${esc(c.seminar_day_nm)} ${esc(c.seminar_time_nm)}
-          ${c.class_nm ? `<span class="tag">${esc(c.class_nm)}</span>` : ""}</td>
-        <td class="col-date" data-label="오리엔테이션">${mdw(c.ot_dt)}</td>
-        <td class="col-date" data-label="중간평가회">${mdw(c.midterm_dt)}</td>
-        <td class="col-date" data-label="최종평가회">${mdw(c.final_dt)}</td>
-        <td class="col-period" data-label="실습가능기간">${md(c.practicum_start_dt)} ~ ${md(c.practicum_end_dt)}</td>
-        <td data-label="신청">${applyCell(c)}</td>
+        <td class="col-seminar" data-label="세미나"><span>${esc(c.seminar_day_nm)} ${esc(c.seminar_time_nm)}</span>
+          ${c.class_nm ? `<span class="tag">${esc(c.class_nm)}</span>` : ""}
+          <button type="button" class="btn-more" aria-expanded="false">일정 <span class="chev">▾</span></button></td>
+        <td class="col-date is-detail" data-label="오리엔테이션">${mdw(c.ot_dt)}</td>
+        <td class="col-date is-detail" data-label="중간평가회">${mdw(c.midterm_dt)}</td>
+        <td class="col-date is-detail" data-label="최종평가회">${mdw(c.final_dt)}</td>
+        <td class="col-period is-detail" data-label="실습가능기간">${md(c.practicum_start_dt)} ~ ${md(c.practicum_end_dt)}</td>
+        <td class="col-apply" data-label="신청">${applyCell(c)}</td>
       </tr>`).join("")
   + `</tbody></table>`;
 }
@@ -305,6 +344,14 @@ document.addEventListener("click", e => {
   const goto = e.target.closest("[data-goto]");
   if (goto){ state.region_cd = goto.dataset.goto; state.force_empty = false;
              document.getElementById("sw-empty").checked = false; render(); return; }
+
+  const more = e.target.closest(".btn-more");
+  if (more){
+    const tr = more.closest("tr");
+    const open = tr.classList.toggle("is-open");
+    more.setAttribute("aria-expanded", String(open));
+    return;
+  }
 
   const btn = e.target.closest(".btn-apply");
   if (btn){
