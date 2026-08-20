@@ -181,7 +181,25 @@ thead th{
   border-bottom:1px solid var(--line);padding:11px 10px;
 }
 tbody tr:last-child td{border-bottom:0;}
-tbody tr:hover{background:var(--surface-2);}
+tbody tr:not(.grp-head):hover{background:var(--surface-2);}
+
+/* 전체 탭에서만 쓰는 개강일 그룹 머리.
+   th 는 table-cell 을 유지해야 colspan 이 살아 있으므로 안쪽 div 가 flex 를 맡는다. */
+.grp-head th{
+  text-align:left;font-weight:400;padding:0;
+  background:var(--surface-2);
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);
+}
+tbody.grp:first-of-type .grp-head th{border-top:0;}
+.grp-inner{display:flex;flex-wrap:wrap;align-items:baseline;gap:3px 14px;padding:12px 18px;}
+.grp-date{
+  font-family:"Gothic A1",sans-serif;font-weight:800;font-size:15.5px;
+  color:var(--ink);letter-spacing:-.01em;
+}
+.grp-meta{font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums;}
+.grp-meta b{font-weight:600;}
+.grp-cnt{margin-left:auto;font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums;}
+tbody.grp:last-of-type tr:last-child td{border-bottom:0;}
 
 .col-seminar{white-space:nowrap;font-weight:500;}
 .col-seminar .tag{
@@ -276,13 +294,22 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
   thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);}
   table,tbody{display:block;width:100%;}
 
-  tbody tr{
+  tbody.grp{display:block;}
+  .grp-head{display:block;}
+  .grp-head th{display:block;padding:0;}
+  .grp-inner{padding:12px 14px;gap:2px 12px;}
+  .grp-date{font-size:15px;width:100%;}
+  .grp-cnt{margin-left:auto;}
+
+  tbody tr:not(.grp-head){
     display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:12px;
     border:1px solid var(--line);border-radius:11px;
     margin:10px 12px;padding:12px 14px;background:var(--surface);
   }
-  tbody tr:hover{background:var(--surface);}
-  tbody td,tbody tr:last-child td{display:block;border:0;padding:0;text-align:left;background:none;}
+  tbody tr:not(.grp-head):hover{background:var(--surface);}
+  /* tbody tr:last-child td 를 여기 함께 쓰면 특정도가 td.is-detail 보다 높아져
+     각 그룹 마지막 행의 접힌 셀이 그대로 노출된다. tbody td 만 쓴다. */
+  tbody td{display:block;border:0;padding:0;text-align:left;background:none;}
   td::before{content:none;}
 
   .col-seminar{
@@ -317,7 +344,7 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
     <span class="eyebrow">개편 목업</span>
     <span>배론 사회복지현장실습 안내 페이지(<code>practice_socialwork.asp</code>)의 개설반 영역입니다.
     현행 <b>표 8개 · 소제목 4개</b>를 <b>2단 탭 + 표 1개</b>로 접었습니다.
-    1단은 실습기관 소재지, 2단은 개강일입니다.</span>
+    1단은 실습기관 소재지, 2단은 개강일이며, 2단의 <b>전체</b>를 고르면 그 지역의 모든 개강일을 한 표에서 비교할 수 있습니다.</span>
     <span>데이터는 2026년 8월 20일 기준 실제 개설반 10건이며, 신청 버튼은 동작하지 않습니다.
     폭을 768px 이하로 줄이면 <b>1줄 카드 + 일정 펼치기</b>로 바뀝니다.</span>
   </div>
@@ -367,6 +394,9 @@ const DATA = {
   ]
 };
 
+/* 2단 탭에서 "전체"를 가리키는 값. 실제 개강일과 겹치지 않는 문자열이면 된다. */
+const ALL = "ALL";
+
 const state = { region_cd:"METRO", start_dt:null, logged_in:false, force_empty:false, low_seat_threshold:5 };
 
 const DAY = ["일","월","화","수","목","금","토"];
@@ -403,10 +433,12 @@ function startDates(region_cd){
     .map(([start_dt, items]) => ({ start_dt: start_dt, head: items[0], items: items }));
 }
 
-/* 선택한 개강일이 현재 지역에 없으면 그 지역의 가장 빠른 개강일로 되돌린다. */
+/* 선택한 개강일이 현재 지역에 없으면 그 지역의 가장 빠른 개강일로 되돌린다.
+   "ALL"(전체 탭)은 어느 지역에서나 유효하므로 그대로 둔다. */
 function normalizeStartDate(){
   const dates = startDates(state.region_cd).map(g => g.start_dt);
   if (!dates.length){ state.start_dt = null; return; }
+  if (state.start_dt === ALL) return;
   if (!state.start_dt || dates.indexOf(state.start_dt) === -1) state.start_dt = dates[0];
 }
 
@@ -426,7 +458,13 @@ function renderSubtabs(){
   const groups = startDates(state.region_cd);
   if (!groups.length){ el.innerHTML = ""; el.hidden = true; return; }
   el.hidden = false;
-  el.innerHTML = groups.map(function(g){
+
+  const total = regionRows(state.region_cd).length;
+  let html = '<button type="button" class="subtab" role="tab"'
+           + ' aria-selected="'+(state.start_dt === ALL)+'" data-date="'+ALL+'">'
+           + '전체<span class="cnt">'+total+'개 반</span></button>';
+
+  html += groups.map(function(g){
     const on = g.start_dt === state.start_dt;
     const openCnt = g.items.filter(c => c.remaining_cnt > 0).length;
     const full = openCnt === 0;
@@ -436,14 +474,65 @@ function renderSubtabs(){
          + '<span class="cnt">'+(full ? '마감' : g.items.length+'개 반')+'</span>'
          + '</button>';
   }).join("");
+
+  el.innerHTML = html;
 }
+
+/* 표의 행. 개강일 정보는 담지 않는다 — 2단 탭이나 그룹 머리가 담당한다. */
+function classRows(items){
+  return items.slice()
+    .sort((a,b) => a.seminar_day_nm.localeCompare(b.seminar_day_nm,"ko"))
+    .map(function(c){ return ''
+      + '<tr class="'+(c.remaining_cnt <= 0 ? "is-closed" : "")+'">'
+      + '<td class="col-seminar" data-label="세미나"><span>'+esc(c.seminar_day_nm)+' '+esc(c.seminar_time_nm)+'</span>'
+      +   (c.class_nm ? '<span class="tag">'+esc(c.class_nm)+'</span>' : '')
+      +   '<button type="button" class="btn-more" aria-expanded="false" aria-label="세미나 3회 일정 보기"><span class="chev">▾</span></button></td>'
+      + '<td class="col-date is-detail" data-label="오리엔테이션">'+mdw(c.ot_dt)+'</td>'
+      + '<td class="col-date is-detail" data-label="중간평가회">'+mdw(c.midterm_dt)+'</td>'
+      + '<td class="col-date is-detail" data-label="최종평가회">'+mdw(c.final_dt)+'</td>'
+      + '<td class="col-apply" data-label="신청">'+applyCell(c)+'</td>'
+      + '</tr>'; }).join("");
+}
+
+const TABLE_HEAD = '<thead><tr><th scope="col">세미나</th>'
+  + '<th scope="col">오리엔테이션</th><th scope="col">중간평가회</th><th scope="col">최종평가회</th>'
+  + '<th scope="col">신청</th></tr></thead>';
 
 /* 선택한 개강일의 공통 정보 + 표 */
 function renderPanel(){
   const region = DATA.regions.find(r => r.region_cd === state.region_cd);
-  const g = startDates(state.region_cd).find(x => x.start_dt === state.start_dt);
+  const groups = startDates(state.region_cd);
   const headEl = document.querySelector(".panel-head");
   const body = document.querySelector(".panel-body");
+
+  /* 전체 탭 — 개강일마다 수강기간·실습가능기간이 다르므로 그룹 머리로 나눈다. */
+  if (state.start_dt === ALL && groups.length){
+    headEl.hidden = false;
+    headEl.innerHTML =
+        '<span class="place">'+esc(region.region_desc)+'</span>'
+      + '<span class="meta">개강일 '+groups.length+'종 · 개설반 '+regionRows(state.region_cd).length+'개</span>'
+      + '<span class="fee">수강료 <b>'+won(region.tuition_amt)+'</b></span>';
+
+    body.innerHTML =
+      '<table><caption>'+esc(DATA.term_nm)+' '+esc(region.region_nm)+' 전체 개설반 목록</caption>'
+    + TABLE_HEAD
+    + groups.map(function(g){
+        const h = g.head;
+        return '<tbody class="grp">'
+        + '<tr class="grp-head"><th colspan="5" scope="rowgroup"><div class="grp-inner">'
+        +   '<span class="grp-date">'+kdate(g.start_dt)+' 개강</span>'
+        +   '<span class="grp-meta">수강 <b>'+md(h.start_dt)+' ~ '+md(h.course_end_dt)+'</b></span>'
+        +   '<span class="grp-meta">실습가능 <b>'+md(h.practicum_start_dt)+' ~ '+md(h.practicum_end_dt)+'</b></span>'
+        +   '<span class="grp-cnt">'+g.items.length+'개 반</span>'
+        + '</div></th></tr>'
+        + classRows(g.items)
+        + '</tbody>';
+      }).join("")
+    + '</table>';
+    return;
+  }
+
+  const g = groups.find(x => x.start_dt === state.start_dt);
 
   if (!g){
     headEl.hidden = true;
@@ -462,24 +551,9 @@ function renderPanel(){
     + '<span class="meta">실습가능 <b>'+md(h.practicum_start_dt)+' ~ '+md(h.practicum_end_dt)+'</b></span>'
     + '<span class="fee">수강료 <b>'+won(region.tuition_amt)+'</b></span>';
 
-  const rows = g.items.slice().sort((a,b) => a.seminar_day_nm.localeCompare(b.seminar_day_nm,"ko"));
-
   body.innerHTML =
     '<table><caption>'+esc(DATA.term_nm)+' '+esc(region.region_nm)+' '+kdate(g.start_dt)+' 개강반 목록</caption>'
-  + '<thead><tr><th scope="col">세미나</th>'
-  + '<th scope="col">오리엔테이션</th><th scope="col">중간평가회</th><th scope="col">최종평가회</th>'
-  + '<th scope="col">신청</th></tr></thead><tbody>'
-  + rows.map(function(c){ return ''
-    + '<tr class="'+(c.remaining_cnt <= 0 ? "is-closed" : "")+'">'
-    + '<td class="col-seminar" data-label="세미나"><span>'+esc(c.seminar_day_nm)+' '+esc(c.seminar_time_nm)+'</span>'
-    +   (c.class_nm ? '<span class="tag">'+esc(c.class_nm)+'</span>' : '')
-    +   '<button type="button" class="btn-more" aria-expanded="false" aria-label="세미나 3회 일정 보기"><span class="chev">▾</span></button></td>'
-    + '<td class="col-date is-detail" data-label="오리엔테이션">'+mdw(c.ot_dt)+'</td>'
-    + '<td class="col-date is-detail" data-label="중간평가회">'+mdw(c.midterm_dt)+'</td>'
-    + '<td class="col-date is-detail" data-label="최종평가회">'+mdw(c.final_dt)+'</td>'
-    + '<td class="col-apply" data-label="신청">'+applyCell(c)+'</td>'
-    + '</tr>'; }).join("")
-  + '</tbody></table>';
+  + TABLE_HEAD + '<tbody>' + classRows(g.items) + '</tbody></table>';
 }
 
 function render(){ normalizeStartDate(); renderTabs(); renderSubtabs(); renderPanel(); }
@@ -495,7 +569,10 @@ function toast(msg){
 document.addEventListener("click", function(e){
   const tab = e.target.closest(".tab");
   if (tab){
-    state.region_cd = tab.dataset.region; state.start_dt = null; state.force_empty = false;
+    state.region_cd = tab.dataset.region;
+    // 전체를 보던 중이면 지역을 바꿔도 전체를 유지한다.
+    if (state.start_dt !== ALL) state.start_dt = null;
+    state.force_empty = false;
     document.getElementById("sw-empty").checked = false; render(); return;
   }
 
@@ -504,7 +581,9 @@ document.addEventListener("click", function(e){
 
   const goto = e.target.closest("[data-goto]");
   if (goto){
-    state.region_cd = goto.dataset.goto; state.start_dt = null; state.force_empty = false;
+    state.region_cd = goto.dataset.goto;
+    if (state.start_dt !== ALL) state.start_dt = null;
+    state.force_empty = false;
     document.getElementById("sw-empty").checked = false; render(); return;
   }
 
