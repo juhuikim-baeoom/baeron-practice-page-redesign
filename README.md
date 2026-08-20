@@ -49,6 +49,16 @@ python3 -m http.server 8899
 
 목업 상단의 확인용 스위치로 로그인 상태와 개설반 0건 상태를 확인할 수 있습니다. 실제 페이지에는 없는 요소입니다.
 
+## Vercel 배포
+
+저장소 루트에 `vercel.json` 이 있어, Vercel 에서 이 저장소를 임포트하면 바로 목업이 뜹니다.
+
+1. https://vercel.com/new 에서 `baeron-practice-page-redesign` 임포트
+2. 프레임워크는 자동 감지(정적 사이트), 별도 빌드 설정 없음
+3. 배포 후 루트 주소가 `mockup/practice-socialwork.html` 로 연결됩니다
+
+검색엔진 색인은 `X-Robots-Tag: noindex` 로 막아 두었습니다. 검토용 목업이 실제 안내 페이지로 오인되는 것을 피하기 위해서입니다.
+
 ## 상태
 
 설계문서와 목업이 확정된 상태입니다. 데스크톱(수도권·전국권)과 모바일 390px(접힘·펼침)에서 실제 렌더를 확인했습니다.
