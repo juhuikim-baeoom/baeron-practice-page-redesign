@@ -1,7 +1,7 @@
 {
   "term_nm": "2026학년도 2학기",
   "captured_dt": "2026-08-21",
-  "note": "현행 세 실습 페이지에서 옮긴 개설반 데이터. 목업 mockup/practice-socialwork.html 의 COURSES 와 같은 모양이다.",
+  "note": "현행 세 실습 페이지에서 옮긴 값. 목업 mockup/practice-socialwork.html 의 COURSES·INFO 와 같은 모양이다.",
   "courses": [
     {
       "key": "social",
@@ -12,12 +12,36 @@
         {
           "cd": "METRO",
           "nm": "수도권",
-          "desc": "서울, 경기, 인천 소재"
+          "desc": "서울, 경기, 인천"
         },
         {
           "cd": "NATIONWIDE",
           "nm": "전국권",
-          "desc": "전국(섬 및 산간지역 제외) 소재"
+          "desc": "전국(섬 및 산간지역 제외)"
+        }
+      ],
+      "info": [
+        {
+          "label": "과목 신청 조건",
+          "main": "선이수 과목 이수 <span class=\"sub\">(필수 4과목 이상 + 선택 2과목 이상 이수자)</span>"
+        },
+        {
+          "label": "제출서류",
+          "main": "선이수과목 성적증명서 <span class=\"sub\">(배론 이수과목은 서류제출 불필요)</span>",
+          "sub": "개강전까지 [나의강의실 &gt; 사회복지현장실습 강의실 &gt; 선이수과목 서류제출]에 제출"
+        },
+        {
+          "label": "실습기관 조건",
+          "main": "한국사회복지사협회 공지사항 ‘실습기관’ 게시물 참조 <a class=\"link\" href=\"https://www.welfare.net/prm/find-training-center/current-stat\">바로가기 ▶</a>",
+          "sub": "실습기관 소재지에 따라 수강료가 다름 - 위 <b>개설반 안내</b>의 소재지 탭 참조"
+        },
+        {
+          "label": "기관실습비",
+          "main": "기관별로 상이하며, 실습기관에 <b>본인이 직접 납부함</b>"
+        },
+        {
+          "label": "실습 전 준비 안내서",
+          "main": "<a class=\"link\" href=\"https://www.baeron.com/download/s_pre_guide.pdf\">[안내서 다운로드]</a>"
         }
       ],
       "head": [
@@ -218,7 +242,37 @@
       "nm": "보육실습",
       "source_url": "https://www.baeron.com/corp/new/practice_child.asp",
       "notice_txt": "",
-      "regions": null,
+      "regions": [
+        {
+          "cd": "NATIONWIDE",
+          "nm": "전국권",
+          "desc": "전국(섬 및 산간지역 제외)"
+        }
+      ],
+      "info": [
+        {
+          "label": "과목 신청 조건",
+          "main": "선이수 요건 없음"
+        },
+        {
+          "label": "실습기관 조건",
+          "main": "정원 15인 이상, 실습 시작일 기준 [평가완료]인 어린이집 <span class=\"sub\">(유치원 불가)</span>",
+          "sub": "종전의 규정에 따라 평가인증 또는 평가를 받아 평가결과(평가등급)가 유효한 어린이집은 개정 규정에 따라 평가를 받은 어린이집에 해당함 / 평가등급제 폐지 시행(2024.7.3. 시행)"
+        },
+        {
+          "label": "기관실습비",
+          "main": "기관별로 상이하며, 실습기관에 <b>본인이 직접 납부함</b>"
+        },
+        {
+          "label": "수업구성",
+          "main": "온라인 강의 수강 <span class=\"sub\">(1주차~5주차)</span>",
+          "sub": "직접 기관 실습 240시간 / 출석세미나 2회 - 온라인 ZOOM 화상수업으로 진행"
+        },
+        {
+          "label": "실습 전 준비 안내서",
+          "main": "<a class=\"link\" href=\"https://www.baeron.com/download/c_pre_guide.pdf\">[안내서 다운로드]</a>"
+        }
+      ],
       "head": [
         "term",
         "course",
@@ -243,6 +297,7 @@
       "classes": [
         {
           "class_id": "C-0904",
+          "region_cd": "NATIONWIDE",
           "start_dt": "2026-09-04",
           "course_end_dt": "2026-12-17",
           "practicum_start_dt": "2026-09-14",
@@ -256,6 +311,7 @@
         },
         {
           "class_id": "C-0917",
+          "region_cd": "NATIONWIDE",
           "start_dt": "2026-09-17",
           "course_end_dt": "2026-12-30",
           "practicum_start_dt": "2026-09-28",
@@ -269,6 +325,7 @@
         },
         {
           "class_id": "C-1008",
+          "region_cd": "NATIONWIDE",
           "start_dt": "2026-10-08",
           "course_end_dt": "2027-01-20",
           "practicum_start_dt": "2026-10-19",
@@ -288,6 +345,31 @@
       "source_url": "https://www.baeron.com/corp/new/practice_korean.asp",
       "notice_txt": "",
       "regions": null,
+      "info": [
+        {
+          "label": "과목 신청 조건",
+          "main": "1,3영역 전공(필수+선택) 8과목(24학점) 이상 이수자 <span class=\"sub\">(1영역은 1과목 이상 포함)</span>"
+        },
+        {
+          "label": "제출서류",
+          "main": "선이수과목 성적증명서 <a class=\"link\" href=\"https://www.baeron.com/korean_teacher/k_teacher08.asp\">바로가기 ▶</a>",
+          "sub": "개강 전까지 [나의 강의실 &gt; 선이수과목 서류제출]에 업로드 (배론 이수과목은 제출 불필요)"
+        },
+        {
+          "label": "기관실습비",
+          "main": "<b>0원</b>",
+          "sub": "기관 실습이 없어 별도로 납부하는 비용 없음"
+        },
+        {
+          "label": "수업구성",
+          "main": "온라인 수업 <span class=\"sub\">1~3주(이론), 10~13주(온라인 모의수업)</span>",
+          "sub": "온라인 강의 참관 5~9주 / 화상 세미나 4주 - 3시간, 줌(zoom) 실시간 화상 수업<br/>모의수업 10~14주 참관 및 시연 - 그룹별로 줌(zoom)에 접속해 시연·참관하고 저장한 영상을 제출"
+        },
+        {
+          "label": "확인사항",
+          "main": "모의수업+참관수업 온라인 진행은 국립국어원 실습과목 운영 권고안에 따라 별도 공지 시까지 적용"
+        }
+      ],
       "head": [
         "term",
         "course",

@@ -701,31 +701,7 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
     <h2>수강신청 안내</h2>
     <div class="card">
       <table class="info">
-        <tbody>
-          <tr>
-            <th scope="row">수강신청 자격</th>
-            <td><p>선이수 과목 이수 <span class="sub">(필수 4과목 이상 + 선택 2과목 이상 이수자)</span></p></td>
-          </tr>
-          <tr>
-            <th scope="row">기관실습비</th>
-            <td><p>기관별로 상이하며, 실습기관에 <b>본인이 직접 납부함</b></p></td>
-          </tr>
-          <tr>
-            <th scope="row">실습기관</th>
-            <td><p>한국사회복지사협회 공지사항 ‘실습기관’ 게시물 참조
-                <a class="link" href="https://www.welfare.net/prm/find-training-center/current-stat">바로가기 ▶</a></p>
-                <p class="sub">실습기관 소재지에 따라 수강료가 다름 - 아래 <b>개설반 안내</b>의 소재지 탭 참조</p></td>
-          </tr>
-          <tr>
-            <th scope="row">제출서류</th>
-            <td><p>선이수과목 성적증명서 <span class="sub">(배론 이수과목은 서류제출 불필요)</span></p>
-                <p class="sub">개강전까지 [나의강의실 &gt; 사회복지현장실습 강의실 &gt; 선이수과목 서류제출]에 제출</p></td>
-          </tr>
-          <tr>
-            <th scope="row">실습 전 준비 안내서</th>
-            <td><p><a class="link" href="https://www.baeron.com/download/s_pre_guide.pdf">[안내서 다운로드]</a></p></td>
-          </tr>
-        </tbody>
+        <tbody id="info-body"></tbody>
       </table>
     </div>
   </section>
@@ -771,6 +747,61 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
+/* 수강신청 안내 표. 세 과정이 같은 행 이름을 같은 순서로 쓴다.
+   그 과정에 없는 행은 넣지 않는다. 순서는 아래와 같다.
+     과목 신청 조건 / 제출서류 / 실습기관 조건 / 기관실습비 / 수업구성 / 실습 전 준비 안내서 / 확인사항 */
+const INFO = {
+  social: [
+    { label:"과목 신청 조건",
+      main:'선이수 과목 이수 <span class="sub">(필수 4과목 이상 + 선택 2과목 이상 이수자)</span>' },
+    { label:"제출서류",
+      main:'선이수과목 성적증명서 <span class="sub">(배론 이수과목은 서류제출 불필요)</span>',
+      sub:'개강전까지 [나의강의실 &gt; 사회복지현장실습 강의실 &gt; 선이수과목 서류제출]에 제출' },
+    { label:"실습기관 조건",
+      main:'한국사회복지사협회 공지사항 ‘실습기관’ 게시물 참조 '
+         + '<a class="link" href="https://www.welfare.net/prm/find-training-center/current-stat">바로가기 ▶</a>',
+      sub:'실습기관 소재지에 따라 수강료가 다름 - 위 <b>개설반 안내</b>의 소재지 탭 참조' },
+    { label:"기관실습비",
+      main:'기관별로 상이하며, 실습기관에 <b>본인이 직접 납부함</b>' },
+    { label:"실습 전 준비 안내서",
+      main:'<a class="link" href="https://www.baeron.com/download/s_pre_guide.pdf">[안내서 다운로드]</a>' }
+  ],
+
+  child: [
+    { label:"과목 신청 조건",
+      main:'선이수 요건 없음' },
+    { label:"실습기관 조건",
+      main:'정원 15인 이상, 실습 시작일 기준 [평가완료]인 어린이집 <span class="sub">(유치원 불가)</span>',
+      sub:'종전의 규정에 따라 평가인증 또는 평가를 받아 평가결과(평가등급)가 유효한 어린이집은 '
+        + '개정 규정에 따라 평가를 받은 어린이집에 해당함 / 평가등급제 폐지 시행(2024.7.3. 시행)' },
+    { label:"기관실습비",
+      main:'기관별로 상이하며, 실습기관에 <b>본인이 직접 납부함</b>' },
+    { label:"수업구성",
+      main:'온라인 강의 수강 <span class="sub">(1주차~5주차)</span>',
+      sub:'직접 기관 실습 240시간 / 출석세미나 2회 - 온라인 ZOOM 화상수업으로 진행' },
+    { label:"실습 전 준비 안내서",
+      main:'<a class="link" href="https://www.baeron.com/download/c_pre_guide.pdf">[안내서 다운로드]</a>' }
+  ],
+
+  korean: [
+    { label:"과목 신청 조건",
+      main:'1,3영역 전공(필수+선택) 8과목(24학점) 이상 이수자 <span class="sub">(1영역은 1과목 이상 포함)</span>' },
+    { label:"제출서류",
+      main:'선이수과목 성적증명서 '
+         + '<a class="link" href="https://www.baeron.com/korean_teacher/k_teacher08.asp">바로가기 ▶</a>',
+      sub:'개강 전까지 [나의 강의실 &gt; 선이수과목 서류제출]에 업로드 (배론 이수과목은 제출 불필요)' },
+    { label:"기관실습비",
+      main:'<b>0원</b>',
+      sub:'기관 실습이 없어 별도로 납부하는 비용 없음' },
+    { label:"수업구성",
+      main:'온라인 수업 <span class="sub">1~3주(이론), 10~13주(온라인 모의수업)</span>',
+      sub:'온라인 강의 참관 5~9주 / 화상 세미나 4주 - 3시간, 줌(zoom) 실시간 화상 수업<br/>'
+        + '모의수업 10~14주 참관 및 시연 - 그룹별로 줌(zoom)에 접속해 시연·참관하고 저장한 영상을 제출' },
+    { label:"확인사항",
+      main:'모의수업+참관수업 온라인 진행은 국립국어원 실습과목 운영 권고안에 따라 별도 공지 시까지 적용' }
+  ]
+};
+
 /* ── 과정 정의 ──
    개설반 영역만 과정마다 다르다. 히어로·수강신청 안내·유의사항은 사복 것을 그대로 둔다.
    과정을 고르는 스위치는 확인용이며 실제 페이지에는 없다. 실제로는 과정마다 주소가 따로 있다.
@@ -784,8 +815,8 @@ const COURSES = [
   {
     key:"social", nm:"사회복지현장실습", set:0, notice_txt:"",
     regions:[
-      { cd:"METRO",      nm:"수도권", desc:"서울, 경기, 인천 소재" },
-      { cd:"NATIONWIDE", nm:"전국권", desc:"전국(섬 및 산간지역 제외) 소재" }
+      { cd:"METRO",      nm:"수도권", desc:"서울, 경기, 인천" },
+      { cd:"NATIONWIDE", nm:"전국권", desc:"전국(섬 및 산간지역 제외)" }
     ],
     head:["term","course","practicum"],
     cols:[
@@ -812,7 +843,8 @@ const COURSES = [
   /* 보육실습 - 실습가능지역이 전국권 하나뿐이라 1단 축이 없다. 중간평가회도 없다. */
   {
     key:"child", nm:"보육실습", set:1, notice_txt:"",
-    regions:null,
+    /* 실습가능지역이 전국권 하나뿐이지만, 범위를 밝히는 자리로 탭 한 장을 남긴다. */
+    regions:[{ cd:"NATIONWIDE", nm:"전국권", desc:"전국(섬 및 산간지역 제외)" }],
     head:["term","course","practicum"],
     cols:[
       { k:"seminar_nm", label:"세미나" },
@@ -820,9 +852,9 @@ const COURSES = [
       { k:"final_dt",   label:"최종평가회",   date:true }
     ],
     classes:[
-      { class_id:"C-0904", start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", term_nm:"26년 2학기", fee:300000, seminar_nm:"금요일 13~16시", ot_dt:"2026-09-04", final_dt:"2026-12-11", closed_flag:false },
-      { class_id:"C-0917", start_dt:"2026-09-17", course_end_dt:"2026-12-30", practicum_start_dt:"2026-09-28", practicum_end_dt:"2026-12-16", term_nm:"26년 2학기", fee:300000, seminar_nm:"목요일 13~16시", ot_dt:"2026-09-17", final_dt:"2026-12-24", closed_flag:false },
-      { class_id:"C-1008", start_dt:"2026-10-08", course_end_dt:"2027-01-20", practicum_start_dt:"2026-10-19", practicum_end_dt:"2027-01-06", term_nm:"26년 2학기", fee:300000, seminar_nm:"목요일 13~16시", ot_dt:"2026-10-08", final_dt:"2027-01-14", closed_flag:false }
+      { class_id:"C-0904", region_cd:"NATIONWIDE", start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", term_nm:"26년 2학기", fee:300000, seminar_nm:"금요일 13~16시", ot_dt:"2026-09-04", final_dt:"2026-12-11", closed_flag:false },
+      { class_id:"C-0917", region_cd:"NATIONWIDE", start_dt:"2026-09-17", course_end_dt:"2026-12-30", practicum_start_dt:"2026-09-28", practicum_end_dt:"2026-12-16", term_nm:"26년 2학기", fee:300000, seminar_nm:"목요일 13~16시", ot_dt:"2026-09-17", final_dt:"2026-12-24", closed_flag:false },
+      { class_id:"C-1008", region_cd:"NATIONWIDE", start_dt:"2026-10-08", course_end_dt:"2027-01-20", practicum_start_dt:"2026-10-19", practicum_end_dt:"2027-01-06", term_nm:"26년 2학기", fee:300000, seminar_nm:"목요일 13~16시", ot_dt:"2026-10-08", final_dt:"2027-01-14", closed_flag:false }
     ]
   },
 
@@ -1033,18 +1065,28 @@ function renderNotice(){
   el.innerHTML = '<span aria-hidden="true">▼</span>'+esc(txt)+'<span aria-hidden="true">▼</span>';
 }
 
-/* 사복이 아닌 과정을 보는 동안, 위 히어로와 안내 표가 사복 것임을 밝힌다. */
+/* 수강신청 안내 표. 세 과정이 같은 행 이름을 같은 순서로 쓰고, 없는 행은 넣지 않는다. */
+function renderInfo(){
+  document.getElementById("info-body").innerHTML = INFO[course().key].map(function(r){
+    return '<tr><th scope="row">'+esc(r.label)+'</th><td>'
+      + '<p>'+r.main+'</p>'
+      + (r.sub ? '<p class="sub">'+r.sub+'</p>' : '')
+      + '</td></tr>';
+  }).join("");
+}
+
+/* 사복이 아닌 과정을 보는 동안, 위 히어로가 사복 것임을 밝힌다. */
 function renderCourseNote(){
   const el = document.getElementById("course-note");
   if (state.course === 0){ el.hidden = true; return; }
   el.hidden = false;
-  el.innerHTML = '아래 표는 <b>'+esc(course().nm)+'</b> 개설반입니다. '
-    + '이번 개편 대상은 개설반 영역이므로, 위 히어로와 수강신청 안내는 '
-    + '비교를 위해 <b>사회복지현장실습 것을 그대로</b> 두었습니다.';
+  el.innerHTML = '지금 보고 있는 과정은 <b>'+esc(course().nm)+'</b> 입니다. '
+    + '수강신청 안내와 개설반은 이 과정의 값이고, '
+    + '맨 위 히어로와 아래 유의사항은 아직 <b>사회복지현장실습 것</b>입니다.';
 }
 
 function render(){
-  normalizeState(); renderTabs(); renderSubtabs(); renderPanel();
+  normalizeState(); renderInfo(); renderTabs(); renderSubtabs(); renderPanel();
   renderNotice(); renderCourseNote();
 }
 
