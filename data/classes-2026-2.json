@@ -1,7 +1,7 @@
 {
   "term_nm": "2026학년도 2학기",
   "captured_dt": "2026-08-21",
-  "note": "현행 세 실습 페이지에서 옮긴 값. 목업 mockup/practice-socialwork.html 의 HERO·INFO·COURSES 와 같은 모양이다.",
+  "note": "현행 세 실습 페이지에서 옮긴 값. 목업 mockup/practice.html 의 HERO·INFO·COURSES 와 같은 모양이다.",
   "courses": [
     {
       "key": "social",

@@ -1,6 +1,6 @@
 {
   "rewrites": [
-    { "source": "/", "destination": "/mockup/practice-socialwork.html" }
+    { "source": "/", "destination": "/mockup/practice.html" }
   ],
   "headers": [
     {

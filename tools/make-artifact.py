@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""mockup/practice-socialwork.html 에서 Artifact 발행용 조각을 만든다.
+"""mockup/practice.html 에서 Artifact 발행용 조각을 만든다.
 
 Artifact 는 <!doctype>/<html>/<head>/<body> 를 발행 시점에 직접 감싸므로,
 그 껍데기를 벗긴 본문만 넘겨야 한다. 저장소의 목업이 원본이고,
@@ -9,7 +9,7 @@ Artifact 는 <!doctype>/<html>/<head>/<body> 를 발행 시점에 직접 감싸�
 """
 import io, re, sys
 
-SRC = "mockup/practice-socialwork.html"
+SRC = "mockup/practice.html"
 
 def main():
     if len(sys.argv) != 2:

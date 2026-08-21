@@ -44,7 +44,7 @@
 |------|------|
 | `docs/superpowers/specs/2026-08-20-실습-안내-페이지-개편-design.md` | 설계문서 - 현황 진단, 탭 기준 선정 근거, 기각한 대안, 컬럼 구성, 상태 처리, 데이터 구조, 미해결 이슈, 후속 과제 |
 | `data/classes-2026-2.json` | 2026학년도 2학기 개설반 - 세 과정 24건 (사회복지 10 · 보육 3 · 한국어교육 11). 목업의 `COURSES` 와 같은 모양입니다 |
-| `mockup/practice-socialwork.html` | 동작하는 목업 (단일 파일, 의존성 없음) |
+| `mockup/practice.html` | 동작하는 목업 (단일 파일). 과정 스위치로 세 과정을 모두 봅니다 |
 | `tools/make-artifact.py` | 목업에서 공유용 조각을 생성 - 두 벌이 어긋나지 않게 함 |
 
 ## 목업 실행
@@ -53,7 +53,7 @@
 python3 -m http.server 8899
 ```
 
-브라우저에서 `http://localhost:8899/mockup/practice-socialwork.html` 로 접속합니다.
+브라우저에서 `http://localhost:8899/mockup/practice.html` 로 접속합니다.
 
 창 너비를 768px 이하로 줄이면 모바일 배치(1줄 카드 + 일정 펼치기)로 바뀝니다.
 
@@ -93,7 +93,7 @@ python3 -m http.server 8899
 
 **https://baeron-practice-page-redesign.vercel.app/**
 
-`main` 브랜치에 푸시하면 Vercel 이 자동으로 재배포합니다. 루트 `vercel.json` 이 루트 주소를 `mockup/practice-socialwork.html` 로 연결하고, `X-Robots-Tag: noindex` 로 검색엔진 색인을 막습니다. 검토용 목업이 실제 안내 페이지로 오인되는 것을 피하기 위해서입니다.
+`main` 브랜치에 푸시하면 Vercel 이 자동으로 재배포합니다. 루트 `vercel.json` 이 루트 주소를 `mockup/practice.html` 로 연결하고, `X-Robots-Tag: noindex` 로 검색엔진 색인을 막습니다. 검토용 목업이 실제 안내 페이지로 오인되는 것을 피하기 위해서입니다.
 
 빌드 설정은 없습니다(정적 사이트). Vercel 프로젝트 설정에서 Application Preset 은 `Other`, Root Directory 는 `./` 입니다.
 
