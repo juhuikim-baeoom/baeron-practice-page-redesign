@@ -29,6 +29,12 @@
   --cta-ink:#ffffff;
   --cta-hover:#b53700;
   --warn:#b8342a;
+  --hero-bg:#188a6e;
+  --hero-mint:#48ebb5;
+  --hero-mint-ink:#0f3a2d;
+  --hero-faq-bg:#2a2333;
+  --hero-faq-ink:#48ebb5;
+  --hero-guide-ink:#1c2b26;
   --note-bg:#fdf8ec;
   --note-card-bg:#fffdf6;
   --note-line:#eedfb8;
@@ -170,14 +176,55 @@ body{
 .note-card > h3 > span{font-weight:500;font-size:12px;color:var(--note-ink-3);}
 .note-card ul{margin:0;padding-left:1.05em;display:flex;flex-direction:column;gap:3px;}
 .note-card li::marker{color:var(--note-badge);}
-.note-card .row{display:flex;flex-wrap:wrap;gap:7px 20px;}
+.note-card .row{display:flex;flex-wrap:wrap;align-items:center;gap:9px 20px;}
+.note-card .row + .row{margin-top:9px;padding-top:9px;border-top:1px solid var(--note-line);}
 .note-card label{display:inline-flex;align-items:center;gap:7px;cursor:pointer;}
 .note-card input{accent-color:var(--note-badge);width:16px;height:16px;}
+/* 색 조절기 - 값을 바꿔 보는 용도이고 실제 페이지에는 없다 */
+.note-card input[type="color"]{
+  width:30px;height:22px;padding:0;cursor:pointer;
+  border:1px solid var(--note-line);border-radius:5px;background:none;
+}
+.note-card input[type="color"]::-webkit-color-swatch-wrapper{padding:2px;}
+.note-card input[type="color"]::-webkit-color-swatch{border:0;border-radius:3px;}
+.note-card .hex{
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;
+  color:var(--note-ink-3);min-width:58px;
+}
+.note-card .mini{
+  appearance:none;cursor:pointer;font:inherit;font-size:12px;font-weight:600;
+  color:var(--note-ink);background:transparent;
+  border:1px solid var(--note-line);border-radius:999px;padding:4px 12px;
+}
+.note-card .mini:hover{border-color:var(--note-badge);color:var(--note-strong);}
+.note-card .mini:focus-visible{outline:2px solid var(--note-badge);outline-offset:2px;}
+.note-card .rowlab{
+  font-weight:700;color:var(--note-strong);min-width:52px;
+}
+/* 색 세트 - 누르면 토큰 한 벌이 통째로 바뀐다 */
+.note-card .set{
+  appearance:none;cursor:pointer;font:inherit;font-size:12px;font-weight:600;
+  color:var(--note-ink);background:var(--note-card-bg);
+  border:1px solid var(--note-line);border-radius:999px;
+  padding:4px 12px 4px 5px;display:inline-flex;align-items:center;gap:7px;
+}
+.note-card .set:hover{border-color:var(--note-badge);color:var(--note-strong);}
+.note-card .set:focus-visible{outline:2px solid var(--note-badge);outline-offset:2px;}
+.note-card .set[aria-pressed="true"]{
+  border-color:var(--note-strong);color:var(--note-strong);
+  box-shadow:inset 0 0 0 1px var(--note-strong);
+}
+.note-card .set .chips{display:inline-flex;}
+.note-card .set .chips i{
+  width:13px;height:13px;border-radius:50%;
+  border:1px solid var(--note-card-bg);margin-right:-5px;
+}
+.note-card .set .chips i:last-child{margin-right:0;}
 
 /* 히어로 - 현행 페이지의 녹색 띠(#188a6e)를 그대로 쓴다.
    현행은 이 영역이 통째로 이미지고 대체텍스트가 "하단 참조"뿐이라, 같은 내용을 글자로 옮겼다.
    브랜드 띠이므로 라이트·다크 어느 쪽에서도 색이 바뀌지 않는다. */
-.hero{background:#188a6e;color:#fff;}
+.hero{background:var(--hero-bg);color:#fff;}
 .hero-in{
   max-width:1000px;margin:0 auto;padding:38px 18px 42px;
   display:flex;flex-direction:column;align-items:center;gap:20px;text-align:center;
@@ -185,7 +232,7 @@ body{
 /* 현행 이미지의 제목 짜임을 따른다. 민트 알약 한 줄 + 큰 제목 한 줄. */
 .hero h1{margin:0;display:flex;flex-direction:column;align-items:center;gap:12px;}
 .hero h1 .kicker{
-  background:#48ebb5;color:#0f3a2d;border-radius:999px;
+  background:var(--hero-mint);color:var(--hero-mint-ink);border-radius:999px;
   padding:7px 22px;font-size:clamp(15px,1.9vw,20px);font-weight:700;letter-spacing:-.02em;
 }
 .hero h1 .big{
@@ -223,14 +270,14 @@ body{
 /* 자주하는 질문 버튼은 짙은 남색 바탕에 민트 글자다 */
 .hero-faq{
   display:inline-flex;align-items:center;justify-content:center;gap:7px;
-  background:#2a2333;color:#48ebb5;text-decoration:none;
+  background:var(--hero-faq-bg);color:var(--hero-faq-ink);text-decoration:none;
   font-size:16px;font-weight:600;padding:12px 34px;min-height:44px;
 }
 .hero-faq b{font-weight:700;}
-.hero-faq:hover{background:#3a3147;}
-.hero-faq:focus-visible{outline:2px solid #48ebb5;outline-offset:2px;}
+.hero-faq:hover{filter:brightness(1.25);}
+.hero-faq:focus-visible{outline:2px solid var(--hero-faq-ink);outline-offset:2px;}
 
-.hero-guide{margin:0;font-size:17px;font-weight:600;line-height:1.45;color:#1c2b26;}
+.hero-guide{margin:0;font-size:17px;font-weight:600;line-height:1.45;color:var(--hero-guide-ink);}
 
 /* 섹션 - 현행 페이지의 수강신청 안내 / 개설반 / 유의사항 구성을 따른다 */
 /* 제목·본문·상자의 왼쪽 끝을 모두 같은 선에 맞춘다.
@@ -597,6 +644,16 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
       <div class="row">
         <label><input type="checkbox" id="sw-login"/> 로그인 상태로 보기</label>
         <label><input type="checkbox" id="sw-empty"/> 개설반 0건 상태 보기</label>
+        <label><input type="checkbox" id="sw-dark"/> 어두운 화면으로 보기</label>
+      </div>
+
+      <div class="row" id="sets">
+        <span class="rowlab">색 세트</span>
+      </div>
+
+      <div class="row" id="knobs">
+        <span class="rowlab">세부</span>
+        <button type="button" class="mini" id="c-reset">현행 사복 색으로</button>
       </div>
     </div>
   </div>
@@ -932,6 +989,138 @@ document.addEventListener("click", function(e){
 
 document.getElementById("sw-login").addEventListener("change", function(e){ state.logged_in = e.target.checked; });
 document.getElementById("sw-empty").addEventListener("change", function(e){ state.force_empty = e.target.checked; render(); });
+
+/* ── 색 세트 ── 실제 페이지에는 없다.
+   앞의 셋은 현행 세 실습 페이지에서 그대로 measured 한 값이고, 뒤의 둘은 제안이다.
+   신청 버튼 주황(#d94100)은 세 페이지가 모두 같이 쓰므로 세트마다 바꾸지 않는다. */
+const PRESETS = [
+  { nm:"사회복지", note:"현행",
+    v:{ "--accent":"#0d855d", "--band":"#d5f2e9", "--band-ink":"#0b7350", "--hero-bg":"#188a6e", "--cta":"#d94100",
+        "--hero-mint":"#48ebb5", "--hero-mint-ink":"#0f3a2d", "--hero-faq-bg":"#2a2333", "--hero-faq-ink":"#48ebb5", "--hero-guide-ink":"#1c2b26" } },
+  { nm:"보육", note:"현행",
+    v:{ "--accent":"#554d72", "--band":"#e0ddf0", "--band-ink":"#554d72", "--hero-bg":"#d44d51", "--cta":"#d94100" } },
+  { nm:"한국어교육", note:"현행",
+    v:{ "--accent":"#1f6699", "--band":"#e6f0ff", "--band-ink":"#1f6699", "--hero-bg":"#3535b2", "--cta":"#d94100" } },
+  { nm:"중립", note:"추천",
+    v:{ "--accent":"#333f45", "--band":"#eceff1", "--band-ink":"#333f45", "--hero-bg":"#2b3a41", "--cta":"#d94100" } },
+  { nm:"딥그린", note:"추천",
+    v:{ "--accent":"#125c43", "--band":"#e3efe9", "--band-ink":"#125c43", "--hero-bg":"#0f5140", "--cta":"#d94100" } }
+];
+
+/* ── 색 조절기 ── 세트를 고른 뒤 한 값만 손볼 때 쓴다.
+   누르는 값(hover)은 원래 색에서 자동으로 어둡게 만든다. */
+const KNOBS = [
+  { nm:"강조",        v:"--accent",  hover:"--accent-hover" },
+  { nm:"신청·수강료", v:"--cta",     hover:"--cta-hover" },
+  { nm:"표 머리 띠",  v:"--band" },
+  { nm:"히어로 띠",   v:"--hero-bg" }
+];
+
+const root = document.documentElement;
+const readVar = n => getComputedStyle(root).getPropertyValue(n).trim();
+
+/* #rrggbb 를 검정(어둡게) 또는 흰색(밝게) 쪽으로 섞는다.
+   누르는 색이나 히어로 보조색을 사람이 따로 고르지 않게 하려는 것뿐이다. */
+function mix(hex, ratio, toward){
+  const n = parseInt(hex.slice(1), 16);
+  const f = c => Math.round(c + (toward - c) * ratio);
+  return "#" + [f(n >> 16 & 255), f(n >> 8 & 255), f(n & 255)]
+    .map(c => Math.max(0, Math.min(255, c)).toString(16).padStart(2, "0")).join("");
+}
+const darken  = (hex, r) => mix(hex, r, 0);
+const lighten = (hex, r) => mix(hex, r, 255);
+
+/* 0(검정) ~ 1(흰색). 글자를 밝게 뒤집을지 정하는 데만 쓴다. */
+function brightness(hex){
+  const n = parseInt(hex.slice(1), 16);
+  return (0.299 * (n >> 16 & 255) + 0.587 * (n >> 8 & 255) + 0.114 * (n & 255)) / 255;
+}
+
+function buildKnobs(){
+  const box = document.getElementById("knobs");
+  KNOBS.forEach(function(k){
+    const label = document.createElement("label");
+    label.innerHTML = '<span>'+esc(k.nm)+'</span>'
+      + '<input type="color" data-var="'+k.v+'"'+(k.hover ? ' data-hover="'+k.hover+'"' : '')+'/>'
+      + '<span class="hex"></span>';
+    box.insertBefore(label, box.lastElementChild);
+  });
+  syncKnobs();
+}
+
+/* 화면에 실제로 적용된 값을 조절기에 되비춘다. 어두운 화면으로 바꾸면 값도 따라 바뀐다. */
+function syncKnobs(){
+  document.querySelectorAll('#knobs input[type="color"]').forEach(function(inp){
+    const cur = readVar(inp.dataset.var);
+    if (/^#[0-9a-f]{6}$/i.test(cur)) inp.value = cur;
+    inp.nextElementSibling.textContent = inp.value;
+  });
+}
+
+document.getElementById("knobs").addEventListener("input", function(e){
+  const inp = e.target;
+  if (inp.type !== "color") return;
+  root.style.setProperty(inp.dataset.var, inp.value);
+  if (inp.dataset.hover) root.style.setProperty(inp.dataset.hover, darken(inp.value, .18));
+  inp.nextElementSibling.textContent = inp.value;
+});
+
+/* 세트를 고르면 토큰 한 벌을 통째로 얹는다. 누르는 값도 같이 계산해 둔다. */
+function applyPreset(i){
+  const p = PRESETS[i];
+  Object.keys(p.v).forEach(k => root.style.setProperty(k, p.v[k]));
+  root.style.setProperty("--accent-hover", darken(p.v["--accent"], .18));
+  root.style.setProperty("--cta-hover", darken(p.v["--cta"], .18));
+
+  /* 히어로 보조색은 세트가 값을 주지 않으면 띠 색에서 만든다.
+     사복만 현행 이미지에서 딴 값이 있으므로 그때는 그 값을 쓴다. */
+  const hero = p.v["--hero-bg"];
+  const derived = {
+    "--hero-mint":     lighten(hero, .70),
+    "--hero-mint-ink": darken(hero, .55),
+    "--hero-faq-bg":   darken(hero, .74),
+    "--hero-faq-ink":  lighten(hero, .60),
+    /* 띠가 어두우면 맺음 문구를 밝게 뒤집는다. 안 그러면 글자가 띠에 묻힌다. */
+    "--hero-guide-ink": brightness(hero) > .35 ? darken(hero, .82) : lighten(hero, .86)
+  };
+  Object.keys(derived).forEach(k => root.style.setProperty(k, p.v[k] || derived[k]));
+  document.querySelectorAll("#sets .set").forEach(function(b, j){
+    b.setAttribute("aria-pressed", String(j === i));
+  });
+  syncKnobs();
+}
+
+function buildPresets(){
+  const box = document.getElementById("sets");
+  PRESETS.forEach(function(p, i){
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "set";
+    b.setAttribute("aria-pressed", "false");
+    b.innerHTML = '<span class="chips">'
+      + ['--hero-bg','--accent','--band'].map(k => '<i style="background:'+p.v[k]+'"></i>').join('')
+      + '</span>' + esc(p.nm) + ' <span style="opacity:.6">' + esc(p.note) + '</span>';
+    b.addEventListener("click", () => applyPreset(i));
+    box.appendChild(b);
+  });
+}
+
+/* 되돌리기는 인라인 값을 걷어낸다. 스타일시트에 적힌 사복 색으로 돌아간다. */
+document.getElementById("c-reset").addEventListener("click", function(){
+  ["--accent","--accent-hover","--cta","--cta-hover","--band","--band-ink",
+   "--hero-bg","--hero-mint","--hero-mint-ink","--hero-faq-bg","--hero-faq-ink","--hero-guide-ink"]
+    .forEach(k => root.style.removeProperty(k));
+  document.querySelectorAll("#sets .set").forEach(b => b.setAttribute("aria-pressed","false"));
+  syncKnobs();
+});
+
+document.getElementById("sw-dark").addEventListener("change", function(e){
+  root.setAttribute("data-theme", e.target.checked ? "dark" : "light");
+  syncKnobs();
+});
+
+buildPresets();
+buildKnobs();
 
 /* 설명 접기 - 확인용 스위치는 설명이 아니므로 접어도 남는다. */
 document.getElementById("note-toggle").addEventListener("click", function(e){
