@@ -75,6 +75,7 @@
         "개설 가능 인원 미달 시 폐강될 수 있으며, 출석 수업 일정은 내부 사정에 따라 변동될 수 있습니다."
       ],
       "notice_txt": "",
+      "axis": "실습기관 소재지",
       "regions": [
         {
           "cd": "METRO",
@@ -325,6 +326,7 @@
         "<b>온라인 세미나 불참 시 학점 취득이 불가</b>합니다."
       ],
       "notice_txt": "",
+      "axis": "실습기관 소재지",
       "regions": [
         {
           "cd": "NATIONWIDE",
@@ -449,7 +451,14 @@
         "개설 가능 인원 미달 시 폐강될 수 있으며, 출석 수업 일정은 내부 사정에 따라 변동될 수 있습니다."
       ],
       "notice_txt": "",
-      "regions": null,
+      "axis": "실습 진행 방식",
+      "regions": [
+        {
+          "cd": "ONLINE",
+          "nm": "온라인",
+          "desc": "2026.12.31까지 개강분"
+        }
+      ],
       "head": [
         "term",
         "course",
@@ -477,6 +486,7 @@
       "classes": [
         {
           "class_id": "K-0904-1",
+          "region_cd": "ONLINE",
           "start_dt": "2026-09-04",
           "course_end_dt": "2026-12-17",
           "term_nm": "26년 2학기",
@@ -490,6 +500,7 @@
         },
         {
           "class_id": "K-0904-2",
+          "region_cd": "ONLINE",
           "start_dt": "2026-09-04",
           "course_end_dt": "2026-12-17",
           "term_nm": "26년 2학기",
@@ -503,6 +514,7 @@
         },
         {
           "class_id": "K-0904-3",
+          "region_cd": "ONLINE",
           "start_dt": "2026-09-04",
           "course_end_dt": "2026-12-17",
           "term_nm": "26년 2학기",
@@ -516,6 +528,7 @@
         },
         {
           "class_id": "K-0910-1",
+          "region_cd": "ONLINE",
           "start_dt": "2026-09-10",
           "course_end_dt": "2026-12-23",
           "term_nm": "26년 2학기",
@@ -529,6 +542,7 @@
         },
         {
           "class_id": "K-0910-2",
+          "region_cd": "ONLINE",
           "start_dt": "2026-09-10",
           "course_end_dt": "2026-12-23",
           "term_nm": "26년 2학기",
@@ -542,6 +556,7 @@
         },
         {
           "class_id": "K-0910-3",
+          "region_cd": "ONLINE",
           "start_dt": "2026-09-10",
           "course_end_dt": "2026-12-23",
           "term_nm": "26년 2학기",
@@ -555,6 +570,7 @@
         },
         {
           "class_id": "K-0917-1",
+          "region_cd": "ONLINE",
           "start_dt": "2026-09-17",
           "course_end_dt": "2026-12-30",
           "term_nm": "26년 2학기",
@@ -568,6 +584,7 @@
         },
         {
           "class_id": "K-0917-2",
+          "region_cd": "ONLINE",
           "start_dt": "2026-09-17",
           "course_end_dt": "2026-12-30",
           "term_nm": "26년 2학기",
@@ -581,6 +598,7 @@
         },
         {
           "class_id": "K-0917-3",
+          "region_cd": "ONLINE",
           "start_dt": "2026-09-17",
           "course_end_dt": "2026-12-30",
           "term_nm": "26년 2학기",
@@ -594,6 +612,7 @@
         },
         {
           "class_id": "K-0917-4",
+          "region_cd": "ONLINE",
           "start_dt": "2026-09-17",
           "course_end_dt": "2026-12-30",
           "term_nm": "26년 2학기",
@@ -607,6 +626,7 @@
         },
         {
           "class_id": "K-0917-5",
+          "region_cd": "ONLINE",
           "start_dt": "2026-09-17",
           "course_end_dt": "2026-12-30",
           "term_nm": "26년 2학기",

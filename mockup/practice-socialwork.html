@@ -895,6 +895,7 @@ const INFO = {
 const COURSES = [
   {
     key:"social", nm:"사회복지현장실습", set:0, notice_txt:"",
+    axis:"실습기관 소재지",
     regions:[
       { cd:"METRO",      nm:"수도권", desc:"서울, 경기, 인천" },
       { cd:"NATIONWIDE", nm:"전국권", desc:"전국(섬 및 산간지역 제외)" }
@@ -924,6 +925,7 @@ const COURSES = [
   /* 보육실습 - 실습가능지역이 전국권 하나뿐이라 1단 축이 없다. 중간평가회도 없다. */
   {
     key:"child", nm:"보육실습", set:1, notice_txt:"",
+    axis:"실습기관 소재지",
     /* 실습가능지역이 전국권 하나뿐이지만, 범위를 밝히는 자리로 탭 한 장을 남긴다. */
     regions:[{ cd:"NATIONWIDE", nm:"전국권", desc:"전국(섬 및 산간지역 제외)" }],
     head:["term","course","practicum"],
@@ -943,7 +945,10 @@ const COURSES = [
      현행은 반마다 같은 모의수업 문구를 표 안에서 반복하므로 공통 정보 줄로 올린다. */
   {
     key:"korean", nm:"한국어교육실습", set:2, notice_txt:"",
-    regions:null,
+    /* 기관 실습이 없으므로 소재지 대신 진행 방식을 축으로 쓴다.
+       2027년부터 오프라인 강의참관·모의수업으로 바뀌므로 그때 탭이 한 장 늘어난다. */
+    axis:"실습 진행 방식",
+    regions:[{ cd:"ONLINE", nm:"온라인", desc:"2026.12.31까지 개강분" }],
     head:["term","course","sim"],
     cols:[
       { k:"class_nm",   label:"분반" },
@@ -952,17 +957,17 @@ const COURSES = [
       { k:"quota_nm",   label:"정원" }
     ],
     classes:[
-      { class_id:"K-0904-1", start_dt:"2026-09-04", course_end_dt:"2026-12-17", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오전반", seminar_nm:"토요일 10~13시", seminar_dt:"2026-09-19", quota_nm:"30명", closed_flag:true },
-      { class_id:"K-0904-2", start_dt:"2026-09-04", course_end_dt:"2026-12-17", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오후반", seminar_nm:"토요일 14~17시", seminar_dt:"2026-09-19", quota_nm:"30명", closed_flag:true },
-      { class_id:"K-0904-3", start_dt:"2026-09-04", course_end_dt:"2026-12-17", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오전반", seminar_nm:"토요일 10~13시", seminar_dt:"2026-09-19", quota_nm:"30명", closed_flag:true },
-      { class_id:"K-0910-1", start_dt:"2026-09-10", course_end_dt:"2026-12-23", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"금요일 오전반", seminar_nm:"금요일 09~12시", seminar_dt:"2026-10-02", quota_nm:"30명", closed_flag:true },
-      { class_id:"K-0910-2", start_dt:"2026-09-10", course_end_dt:"2026-12-23", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"금요일 오후반", seminar_nm:"금요일 13~16시", seminar_dt:"2026-10-02", quota_nm:"30명", closed_flag:true },
-      { class_id:"K-0910-3", start_dt:"2026-09-10", course_end_dt:"2026-12-23", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"금요일 오후반", seminar_nm:"금요일 13~16시", seminar_dt:"2026-10-02", quota_nm:"30명", closed_flag:false },
-      { class_id:"K-0917-1", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오전반", seminar_nm:"토요일 10~13시", seminar_dt:"2026-10-10", quota_nm:"30명", closed_flag:true },
-      { class_id:"K-0917-2", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오후반", seminar_nm:"토요일 14~17시", seminar_dt:"2026-10-10", quota_nm:"30명", closed_flag:true },
-      { class_id:"K-0917-3", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오전반", seminar_nm:"토요일 10~13시", seminar_dt:"2026-10-10", quota_nm:"30명", closed_flag:true },
-      { class_id:"K-0917-4", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오후반", seminar_nm:"토요일 14~17시", seminar_dt:"2026-10-10", quota_nm:"30명", closed_flag:true },
-      { class_id:"K-0917-5", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오전반", seminar_nm:"토요일 10~13시", seminar_dt:"2026-10-17", quota_nm:"30명", closed_flag:false }
+      { class_id:"K-0904-1", region_cd:"ONLINE", start_dt:"2026-09-04", course_end_dt:"2026-12-17", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오전반", seminar_nm:"토요일 10~13시", seminar_dt:"2026-09-19", quota_nm:"30명", closed_flag:true },
+      { class_id:"K-0904-2", region_cd:"ONLINE", start_dt:"2026-09-04", course_end_dt:"2026-12-17", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오후반", seminar_nm:"토요일 14~17시", seminar_dt:"2026-09-19", quota_nm:"30명", closed_flag:true },
+      { class_id:"K-0904-3", region_cd:"ONLINE", start_dt:"2026-09-04", course_end_dt:"2026-12-17", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오전반", seminar_nm:"토요일 10~13시", seminar_dt:"2026-09-19", quota_nm:"30명", closed_flag:true },
+      { class_id:"K-0910-1", region_cd:"ONLINE", start_dt:"2026-09-10", course_end_dt:"2026-12-23", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"금요일 오전반", seminar_nm:"금요일 09~12시", seminar_dt:"2026-10-02", quota_nm:"30명", closed_flag:true },
+      { class_id:"K-0910-2", region_cd:"ONLINE", start_dt:"2026-09-10", course_end_dt:"2026-12-23", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"금요일 오후반", seminar_nm:"금요일 13~16시", seminar_dt:"2026-10-02", quota_nm:"30명", closed_flag:true },
+      { class_id:"K-0910-3", region_cd:"ONLINE", start_dt:"2026-09-10", course_end_dt:"2026-12-23", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"금요일 오후반", seminar_nm:"금요일 13~16시", seminar_dt:"2026-10-02", quota_nm:"30명", closed_flag:false },
+      { class_id:"K-0917-1", region_cd:"ONLINE", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오전반", seminar_nm:"토요일 10~13시", seminar_dt:"2026-10-10", quota_nm:"30명", closed_flag:true },
+      { class_id:"K-0917-2", region_cd:"ONLINE", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오후반", seminar_nm:"토요일 14~17시", seminar_dt:"2026-10-10", quota_nm:"30명", closed_flag:true },
+      { class_id:"K-0917-3", region_cd:"ONLINE", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오전반", seminar_nm:"토요일 10~13시", seminar_dt:"2026-10-10", quota_nm:"30명", closed_flag:true },
+      { class_id:"K-0917-4", region_cd:"ONLINE", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오후반", seminar_nm:"토요일 14~17시", seminar_dt:"2026-10-10", quota_nm:"30명", closed_flag:true },
+      { class_id:"K-0917-5", region_cd:"ONLINE", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오전반", seminar_nm:"토요일 10~13시", seminar_dt:"2026-10-17", quota_nm:"30명", closed_flag:false }
     ]
   }
 ];
@@ -1024,6 +1029,7 @@ function renderTabs(){
   const c = course();
   if (!c.regions){ el.innerHTML = ""; el.hidden = true; return; }
   el.hidden = false;
+  el.setAttribute("aria-label", c.axis);
   el.innerHTML = c.regions.map(function(r){
     const on = r.cd === state.region_cd;
     return '<button type="button" class="tab" role="tab" aria-selected="'+on+'" data-region="'+r.cd+'">'
