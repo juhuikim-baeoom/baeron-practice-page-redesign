@@ -180,24 +180,6 @@ body{
 .note-card .row + .row{margin-top:9px;padding-top:9px;border-top:1px solid var(--note-line);}
 .note-card label{display:inline-flex;align-items:center;gap:7px;cursor:pointer;}
 .note-card input{accent-color:var(--note-badge);width:16px;height:16px;}
-/* 색 조절기 - 값을 바꿔 보는 용도이고 실제 페이지에는 없다 */
-.note-card input[type="color"]{
-  width:30px;height:22px;padding:0;cursor:pointer;
-  border:1px solid var(--note-line);border-radius:5px;background:none;
-}
-.note-card input[type="color"]::-webkit-color-swatch-wrapper{padding:2px;}
-.note-card input[type="color"]::-webkit-color-swatch{border:0;border-radius:3px;}
-.note-card .hex{
-  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;
-  color:var(--note-ink-3);min-width:58px;
-}
-.note-card .mini{
-  appearance:none;cursor:pointer;font:inherit;font-size:12px;font-weight:600;
-  color:var(--note-ink);background:transparent;
-  border:1px solid var(--note-line);border-radius:999px;padding:4px 12px;
-}
-.note-card .mini:hover{border-color:var(--note-badge);color:var(--note-strong);}
-.note-card .mini:focus-visible{outline:2px solid var(--note-badge);outline-offset:2px;}
 .note-card .rowlab{
   font-weight:700;color:var(--note-strong);min-width:52px;
 }
@@ -291,6 +273,14 @@ body{
   content:"";display:block;width:32px;height:4px;border-radius:2px;
   background:var(--accent);margin-bottom:11px;
 }
+
+/* 과정 비교용 안내. 실제 페이지에는 없다. */
+.course-note{
+  margin:0;padding:9px 14px;border-radius:8px;
+  background:var(--note-bg);border:1px solid var(--note-line);color:var(--note-ink);
+  font-size:13px;line-height:1.6;
+}
+.course-note b{color:var(--note-strong);font-weight:700;}
 
 /* 표·목록을 담는 흰 상자. 현행 페이지는 그림자를 쓰지 않으므로 테두리로만 구분한다. */
 .card{
@@ -392,6 +382,8 @@ body{
   background:var(--surface);border:1px solid var(--line);border-radius:0 0 8px 8px;
   overflow:hidden;margin-top:-1px;
 }
+/* 1단 축이 없는 과정은 탭 줄이 없으므로 패널 위쪽도 둥글게 되돌린다 */
+.tabs[hidden] + .panel{border-radius:8px;margin-top:0;}
 
 /* 2단 탭 - 개강일. 반 개수는 표의 행 수로 바로 보이므로 배지를 두지 않고,
    대신 탭이 줄 폭을 균등하게 나눠 갖는다. */
@@ -647,13 +639,12 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
         <label><input type="checkbox" id="sw-dark"/> 어두운 화면으로 보기</label>
       </div>
 
-      <div class="row" id="sets">
-        <span class="rowlab">색 세트</span>
+      <div class="row" id="courses">
+        <span class="rowlab">과정</span>
       </div>
 
-      <div class="row" id="knobs">
-        <span class="rowlab">세부</span>
-        <button type="button" class="mini" id="c-reset">현행 사복 색으로</button>
+      <div class="row" id="sets">
+        <span class="rowlab">색 세트</span>
       </div>
     </div>
   </div>
@@ -742,6 +733,9 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
   <section class="sec">
     <h2>개설반 안내</h2>
 
+    <!-- 확인용. 사복이 아닌 과정을 고른 동안만 나온다. -->
+    <p class="course-note" id="course-note" hidden></p>
+
     <div class="alert" id="notice" hidden></div>
 
     <div>
@@ -777,31 +771,92 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-const DATA = {
-  /* 학기는 개강일마다 다를 수 있으므로 개설반 항목에 둔다 (아래 term_nm). */
-  /* 학기마다 바뀌는 개강반 공지. 채우면 개설반 안내 머리에 한 줄이 뜬다.
-     현행 페이지는 "10월 6일 개강반부터 간접실습 불가"를 주석으로 막아둔 상태이므로 비워 둔다. */
-  notice_txt: "",
-  regions: [
-    { region_cd:"METRO",      region_nm:"수도권", region_desc:"서울, 경기, 인천 소재", tuition_amt:300000 },
-    { region_cd:"NATIONWIDE", region_nm:"전국권", region_desc:"전국(섬 및 산간지역 제외) 소재", tuition_amt:400000 }
-  ],
-  classes: [
-    { class_id:"2026-2-0904-M1", region_cd:"METRO", start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", term_nm:"26년 2학기", target_nm:"구법,신법", seminar_day_nm:"금요일", seminar_time_nm:"14~16시", ot_dt:"2026-09-04", midterm_dt:"2026-10-23", final_dt:"2026-12-11", tuition_amt:300000, closed_flag:false },
-    { class_id:"2026-2-0904-M2", region_cd:"METRO", start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", term_nm:"26년 2학기", target_nm:"구법,신법", seminar_day_nm:"금요일", seminar_time_nm:"14~16시", ot_dt:"2026-09-04", midterm_dt:"2026-10-23", final_dt:"2026-12-11", tuition_amt:300000, closed_flag:false },
-    { class_id:"2026-2-0904-M3", region_cd:"METRO", start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", term_nm:"26년 2학기", target_nm:"구법,신법", seminar_day_nm:"수요일", seminar_time_nm:"09~11시", ot_dt:"2026-09-09", midterm_dt:"2026-10-28", final_dt:"2026-12-16", tuition_amt:300000, closed_flag:false },
-    { class_id:"2026-2-0904-M4", region_cd:"METRO", start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", term_nm:"26년 2학기", target_nm:"구법,신법", seminar_day_nm:"일요일", seminar_time_nm:"09~11시", ot_dt:"2026-09-06", midterm_dt:"2026-10-25", final_dt:"2026-12-13", tuition_amt:300000, closed_flag:true },
-    { class_id:"2026-2-0904-N1", region_cd:"NATIONWIDE", start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", term_nm:"26년 2학기", target_nm:"구법,신법", seminar_day_nm:"토요일", seminar_time_nm:"14~16시", ot_dt:"2026-09-05", midterm_dt:"2026-10-24", final_dt:"2026-12-12", tuition_amt:400000, closed_flag:false },
-    { class_id:"2026-2-0910-M1", region_cd:"METRO", start_dt:"2026-09-10", course_end_dt:"2026-12-23", practicum_start_dt:"2026-09-21", practicum_end_dt:"2026-12-09", term_nm:"26년 2학기", target_nm:"구법,신법", seminar_day_nm:"목요일", seminar_time_nm:"14~16시", ot_dt:"2026-09-10", midterm_dt:"2026-10-29", final_dt:"2026-12-17", tuition_amt:300000, closed_flag:false },
-    { class_id:"2026-2-0917-M1", region_cd:"METRO", start_dt:"2026-09-17", course_end_dt:"2026-12-30", practicum_start_dt:"2026-09-28", practicum_end_dt:"2026-12-16", term_nm:"26년 2학기", target_nm:"구법,신법", seminar_day_nm:"목요일", seminar_time_nm:"09~11시", ot_dt:"2026-09-17", midterm_dt:"2026-11-05", final_dt:"2026-12-24", tuition_amt:300000, closed_flag:false },
-    { class_id:"2026-2-0917-N1", region_cd:"NATIONWIDE", start_dt:"2026-09-17", course_end_dt:"2026-12-30", practicum_start_dt:"2026-09-28", practicum_end_dt:"2026-12-16", term_nm:"26년 2학기", target_nm:"구법,신법", seminar_day_nm:"목요일", seminar_time_nm:"09~11시", ot_dt:"2026-09-17", midterm_dt:"2026-11-05", final_dt:"2026-12-24", tuition_amt:400000, closed_flag:false },
-    { class_id:"2026-2-1008-M1", region_cd:"METRO", start_dt:"2026-10-08", course_end_dt:"2027-01-20", practicum_start_dt:"2026-10-19", practicum_end_dt:"2027-01-06", term_nm:"26년 2학기", target_nm:"구법,신법", seminar_day_nm:"목요일", seminar_time_nm:"09~11시", ot_dt:"2026-10-08", midterm_dt:"2026-11-26", final_dt:"2027-01-14", tuition_amt:300000, closed_flag:false },
-    { class_id:"2026-2-1008-N1", region_cd:"NATIONWIDE", start_dt:"2026-10-08", course_end_dt:"2027-01-20", practicum_start_dt:"2026-10-19", practicum_end_dt:"2027-01-06", term_nm:"26년 2학기", target_nm:"구법,신법", seminar_day_nm:"목요일", seminar_time_nm:"14~16시", ot_dt:"2026-10-08", midterm_dt:"2026-11-26", final_dt:"2027-01-14", tuition_amt:400000, closed_flag:false }
-  ]
-};
+/* ── 과정 정의 ──
+   개설반 영역만 과정마다 다르다. 히어로·수강신청 안내·유의사항은 사복 것을 그대로 둔다.
+   과정을 고르는 스위치는 확인용이며 실제 페이지에는 없다. 실제로는 과정마다 주소가 따로 있다.
 
-/* 기본 선택은 그 지역의 가장 빠른 개강일. normalizeStartDate 가 채운다. */
-const state = { region_cd:"METRO", start_dt:null, logged_in:false, force_empty:false };
+   과정이 정하는 것은 네 가지다.
+     regions  1단 축. 없으면(null) 1단 탭을 그리지 않는다.
+     head     공통 정보 줄에 넣을 항목. 수강료는 항상 맨 뒤에 붙는다.
+     cols     표 컬럼. 첫 컬럼이 모바일 카드 앞면이 되고, 신청 칸은 자동으로 붙는다.
+     classes  개설반. 2026학년도 2학기 현행 값이다. */
+const COURSES = [
+  {
+    key:"social", nm:"사회복지현장실습", set:0, notice_txt:"",
+    regions:[
+      { cd:"METRO",      nm:"수도권", desc:"서울, 경기, 인천 소재" },
+      { cd:"NATIONWIDE", nm:"전국권", desc:"전국(섬 및 산간지역 제외) 소재" }
+    ],
+    head:["term","course","practicum"],
+    cols:[
+      { k:"seminar_nm", label:"세미나" },
+      { k:"target_nm",  label:"대상" },
+      { k:"ot_dt",      label:"오리엔테이션", date:true },
+      { k:"midterm_dt", label:"중간평가회",   date:true },
+      { k:"final_dt",   label:"최종평가회",   date:true }
+    ],
+    classes:[
+      { class_id:"S-0904-M1", region_cd:"METRO",      start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", term_nm:"26년 2학기", fee:300000, target_nm:"구법,신법", seminar_nm:"금요일 14~16시", ot_dt:"2026-09-04", midterm_dt:"2026-10-23", final_dt:"2026-12-11", closed_flag:false },
+      { class_id:"S-0904-M2", region_cd:"METRO",      start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", term_nm:"26년 2학기", fee:300000, target_nm:"구법,신법", seminar_nm:"금요일 14~16시", ot_dt:"2026-09-04", midterm_dt:"2026-10-23", final_dt:"2026-12-11", closed_flag:false },
+      { class_id:"S-0904-M3", region_cd:"METRO",      start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", term_nm:"26년 2학기", fee:300000, target_nm:"구법,신법", seminar_nm:"수요일 09~11시", ot_dt:"2026-09-09", midterm_dt:"2026-10-28", final_dt:"2026-12-16", closed_flag:false },
+      { class_id:"S-0904-M4", region_cd:"METRO",      start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", term_nm:"26년 2학기", fee:300000, target_nm:"구법,신법", seminar_nm:"일요일 09~11시", ot_dt:"2026-09-06", midterm_dt:"2026-10-25", final_dt:"2026-12-13", closed_flag:true },
+      { class_id:"S-0904-N1", region_cd:"NATIONWIDE", start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", term_nm:"26년 2학기", fee:400000, target_nm:"구법,신법", seminar_nm:"토요일 14~16시", ot_dt:"2026-09-05", midterm_dt:"2026-10-24", final_dt:"2026-12-12", closed_flag:false },
+      { class_id:"S-0910-M1", region_cd:"METRO",      start_dt:"2026-09-10", course_end_dt:"2026-12-23", practicum_start_dt:"2026-09-21", practicum_end_dt:"2026-12-09", term_nm:"26년 2학기", fee:300000, target_nm:"구법,신법", seminar_nm:"목요일 14~16시", ot_dt:"2026-09-10", midterm_dt:"2026-10-29", final_dt:"2026-12-17", closed_flag:false },
+      { class_id:"S-0917-M1", region_cd:"METRO",      start_dt:"2026-09-17", course_end_dt:"2026-12-30", practicum_start_dt:"2026-09-28", practicum_end_dt:"2026-12-16", term_nm:"26년 2학기", fee:300000, target_nm:"구법,신법", seminar_nm:"목요일 09~11시", ot_dt:"2026-09-17", midterm_dt:"2026-11-05", final_dt:"2026-12-24", closed_flag:false },
+      { class_id:"S-0917-N1", region_cd:"NATIONWIDE", start_dt:"2026-09-17", course_end_dt:"2026-12-30", practicum_start_dt:"2026-09-28", practicum_end_dt:"2026-12-16", term_nm:"26년 2학기", fee:400000, target_nm:"구법,신법", seminar_nm:"목요일 09~11시", ot_dt:"2026-09-17", midterm_dt:"2026-11-05", final_dt:"2026-12-24", closed_flag:false },
+      { class_id:"S-1008-M1", region_cd:"METRO",      start_dt:"2026-10-08", course_end_dt:"2027-01-20", practicum_start_dt:"2026-10-19", practicum_end_dt:"2027-01-06", term_nm:"26년 2학기", fee:300000, target_nm:"구법,신법", seminar_nm:"목요일 09~11시", ot_dt:"2026-10-08", midterm_dt:"2026-11-26", final_dt:"2027-01-14", closed_flag:false },
+      { class_id:"S-1008-N1", region_cd:"NATIONWIDE", start_dt:"2026-10-08", course_end_dt:"2027-01-20", practicum_start_dt:"2026-10-19", practicum_end_dt:"2027-01-06", term_nm:"26년 2학기", fee:400000, target_nm:"구법,신법", seminar_nm:"목요일 14~16시", ot_dt:"2026-10-08", midterm_dt:"2026-11-26", final_dt:"2027-01-14", closed_flag:false }
+    ]
+  },
+
+  /* 보육실습 - 실습가능지역이 전국권 하나뿐이라 1단 축이 없다. 중간평가회도 없다. */
+  {
+    key:"child", nm:"보육실습", set:1, notice_txt:"",
+    regions:null,
+    head:["term","course","practicum"],
+    cols:[
+      { k:"seminar_nm", label:"세미나" },
+      { k:"ot_dt",      label:"오리엔테이션", date:true },
+      { k:"final_dt",   label:"최종평가회",   date:true }
+    ],
+    classes:[
+      { class_id:"C-0904", start_dt:"2026-09-04", course_end_dt:"2026-12-17", practicum_start_dt:"2026-09-14", practicum_end_dt:"2026-12-02", term_nm:"26년 2학기", fee:300000, seminar_nm:"금요일 13~16시", ot_dt:"2026-09-04", final_dt:"2026-12-11", closed_flag:false },
+      { class_id:"C-0917", start_dt:"2026-09-17", course_end_dt:"2026-12-30", practicum_start_dt:"2026-09-28", practicum_end_dt:"2026-12-16", term_nm:"26년 2학기", fee:300000, seminar_nm:"목요일 13~16시", ot_dt:"2026-09-17", final_dt:"2026-12-24", closed_flag:false },
+      { class_id:"C-1008", start_dt:"2026-10-08", course_end_dt:"2027-01-20", practicum_start_dt:"2026-10-19", practicum_end_dt:"2027-01-06", term_nm:"26년 2학기", fee:300000, seminar_nm:"목요일 13~16시", ot_dt:"2026-10-08", final_dt:"2027-01-14", closed_flag:false }
+    ]
+  },
+
+  /* 한국어교육실습 - 지역 개념이 없고(전부 온라인) 실습가능기간도 없다.
+     현행은 반마다 같은 모의수업 문구를 표 안에서 반복하므로 공통 정보 줄로 올린다. */
+  {
+    key:"korean", nm:"한국어교육실습", set:2, notice_txt:"",
+    regions:null,
+    head:["term","course","sim"],
+    cols:[
+      { k:"class_nm",   label:"분반" },
+      { k:"seminar_nm", label:"실시간 화상 세미나" },
+      { k:"seminar_dt", label:"세미나 날짜", date:true },
+      { k:"quota_nm",   label:"정원" }
+    ],
+    classes:[
+      { class_id:"K-0904-1", start_dt:"2026-09-04", course_end_dt:"2026-12-17", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오전반", seminar_nm:"토요일 10~13시", seminar_dt:"2026-09-19", quota_nm:"30명", closed_flag:true },
+      { class_id:"K-0904-2", start_dt:"2026-09-04", course_end_dt:"2026-12-17", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오후반", seminar_nm:"토요일 14~17시", seminar_dt:"2026-09-19", quota_nm:"30명", closed_flag:true },
+      { class_id:"K-0904-3", start_dt:"2026-09-04", course_end_dt:"2026-12-17", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오전반", seminar_nm:"토요일 10~13시", seminar_dt:"2026-09-19", quota_nm:"30명", closed_flag:true },
+      { class_id:"K-0910-1", start_dt:"2026-09-10", course_end_dt:"2026-12-23", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"금요일 오전반", seminar_nm:"금요일 09~12시", seminar_dt:"2026-10-02", quota_nm:"30명", closed_flag:true },
+      { class_id:"K-0910-2", start_dt:"2026-09-10", course_end_dt:"2026-12-23", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"금요일 오후반", seminar_nm:"금요일 13~16시", seminar_dt:"2026-10-02", quota_nm:"30명", closed_flag:true },
+      { class_id:"K-0910-3", start_dt:"2026-09-10", course_end_dt:"2026-12-23", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"금요일 오후반", seminar_nm:"금요일 13~16시", seminar_dt:"2026-10-02", quota_nm:"30명", closed_flag:false },
+      { class_id:"K-0917-1", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오전반", seminar_nm:"토요일 10~13시", seminar_dt:"2026-10-10", quota_nm:"30명", closed_flag:true },
+      { class_id:"K-0917-2", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오후반", seminar_nm:"토요일 14~17시", seminar_dt:"2026-10-10", quota_nm:"30명", closed_flag:true },
+      { class_id:"K-0917-3", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오전반", seminar_nm:"토요일 10~13시", seminar_dt:"2026-10-10", quota_nm:"30명", closed_flag:true },
+      { class_id:"K-0917-4", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오후반", seminar_nm:"토요일 14~17시", seminar_dt:"2026-10-10", quota_nm:"30명", closed_flag:true },
+      { class_id:"K-0917-5", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오전반", seminar_nm:"토요일 10~13시", seminar_dt:"2026-10-17", quota_nm:"30명", closed_flag:false }
+    ]
+  }
+];
+
+/* 기본 선택은 그 축의 가장 빠른 개강일. normalizeStartDate 가 채운다. */
+const state = { course:0, region_cd:null, start_dt:null, logged_in:false, force_empty:false };
+const course = () => COURSES[state.course];
 
 const DAY = ["일","월","화","수","목","금","토"];
 const d    = s => new Date(s+"T00:00:00");
@@ -820,15 +875,17 @@ function applyCell(cls){
   return '<button type="button" class="btn-apply" data-id="'+esc(cls.class_id)+'">신청하기</button>';
 }
 
-function regionRows(region_cd){
-  return (state.force_empty && region_cd === state.region_cd)
-    ? [] : DATA.classes.filter(c => c.region_cd === region_cd);
+/* 1단 축이 없는 과정은 전체가 한 묶음이다. */
+function axisRows(cd){
+  const c = course();
+  if (state.force_empty && cd === state.region_cd) return [];
+  return c.regions ? c.classes.filter(x => x.region_cd === cd) : c.classes;
 }
 
-/* 선택 지역의 개강일 목록. 개강일이 같으면 수강기간·실습가능기간도 같다. */
-function startDates(region_cd){
+/* 선택 축의 개강일 목록. 개강일이 같으면 수강기간·실습가능기간도 같다. */
+function startDates(cd){
   const map = new Map();
-  regionRows(region_cd).forEach(function(c){
+  axisRows(cd).forEach(function(c){
     if (!map.has(c.start_dt)) map.set(c.start_dt, []);
     map.get(c.start_dt).push(c);
   });
@@ -837,20 +894,28 @@ function startDates(region_cd){
     .map(([start_dt, items]) => ({ start_dt: start_dt, head: items[0], items: items }));
 }
 
-/* 선택한 개강일이 현재 지역에 없으면 그 지역의 가장 빠른 개강일로 되돌린다. */
-function normalizeStartDate(){
+/* 선택한 축이 이 과정에 없으면 첫 축으로, 개강일이 없으면 가장 빠른 개강일로 되돌린다. */
+function normalizeState(){
+  const c = course();
+  if (!c.regions) state.region_cd = null;
+  else if (!c.regions.some(r => r.cd === state.region_cd)) state.region_cd = c.regions[0].cd;
+
   const dates = startDates(state.region_cd).map(g => g.start_dt);
   if (!dates.length){ state.start_dt = null; return; }
   if (!state.start_dt || dates.indexOf(state.start_dt) === -1) state.start_dt = dates[0];
 }
 
-/* 1단 - 지역 */
+/* 1단 - 축(실습기관 소재지). 축이 없는 과정은 줄 자체를 감춘다. */
 function renderTabs(){
-  document.querySelector(".tabs").innerHTML = DATA.regions.map(function(r){
-    const on = r.region_cd === state.region_cd;
-    return '<button type="button" class="tab" role="tab" aria-selected="'+on+'" data-region="'+r.region_cd+'">'
-         + '<span class="nm">'+esc(r.region_nm)+'</span>'
-         + '<span class="desc">'+esc(r.region_desc)+'</span></button>';
+  const el = document.querySelector(".tabs");
+  const c = course();
+  if (!c.regions){ el.innerHTML = ""; el.hidden = true; return; }
+  el.hidden = false;
+  el.innerHTML = c.regions.map(function(r){
+    const on = r.cd === state.region_cd;
+    return '<button type="button" class="tab" role="tab" aria-selected="'+on+'" data-region="'+r.cd+'">'
+         + '<span class="nm">'+esc(r.nm)+'</span>'
+         + '<span class="desc">'+esc(r.desc)+'</span></button>';
   }).join("");
 }
 
@@ -861,7 +926,7 @@ function renderSubtabs(){
   if (!groups.length){ el.innerHTML = ""; el.hidden = true; return; }
   el.hidden = false;
 
-  /* 개강일이 학기 경계를 넘는 지역에서만 탭에 학기를 적는다.
+  /* 개강일이 학기 경계를 넘을 때만 탭에 학기를 적는다.
      한 학기뿐이면 모든 탭에 같은 값이 붙어 구분에 쓸모가 없다. */
   const multiTerm = new Set(groups.map(g => g.head.term_nm)).size > 1;
 
@@ -878,29 +943,53 @@ function renderSubtabs(){
   }).join("");
 }
 
-/* 표의 행. 개강일 정보는 담지 않는다 - 2단 탭과 공통 정보 줄이 담당한다. */
-function classRows(items){
-  return items.slice()
-    .sort((a,b) => a.seminar_day_nm.localeCompare(b.seminar_day_nm,"ko"))
-    .map(function(c){ return ''
-      + '<tr class="'+(c.closed_flag ? "is-closed" : "")+'">'
-      + '<td class="col-seminar" data-label="세미나"><span>'+esc(c.seminar_day_nm)+' '+esc(c.seminar_time_nm)+'</span>'
-      +   '<button type="button" class="btn-more" aria-expanded="false" aria-label="세미나 3회 일정 보기"><span class="chev">▾</span></button></td>'
-      + '<td class="col-target is-detail" data-label="대상">'+esc(c.target_nm)+'</td>'
-      + '<td class="col-date is-detail" data-label="오리엔테이션">'+mdw(c.ot_dt)+'</td>'
-      + '<td class="col-date is-detail" data-label="중간평가회">'+mdw(c.midterm_dt)+'</td>'
-      + '<td class="col-date is-detail" data-label="최종평가회">'+mdw(c.final_dt)+'</td>'
-      + '<td class="col-apply" data-label="신청">'+applyCell(c)+'</td>'
-      + '</tr>'; }).join("");
+/* 컬럼 폭. 앞면 칸과 신청 칸을 고정하고 나머지가 남은 폭을 똑같이 나눈다.
+   자동 폭에 맡기면 글자 수가 많은 앞면 칸만 넓어져 나머지가 한쪽으로 몰린다. */
+function colGroup(cols){
+  const mid = ((100 - 24 - 22) / (cols.length - 1)).toFixed(2);
+  return '<colgroup><col style="width:24%"/>'
+    + cols.slice(1).map(() => '<col style="width:'+mid+'%"/>').join("")
+    + '<col style="width:22%"/></colgroup>';
 }
 
-const TABLE_HEAD = '<thead><tr><th scope="col">세미나</th><th scope="col">대상</th>'
-  + '<th scope="col">오리엔테이션</th><th scope="col">중간평가회</th><th scope="col">최종평가회</th>'
-  + '<th scope="col">신청</th></tr></thead>';
+function tableHead(cols){
+  return '<thead><tr>'
+    + cols.map(c => '<th scope="col">'+esc(c.label)+'</th>').join("")
+    + '<th scope="col">신청</th></tr></thead>';
+}
+
+/* 표의 행. 개강일 정보는 담지 않는다 - 2단 탭과 공통 정보 줄이 담당한다.
+   첫 컬럼이 모바일 카드 앞면이고 나머지는 펼쳤을 때 보인다. */
+function classRows(items, cols){
+  const key = cols[0].k;
+  return items.slice()
+    .sort((a,b) => String(a[key]).localeCompare(String(b[key]), "ko"))
+    .map(function(c){
+      const cells = cols.map(function(col, i){
+        const val = col.date ? mdw(c[col.k]) : esc(c[col.k]);
+        if (i === 0){
+          return '<td class="col-seminar" data-label="'+esc(col.label)+'"><span>'+val+'</span>'
+            + '<button type="button" class="btn-more" aria-expanded="false" aria-label="나머지 일정 보기"><span class="chev">▾</span></button></td>';
+        }
+        return '<td class="'+(col.date ? "col-date" : "col-target")+' is-detail" data-label="'+esc(col.label)+'">'+val+'</td>';
+      }).join("");
+      return '<tr class="'+(c.closed_flag ? "is-closed" : "")+'">'
+        + cells + '<td class="col-apply" data-label="신청">'+applyCell(c)+'</td></tr>';
+    }).join("");
+}
+
+/* 공통 정보 줄 항목. 수강료는 항상 맨 뒤에 알약으로 붙는다. */
+const HEAD_ITEMS = {
+  term:      h => ["학기", esc(h.term_nm)],
+  course:    h => ["수강기간", ymdw(h.start_dt)+" ~ "+ymdw(h.course_end_dt)],
+  practicum: h => ["실습가능기간", ymdw(h.practicum_start_dt)+" ~ "+ymdw(h.practicum_end_dt)],
+  sim:       h => ["모의수업", esc(h.sim_nm)]
+};
 
 /* 선택한 개강일의 공통 정보 + 표 */
 function renderPanel(){
-  const region = DATA.regions.find(r => r.region_cd === state.region_cd);
+  const c = course();
+  const region = c.regions ? c.regions.find(r => r.cd === state.region_cd) : null;
   const groups = startDates(state.region_cd);
   const headEl = document.querySelector(".panel-head");
   const body = document.querySelector(".panel-body");
@@ -909,10 +998,12 @@ function renderPanel(){
 
   if (!g){
     headEl.hidden = true;
-    const other = DATA.regions.find(r => r.region_cd !== state.region_cd);
-    body.innerHTML = '<div class="empty"><strong>현재 '+esc(region.region_nm)+' 개설반이 없습니다.</strong>'
+    const other = c.regions ? c.regions.find(r => r.cd !== state.region_cd) : null;
+    body.innerHTML = '<div class="empty">'
+      + '<strong>현재 '+(region ? esc(region.nm)+" " : "")+'개설반이 없습니다.</strong>'
       + '다음 학기 일정은 공지사항에서 안내드립니다.'
-      + '<br/><button type="button" data-goto="'+other.region_cd+'">'+esc(other.region_nm)+' 개설반 보기</button></div>';
+      + (other ? '<br/><button type="button" data-goto="'+other.cd+'">'+esc(other.nm)+' 개설반 보기</button>' : '')
+      + '</div>';
     return;
   }
 
@@ -920,26 +1011,42 @@ function renderPanel(){
   headEl.hidden = false;
   /* 소재지는 1단 탭이 담당하므로 여기서 다시 쓰지 않는다.
      학기는 개강일마다 다를 수 있으므로 이 줄이 담는다. */
-  headEl.innerHTML =
-      '<span class="meta"><span class="k">학기</span><b>'+esc(h.term_nm)+'</b></span>'
-    + '<span class="meta"><span class="k">수강기간</span><b>'+ymdw(h.start_dt)+' ~ '+ymdw(h.course_end_dt)+'</b></span>'
-    + '<span class="meta"><span class="k">실습가능기간</span><b>'+ymdw(h.practicum_start_dt)+' ~ '+ymdw(h.practicum_end_dt)+'</b></span>'
-    + '<span class="fee">수강료 <b>'+won(region.tuition_amt)+'</b></span>';
+  headEl.innerHTML = c.head.map(function(k){
+    const [label, val] = HEAD_ITEMS[k](h);
+    return '<span class="meta"><span class="k">'+esc(label)+'</span><b>'+val+'</b></span>';
+  }).join("")
+    + '<span class="fee">수강료 <b>'+won(h.fee)+'</b></span>';
 
   body.innerHTML =
-    '<table><caption>'+esc(h.term_nm)+' '+esc(region.region_nm)+' '+kdate(g.start_dt)+' 개강반 목록</caption>'
-  + TABLE_HEAD + '<tbody>' + classRows(g.items) + '</tbody></table>';
+    '<table><caption>'+esc(h.term_nm)+' '+esc(c.nm)+(region ? " "+esc(region.nm) : "")
+      +' '+kdate(g.start_dt)+' 개강반 목록</caption>'
+  + colGroup(c.cols) + tableHead(c.cols)
+  + '<tbody>' + classRows(g.items, c.cols) + '</tbody></table>';
 }
 
 /* 개강반 공지 */
 function renderNotice(){
   const el = document.getElementById("notice");
-  if (!DATA.notice_txt){ el.hidden = true; return; }
+  const txt = course().notice_txt;
+  if (!txt){ el.hidden = true; return; }
   el.hidden = false;
-  el.innerHTML = '<span aria-hidden="true">▼</span>'+esc(DATA.notice_txt)+'<span aria-hidden="true">▼</span>';
+  el.innerHTML = '<span aria-hidden="true">▼</span>'+esc(txt)+'<span aria-hidden="true">▼</span>';
 }
 
-function render(){ normalizeStartDate(); renderTabs(); renderSubtabs(); renderPanel(); }
+/* 사복이 아닌 과정을 보는 동안, 위 히어로와 안내 표가 사복 것임을 밝힌다. */
+function renderCourseNote(){
+  const el = document.getElementById("course-note");
+  if (state.course === 0){ el.hidden = true; return; }
+  el.hidden = false;
+  el.innerHTML = '아래 표는 <b>'+esc(course().nm)+'</b> 개설반입니다. '
+    + '이번 개편 대상은 개설반 영역이므로, 위 히어로와 수강신청 안내는 '
+    + '비교를 위해 <b>사회복지현장실습 것을 그대로</b> 두었습니다.';
+}
+
+function render(){
+  normalizeState(); renderTabs(); renderSubtabs(); renderPanel();
+  renderNotice(); renderCourseNote();
+}
 
 let toastTimer;
 function toast(msg){
@@ -1007,17 +1114,7 @@ const PRESETS = [
     v:{ "--accent":"#125c43", "--band":"#e3efe9", "--band-ink":"#125c43", "--hero-bg":"#0f5140", "--cta":"#d94100" } }
 ];
 
-/* ── 색 조절기 ── 세트를 고른 뒤 한 값만 손볼 때 쓴다.
-   누르는 값(hover)은 원래 색에서 자동으로 어둡게 만든다. */
-const KNOBS = [
-  { nm:"강조",        v:"--accent",  hover:"--accent-hover" },
-  { nm:"신청·수강료", v:"--cta",     hover:"--cta-hover" },
-  { nm:"표 머리 띠",  v:"--band" },
-  { nm:"히어로 띠",   v:"--hero-bg" }
-];
-
 const root = document.documentElement;
-const readVar = n => getComputedStyle(root).getPropertyValue(n).trim();
 
 /* #rrggbb 를 검정(어둡게) 또는 흰색(밝게) 쪽으로 섞는다.
    누르는 색이나 히어로 보조색을 사람이 따로 고르지 않게 하려는 것뿐이다. */
@@ -1035,35 +1132,6 @@ function brightness(hex){
   const n = parseInt(hex.slice(1), 16);
   return (0.299 * (n >> 16 & 255) + 0.587 * (n >> 8 & 255) + 0.114 * (n & 255)) / 255;
 }
-
-function buildKnobs(){
-  const box = document.getElementById("knobs");
-  KNOBS.forEach(function(k){
-    const label = document.createElement("label");
-    label.innerHTML = '<span>'+esc(k.nm)+'</span>'
-      + '<input type="color" data-var="'+k.v+'"'+(k.hover ? ' data-hover="'+k.hover+'"' : '')+'/>'
-      + '<span class="hex"></span>';
-    box.insertBefore(label, box.lastElementChild);
-  });
-  syncKnobs();
-}
-
-/* 화면에 실제로 적용된 값을 조절기에 되비춘다. 어두운 화면으로 바꾸면 값도 따라 바뀐다. */
-function syncKnobs(){
-  document.querySelectorAll('#knobs input[type="color"]').forEach(function(inp){
-    const cur = readVar(inp.dataset.var);
-    if (/^#[0-9a-f]{6}$/i.test(cur)) inp.value = cur;
-    inp.nextElementSibling.textContent = inp.value;
-  });
-}
-
-document.getElementById("knobs").addEventListener("input", function(e){
-  const inp = e.target;
-  if (inp.type !== "color") return;
-  root.style.setProperty(inp.dataset.var, inp.value);
-  if (inp.dataset.hover) root.style.setProperty(inp.dataset.hover, darken(inp.value, .18));
-  inp.nextElementSibling.textContent = inp.value;
-});
 
 /* 세트를 고르면 토큰 한 벌을 통째로 얹는다. 누르는 값도 같이 계산해 둔다. */
 function applyPreset(i){
@@ -1087,7 +1155,6 @@ function applyPreset(i){
   document.querySelectorAll("#sets .set").forEach(function(b, j){
     b.setAttribute("aria-pressed", String(j === i));
   });
-  syncKnobs();
 }
 
 function buildPresets(){
@@ -1103,24 +1170,41 @@ function buildPresets(){
     b.addEventListener("click", () => applyPreset(i));
     box.appendChild(b);
   });
+  /* 스타일시트에 적힌 기본값이 사복 세트이므로 처음부터 눌린 상태로 둔다. */
+  box.querySelector(".set").setAttribute("aria-pressed", "true");
 }
 
-/* 되돌리기는 인라인 값을 걷어낸다. 스타일시트에 적힌 사복 색으로 돌아간다. */
-document.getElementById("c-reset").addEventListener("click", function(){
-  ["--accent","--accent-hover","--cta","--cta-hover","--band","--band-ink",
-   "--hero-bg","--hero-mint","--hero-mint-ink","--hero-faq-bg","--hero-faq-ink","--hero-guide-ink"]
-    .forEach(k => root.style.removeProperty(k));
-  document.querySelectorAll("#sets .set").forEach(b => b.setAttribute("aria-pressed","false"));
-  syncKnobs();
-});
+/* 과정 스위치. 과정을 고르면 그 과정의 색 세트도 같이 얹는다. */
+function buildCourses(){
+  const box = document.getElementById("courses");
+  COURSES.forEach(function(c, i){
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "set";
+    b.setAttribute("aria-pressed", String(i === state.course));
+    b.innerHTML = '<span class="chips">'
+      + ['--hero-bg','--accent'].map(k => '<i style="background:'+PRESETS[c.set].v[k]+'"></i>').join('')
+      + '</span>' + esc(c.nm);
+    b.addEventListener("click", function(){
+      state.course = i;
+      state.region_cd = null;
+      state.start_dt = null;
+      state.force_empty = false;
+      document.getElementById("sw-empty").checked = false;
+      box.querySelectorAll(".set").forEach((x, j) => x.setAttribute("aria-pressed", String(j === i)));
+      applyPreset(c.set);
+      render();
+    });
+    box.appendChild(b);
+  });
+}
 
 document.getElementById("sw-dark").addEventListener("change", function(e){
   root.setAttribute("data-theme", e.target.checked ? "dark" : "light");
-  syncKnobs();
 });
 
 buildPresets();
-buildKnobs();
+buildCourses();
 
 /* 설명 접기 - 확인용 스위치는 설명이 아니므로 접어도 남는다. */
 document.getElementById("note-toggle").addEventListener("click", function(e){
@@ -1131,7 +1215,6 @@ document.getElementById("note-toggle").addEventListener("click", function(e){
   e.target.textContent = open ? "설명 접기" : "설명 펼치기";
 });
 
-renderNotice();
 render();
 </script>
 </body>
