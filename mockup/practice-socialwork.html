@@ -117,9 +117,14 @@ body{
   font-size:15px;
   line-height:1.62;
   letter-spacing:-.01em;
+  /* 한글은 어절 안에서 줄이 갈리면 읽기 어렵다. 현행이 <br> 를 손으로 넣어 막던 것을 규칙으로 바꾼다. */
+  word-break:keep-all;
+  overflow-wrap:break-word;
   -webkit-text-size-adjust:100%;
 }
 .wrap{max-width:1000px;margin:0 auto;padding:32px 18px 96px;display:flex;flex-direction:column;gap:26px;}
+/* 목업 고지만 담는 위쪽 통. 히어로가 화면 폭을 꽉 채워야 하므로 본문 통과 분리한다. */
+.wrap-top{padding-bottom:26px;}
 
 /* 목업 고지 - 기획 설명 패널. 실제 페이지에는 없다. */
 .note{
@@ -169,13 +174,63 @@ body{
 .note-card label{display:inline-flex;align-items:center;gap:7px;cursor:pointer;}
 .note-card input{accent-color:var(--note-badge);width:16px;height:16px;}
 
-/* 머리말 */
-.head h1{
-  font-weight:800;
-  font-size:clamp(26px,4vw,32px);line-height:1.25;letter-spacing:-.02em;
-  margin:0 0 6px;text-wrap:balance;
+/* 히어로 - 현행 페이지의 녹색 띠(#188a6e)를 그대로 쓴다.
+   현행은 이 영역이 통째로 이미지고 대체텍스트가 "하단 참조"뿐이라, 같은 내용을 글자로 옮겼다.
+   브랜드 띠이므로 라이트·다크 어느 쪽에서도 색이 바뀌지 않는다. */
+.hero{background:#188a6e;color:#fff;}
+.hero-in{
+  max-width:1000px;margin:0 auto;padding:38px 18px 42px;
+  display:flex;flex-direction:column;align-items:center;gap:20px;text-align:center;
 }
-.head p{margin:0;color:var(--ink-2);font-size:15px;max-width:62ch;}
+/* 현행 이미지의 제목 짜임을 따른다. 민트 알약 한 줄 + 큰 제목 한 줄. */
+.hero h1{margin:0;display:flex;flex-direction:column;align-items:center;gap:12px;}
+.hero h1 .kicker{
+  background:#48ebb5;color:#0f3a2d;border-radius:999px;
+  padding:7px 22px;font-size:clamp(15px,1.9vw,20px);font-weight:700;letter-spacing:-.02em;
+}
+.hero h1 .big{
+  font-size:clamp(30px,5.2vw,50px);font-weight:800;letter-spacing:-.03em;line-height:1.15;
+}
+/* 카드는 살구색(#ffeee5)에 어두운 글자, 제목 줄만 한 톤 진하다(#fddecd). 현행 값 그대로다. */
+.hero-cards{display:flex;flex-wrap:wrap;gap:14px;width:100%;}
+.hero-card{
+  flex:1 1 320px;text-align:left;overflow:hidden;
+  background:#ffeee5;color:#333333;border-radius:20px;
+}
+/* 마주 보는 아래쪽 모서리만 각지게 두어 두 장이 한 벌로 읽히게 한다 */
+.hero-card:first-child{border-bottom-right-radius:0;}
+.hero-card:last-child{border-bottom-left-radius:0;}
+.hero-card .hd{background:#fddecd;padding:16px 20px;text-align:center;}
+.hero-card h2{margin:0;font-size:22px;font-weight:700;letter-spacing:-.02em;}
+.hero-card .when{margin:3px 0 0;font-size:13px;color:#4d4d4d;}
+.hero-card ul{
+  margin:0;padding:17px 24px 19px;list-style:none;
+  display:flex;flex-direction:column;gap:8px;font-size:15px;
+}
+.hero-card li{padding-left:15px;position:relative;}
+.hero-card li::before{content:"-";position:absolute;left:0;color:#808080;}
+.hero-card .place{
+  display:flex;flex-wrap:wrap;align-items:center;gap:7px;
+  margin-top:6px;font-size:13px;color:#4d4d4d;
+}
+.hero-card .place a{
+  color:#333333;background:#ffffff;text-decoration:none;font-weight:600;font-size:12px;
+  border-radius:3px;padding:2px 9px;
+}
+.hero-card .place a:hover{background:#f2f2f2;}
+.hero-card .place a:focus-visible{outline:2px solid #333333;outline-offset:2px;}
+
+/* 자주하는 질문 버튼은 짙은 남색 바탕에 민트 글자다 */
+.hero-faq{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  background:#2a2333;color:#48ebb5;text-decoration:none;
+  font-size:16px;font-weight:600;padding:12px 34px;min-height:44px;
+}
+.hero-faq b{font-weight:700;}
+.hero-faq:hover{background:#3a3147;}
+.hero-faq:focus-visible{outline:2px solid #48ebb5;outline-offset:2px;}
+
+.hero-guide{margin:0;font-size:17px;font-weight:600;line-height:1.45;color:#1c2b26;}
 
 /* 섹션 - 현행 페이지의 수강신청 안내 / 개설반 / 유의사항 구성을 따른다 */
 /* 제목·본문·상자의 왼쪽 끝을 모두 같은 선에 맞춘다.
@@ -183,13 +238,12 @@ body{
 .sec{display:flex;flex-direction:column;gap:12px;}
 .sec > h2{
   font-weight:800;
-  font-size:clamp(20px,2.6vw,22px);line-height:1.3;letter-spacing:-.02em;margin:0;
+  font-size:clamp(25px,3.4vw,32px);line-height:1.3;letter-spacing:-.025em;margin:0;
 }
 .sec > h2::before{
-  content:"";display:block;width:26px;height:3px;border-radius:2px;
-  background:var(--accent);margin-bottom:9px;
+  content:"";display:block;width:32px;height:4px;border-radius:2px;
+  background:var(--accent);margin-bottom:11px;
 }
-.sec > .lead{margin:-4px 0 2px;color:var(--ink-2);max-width:62ch;}
 
 /* 표·목록을 담는 흰 상자. 현행 페이지는 그림자를 쓰지 않으므로 테두리로만 구분한다. */
 .card{
@@ -198,24 +252,24 @@ body{
 }
 
 /* 수강신청 안내 표 */
-.info{width:100%;border-collapse:collapse;font-size:14px;}
-/* 현행 수강신청 안내 표의 머리 칸은 녹색 바탕에 흰 글씨다 */
+.info{width:100%;border-collapse:collapse;font-size:16px;}
+/* 현행 수강신청 안내 표의 머리 칸은 녹색 바탕에 흰 글씨, 가로·세로 모두 가운데다 */
 .info th{
-  width:168px;text-align:left;vertical-align:top;
-  font-weight:700;font-size:14px;color:var(--accent-ink);
-  background:var(--accent);padding:15px 18px;
+  width:216px;text-align:center;vertical-align:middle;
+  font-weight:700;font-size:16px;color:var(--accent-ink);
+  background:var(--accent);padding:15px 14px;
   border-bottom:1px solid rgba(255,255,255,.22);
 }
 .info tr:last-child th{border-bottom:0;}
-/* 개설반 표는 가운데 정렬이지만(th,td 공통 규칙) 안내 표는 왼쪽 정렬이다 */
+/* 내용 칸은 왼쪽 정렬, 세로는 머리 칸과 같이 가운데다 */
 .info td{
-  text-align:left;vertical-align:top;color:var(--ink-2);padding:15px 18px;
+  text-align:left;vertical-align:middle;color:var(--ink-2);padding:15px 18px;
   border-bottom:1px solid var(--line-soft);
 }
 .info tr:last-child th,.info tr:last-child td{border-bottom:0;}
 .info p{margin:0;}
 .info p + p{margin-top:4px;}
-.info .sub{color:var(--ink-3);font-size:13px;}
+.info .sub{color:var(--ink-3);font-size:14px;}
 .info b{color:var(--ink);font-weight:600;}
 .link{
   color:var(--accent);font-weight:600;text-decoration:none;
@@ -371,7 +425,9 @@ body{
 .panel-body tbody tr:last-child td{border-bottom:0;}
 .panel-body tbody tr:hover{background:var(--surface-2);}
 
-.col-seminar{white-space:nowrap;font-weight:500;}
+/* 한 개강일 안에서 반끼리 실제로 다른 값은 이 칸뿐이다. 굵기와 명도로 세운다.
+   주황은 신청 버튼과 수강료가 이미 쓰고 있어, 여기까지 주황으로 두면 한 줄에 초점이 세 개가 된다. */
+.col-seminar{white-space:nowrap;font-weight:700;font-size:15px;color:var(--ink);}
 .col-date{white-space:nowrap;color:var(--ink-2);font-variant-numeric:tabular-nums;}
 
 /* 신청 */
@@ -433,9 +489,15 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
   .wrap{padding:20px 12px 80px;gap:20px;}
   .sec{gap:11px;}
 
+  /* 카드가 위아래로 쌓이면 마주 보는 모서리 규칙이 의미가 없다 */
+  .hero-in{padding:30px 14px 34px;gap:17px;}
+  .hero-card:first-child,.hero-card:last-child{border-radius:20px;}
+  .hero-faq{width:100%;padding:12px 16px;}
+
+  /* 좁은 폭에서는 머리 칸이 내용 위에 얹히는 줄이 되므로 가운데 정렬을 풀고 왼쪽에 맞춘다 */
   .info th{
-    display:block;width:auto;border-right:0;border-bottom:0;
-    padding:13px 14px 0;
+    display:block;width:auto;text-align:left;border-bottom:0;
+    padding:12px 14px;
   }
   .info td{display:block;padding:4px 14px 13px;}
   .cautions{padding:14px;}
@@ -501,7 +563,7 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="wrap wrap-top">
 
   <div class="note">
     <div class="note-head">
@@ -539,10 +601,53 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
     </div>
   </div>
 
-  <div class="head">
-    <h1>사회복지현장실습</h1>
-    <p>배론은 보건복지부와 한국사회복지사협회 지침에 따라 운영하고 있습니다.</p>
+</div>
+
+<!-- 히어로 - 현행은 이 영역이 통째로 이미지(alt="하단 참조")다. 같은 내용을 글자로 옮겼다. -->
+<section class="hero">
+  <div class="hero-in">
+    <h1>
+      <span class="kicker">실습 가능 지역 전국 확대!</span>
+      <span class="big">사회복지 현장실습</span>
+    </h1>
+
+    <div class="hero-cards">
+      <div class="hero-card">
+        <div class="hd">
+          <h2>구법 학습자</h2>
+          <p class="when">2020년 이전부터 사회복지사 자격증 교과목 이수 시작</p>
+        </div>
+        <ul>
+          <li>현장실습 120시간</li>
+          <li>온라인 강의 세미나</li>
+        </ul>
+      </div>
+
+      <div class="hero-card">
+        <div class="hd">
+          <h2>신법 학습자</h2>
+          <p class="when">2020년부터 사회복지사 자격증 교과목 이수 시작</p>
+        </div>
+        <ul>
+          <li>현장실습 160시간</li>
+          <li>오프라인 출석 세미나
+            <span class="place">교육장: 서울시 강서구 양천로 583, A-711호
+              <a href="https://map.naver.com/v5/entry/place/12814015" target="_blank" rel="noreferrer" title="새창열림">위치</a>
+            </span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <a class="hero-faq" href="https://www.baeron.com/customer/cs_faq.asp?gubun=6" target="_blank" rel="noreferrer" title="새창열림">
+      사회복지현장실습 자주하는 질문 <b>바로가기</b> <span aria-hidden="true">&gt;</span>
+    </a>
+
+    <p class="hero-guide">배론은 보건복지부와 한국사회복지사협회 지침에 따라 운영하고 있습니다.</p>
   </div>
+</section>
+
+<div class="wrap">
 
   <section class="sec">
     <h2>수강신청 안내</h2>
@@ -579,7 +684,6 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
 
   <section class="sec">
     <h2>개설반 안내</h2>
-    <p class="lead">실습기관 소재지와 개강일을 차례로 선택하세요. 지역에 따라 수강료가 다릅니다.</p>
 
     <div class="alert" id="notice" hidden></div>
 
