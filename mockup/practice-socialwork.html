@@ -698,23 +698,13 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
       </div>
     </div>
 
-    <ul class="footnote">
-      <li>※ 구법대상자는 세미나(총 3회)가 <b>온라인 강의 수강</b>으로 진행되므로 위 세미나 일정과 상관없이 수강신청 바랍니다.</li>
-      <li>※ 신법대상자는 세미나(총 3회)가 <b>오프라인으로 진행</b>되므로 위 세미나 일정 확인 후 수강신청 바랍니다.
-          (세미나 장소: 서울시 강서구 양천로 583, A-711호)</li>
-      <li>※ 한국사회복지사협회 사회복지현장실습 운영안 발표에 따라 운영방식이 변경될 수 있습니다.</li>
-    </ul>
+    <ul class="footnote" id="notes"></ul>
   </section>
 
   <section class="sec">
     <h2>유의사항</h2>
     <div class="card">
-      <ol class="cautions">
-        <li><b>세미나 참석과 실습가능기간은 필수 사항</b>이므로, 일정 확인 후 신청하기 바랍니다.</li>
-        <li>양성과정의 학습과목은 선이수과목으로 인정되지 않으므로, 반드시 확인하기 바랍니다.</li>
-        <li>실습 진행에 필요한 서류 수발신 등의 <b>행정처리는 오리엔테이션 이후</b> 처리됩니다.</li>
-        <li>개설 가능 인원 미달 시 폐강될 수 있으며, 출석 수업 일정은 내부 사정에 따라 변동될 수 있습니다.</li>
-      </ol>
+      <ol class="cautions" id="cautions"></ol>
     </div>
   </section>
 
@@ -722,6 +712,56 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
+/* 표 아래 ※ 안내와 맨 아래 유의사항. 현행은 개강반 표마다 ※ 안내를 반복하므로 한 번만 쓴다. */
+const NOTES = {
+  social: [
+    '구법대상자는 세미나(총 3회)가 <b>온라인 강의 수강</b>으로 진행되므로 위 세미나 일정과 상관없이 수강신청 바랍니다.',
+    '신법대상자는 세미나(총 3회)가 <b>오프라인으로 진행</b>되므로 위 세미나 일정 확인 후 수강신청 바랍니다. (세미나 장소: 서울시 강서구 양천로 583, A-711호)',
+    '한국사회복지사협회 사회복지현장실습 운영안 발표에 따라 운영방식이 변경될 수 있습니다.'
+  ],
+  child: [],
+  korean: [
+    '<b>참관수업</b>은 <b>온라인 참관</b>(교육원 자체 참관영상 수강 + 세종학당 참관영상 수강)으로 진행됩니다.',
+    '<b>실시간 화상 모의수업</b>은 조원끼리 날짜를 정하고 ‘1시간 모의수업 시연 + 5시간 모의수업 참관’ 하는 수업입니다.',
+    '국립국어원 지침에 따라 운영방식이 변경될 수 있습니다.'
+  ]
+};
+
+const CAUTIONS = {
+  social: [
+    '<b>세미나 참석과 실습가능기간은 필수 사항</b>이므로, 일정 확인 후 신청하기 바랍니다.',
+    '양성과정의 학습과목은 선이수과목으로 인정되지 않으므로, 반드시 확인하기 바랍니다.',
+    '실습 진행에 필요한 서류 수발신 등의 <b>행정처리는 오리엔테이션 이후</b> 처리됩니다.',
+    '개설 가능 인원 미달 시 폐강될 수 있으며, 출석 수업 일정은 내부 사정에 따라 변동될 수 있습니다.'
+  ],
+  child: [
+    '<b>세미나 참석과 실습가능기간은 필수 사항</b>이므로, 일정 확인 후 신청하기 바랍니다.',
+    '실습 진행에 필요한 서류 수발신 등의 <b>행정처리는 오리엔테이션 이후</b> 처리됩니다.',
+    '개설 가능 인원 미달 시 폐강될 수 있으며, 출석 수업 일정은 내부 사정에 따라 변동될 수 있습니다.',
+    '<b>온라인 세미나 불참 시 학점 취득이 불가</b>합니다.'
+  ],
+  korean: [
+    '<b>세미나 참석과 실습가능기간은 필수 사항</b>이므로, 일정 확인 후 신청하기 바랍니다.',
+    '양성과정의 학습과목은 선이수과목으로 인정되지 않으므로, 반드시 확인하기 바랍니다.',
+    '실습 진행에 필요한 서류 수발신 등의 <b>행정처리는 오리엔테이션 이후</b> 처리됩니다.',
+    '개설 가능 인원 미달 시 폐강될 수 있으며, 출석 수업 일정은 내부 사정에 따라 변동될 수 있습니다.'
+  ]
+};
+
+/* ※ 안내가 없는 과정은 목록 자체를 감춘다. */
+function renderNotes(){
+  const el = document.getElementById("notes");
+  const list = NOTES[course().key];
+  if (!list.length){ el.innerHTML = ""; el.hidden = true; return; }
+  el.hidden = false;
+  el.innerHTML = list.map(t => '<li>※ '+t+'</li>').join("");
+}
+
+function renderCautions(){
+  document.getElementById("cautions").innerHTML =
+    CAUTIONS[course().key].map(t => '<li>'+t+'</li>').join("");
+}
+
 /* 히어로. 세 과정 모두 현행은 통째로 이미지이고, 글자는 화면낭독기용 .WA 블록에만 있다.
    그 글자를 그대로 옮긴다. 쿠폰·전환 안내 같은 홍보 묶음은 이번 개편 범위가 아니라 넣지 않는다.
    카드(cards)를 쓰는 과정과 특징 목록(points)을 쓰는 과정이 갈린다. */
@@ -1122,11 +1162,12 @@ function renderCourseNote(){
   if (state.course === 0){ el.hidden = true; return; }
   el.hidden = false;
   el.innerHTML = '지금 보고 있는 과정은 <b>'+esc(course().nm)+'</b> 입니다. '
-    + '아래 유의사항만 아직 <b>사회복지현장실습 것</b>이고 나머지는 이 과정의 값입니다.';
+    + '히어로부터 유의사항까지 이 과정의 값으로 바뀝니다.';
 }
 
 function render(){
-  normalizeState(); renderHero(); renderInfo(); renderTabs(); renderSubtabs(); renderPanel();
+  normalizeState(); renderHero(); renderInfo(); renderNotes(); renderCautions();
+  renderTabs(); renderSubtabs(); renderPanel();
   renderNotice(); renderCourseNote();
 }
 
