@@ -1,25 +1,44 @@
 {
   "term_nm": "2026학년도 2학기",
   "captured_dt": "2026-08-21",
-  "note": "현행 세 실습 페이지에서 옮긴 값. 목업 mockup/practice-socialwork.html 의 COURSES·INFO 와 같은 모양이다.",
+  "note": "현행 세 실습 페이지에서 옮긴 값. 목업 mockup/practice-socialwork.html 의 HERO·INFO·COURSES 와 같은 모양이다.",
   "courses": [
     {
       "key": "social",
       "nm": "사회복지현장실습",
       "source_url": "https://www.baeron.com/corp/new/practice_socialwork.asp",
-      "notice_txt": "",
-      "regions": [
-        {
-          "cd": "METRO",
-          "nm": "수도권",
-          "desc": "서울, 경기, 인천"
+      "hero": {
+        "kicker": "실습 가능 지역 전국 확대!",
+        "big": "사회복지 현장실습",
+        "cards": [
+          {
+            "nm": "구법 학습자",
+            "when": "2020년 이전부터 사회복지사 자격증 교과목 이수 시작",
+            "items": [
+              "현장실습 120시간",
+              "온라인 강의 세미나"
+            ]
+          },
+          {
+            "nm": "신법 학습자",
+            "when": "2020년부터 사회복지사 자격증 교과목 이수 시작",
+            "items": [
+              "현장실습 160시간",
+              "오프라인 출석 세미나"
+            ],
+            "place": {
+              "txt": "교육장: 서울시 강서구 양천로 583, A-711호",
+              "href": "https://map.naver.com/v5/entry/place/12814015",
+              "label": "위치"
+            }
+          }
+        ],
+        "faq": {
+          "txt": "사회복지현장실습 자주하는 질문",
+          "href": "https://www.baeron.com/customer/cs_faq.asp?gubun=6"
         },
-        {
-          "cd": "NATIONWIDE",
-          "nm": "전국권",
-          "desc": "전국(섬 및 산간지역 제외)"
-        }
-      ],
+        "guide": "배론은 보건복지부와 한국사회복지사협회 지침에 따라 운영하고 있습니다."
+      },
       "info": [
         {
           "label": "과목 신청 조건",
@@ -42,6 +61,19 @@
         {
           "label": "실습 전 준비 안내서",
           "main": "<a class=\"link\" href=\"https://www.baeron.com/download/s_pre_guide.pdf\">[안내서 다운로드]</a>"
+        }
+      ],
+      "notice_txt": "",
+      "regions": [
+        {
+          "cd": "METRO",
+          "nm": "수도권",
+          "desc": "서울, 경기, 인천"
+        },
+        {
+          "cd": "NATIONWIDE",
+          "nm": "전국권",
+          "desc": "전국(섬 및 산간지역 제외)"
         }
       ],
       "head": [
@@ -241,14 +273,15 @@
       "key": "child",
       "nm": "보육실습",
       "source_url": "https://www.baeron.com/corp/new/practice_child.asp",
-      "notice_txt": "",
-      "regions": [
-        {
-          "cd": "NATIONWIDE",
-          "nm": "전국권",
-          "desc": "전국(섬 및 산간지역 제외)"
-        }
-      ],
+      "hero": {
+        "kicker": "실습 가능 지역 전국 확대!",
+        "big": "보육실습",
+        "points": [
+          "온라인 출석",
+          "이론, 대면, 실습 전과목 보유",
+          "다년간의 실습 운영 노하우"
+        ]
+      },
       "info": [
         {
           "label": "과목 신청 조건",
@@ -271,6 +304,14 @@
         {
           "label": "실습 전 준비 안내서",
           "main": "<a class=\"link\" href=\"https://www.baeron.com/download/c_pre_guide.pdf\">[안내서 다운로드]</a>"
+        }
+      ],
+      "notice_txt": "",
+      "regions": [
+        {
+          "cd": "NATIONWIDE",
+          "nm": "전국권",
+          "desc": "전국(섬 및 산간지역 제외)"
         }
       ],
       "head": [
@@ -343,8 +384,16 @@
       "key": "korean",
       "nm": "한국어교육실습",
       "source_url": "https://www.baeron.com/corp/new/practice_korean.asp",
-      "notice_txt": "",
-      "regions": null,
+      "hero": {
+        "kicker": "한국어교육실습 수강자 수 1위",
+        "kickerSub": "2016년 ~ 현재까지 (정보공시 누계)",
+        "big": "한국어교육실습",
+        "points": [
+          "참관수업 100% 온라인",
+          "세미나 단 1회 실시간 화상수업",
+          "모의 수업 동영상 제출"
+        ]
+      },
       "info": [
         {
           "label": "과목 신청 조건",
@@ -370,6 +419,8 @@
           "main": "모의수업+참관수업 온라인 진행은 국립국어원 실습과목 운영 권고안에 따라 별도 공지 시까지 적용"
         }
       ],
+      "notice_txt": "",
+      "regions": null,
       "head": [
         "term",
         "course",
