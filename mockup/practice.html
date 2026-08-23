@@ -306,12 +306,14 @@ body{
 .info{width:100%;border-collapse:collapse;font-size:16px;}
 /* 현행 수강신청 안내 표의 머리 칸은 녹색 바탕에 흰 글씨, 가로·세로 모두 가운데다 */
 .info th{
-  width:216px;text-align:center;vertical-align:middle;
+  text-align:center;vertical-align:middle;
   font-weight:700;font-size:16px;color:var(--accent-ink);
   background:var(--accent);padding:15px 14px;
   border-bottom:1px solid rgba(255,255,255,.22);
 }
 .info tr:last-child th{border-bottom:0;}
+/* 하위 머리 칸. 현행도 같은 녹색 바탕에 흰 글씨다. */
+.info th.k2{width:auto;}
 /* 내용 칸은 왼쪽 정렬, 세로는 머리 칸과 같이 가운데다 */
 .info td{
   text-align:left;vertical-align:middle;color:var(--ink-2);padding:15px 18px;
@@ -547,11 +549,17 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
   .hero-card:first-child,.hero-card:last-child{border-radius:20px;}
   .hero-faq{width:100%;padding:12px 16px;}
 
-  /* 좁은 폭에서는 머리 칸이 내용 위에 얹히는 줄이 되므로 가운데 정렬을 풀고 왼쪽에 맞춘다 */
+  /* 안내 표는 좁은 폭에서 줄로 쌓는다.
+     표 짜임을 그대로 두면 colgroup 의 고정 폭이 남아 칸이 좁아지므로 통째로 block 으로 바꾼다. */
+  .info,.info tbody,.info tr{display:block;width:100%;}
+  .info colgroup{display:none;}
+  /* 머리 칸이 내용 위에 얹히는 줄이 되므로 가운데 정렬을 풀고 왼쪽에 맞춘다 */
   .info th{
     display:block;width:auto;text-align:left;border-bottom:0;
     padding:12px 14px;
   }
+  /* 하위 머리 칸은 위 묶음 이름 바로 아래 붙는다 */
+  .info th.k2{padding-top:0;font-size:14px;opacity:.9;}
   .info td{display:block;padding:4px 14px 13px;}
   .cautions{padding:14px;}
 
@@ -675,9 +683,7 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
   <section class="sec">
     <h2>수강신청 안내</h2>
     <div class="card">
-      <table class="info">
-        <tbody id="info-body"></tbody>
-      </table>
+      <table class="info" id="info-table"></table>
     </div>
   </section>
 
@@ -873,13 +879,13 @@ const INFO = {
       main:'선이수과목 성적증명서 '
          + '<a class="link" href="https://www.baeron.com/korean_teacher/k_teacher08.asp">바로가기 ▶</a>',
       sub:'개강 전까지 [나의 강의실 &gt; 선이수과목 서류제출]에 업로드 (배론 이수과목은 제출 불필요)' },
-    { label:"기관실습비",
-      main:'<b>0원</b>',
-      sub:'기관 실습이 없어 별도로 납부하는 비용 없음' },
-    { label:"수업구성",
-      main:'온라인 수업 <span class="sub">1~3주(이론), 10~13주(온라인 모의수업)</span>',
-      sub:'온라인 강의 참관 5~9주 / 화상 세미나 4주 - 3시간, 줌(zoom) 실시간 화상 수업<br/>'
-        + '모의수업 10~14주 참관 및 시연 - 그룹별로 줌(zoom)에 접속해 시연·참관하고 저장한 영상을 제출' },
+    { label:"수업구성", rows:[
+      { label:"온라인 수업",      main:'1~3주(이론), 10~13주(온라인 모의수업)' },
+      { label:"온라인 강의 참관",  main:'5~9주' },
+      { label:"화상 세미나",      main:'4주 <span class="sub">3시간, 줌(zoom) 실시간 화상 수업 진행. 아래 개설반 안내에서 일정 확인</span>' },
+      { label:"모의수업",         main:'10~14주 온라인 모의수업 참관 및 시연',
+        sub:'그룹별로 줌(zoom) 실시간 화상으로 접속하여 모의수업 시연 및 참관을 진행하고 저장한 영상을 제출' }
+    ] },
     { label:"확인사항",
       main:'모의수업+참관수업 온라인 진행은 국립국어원 실습과목 운영 권고안에 따라 별도 공지 시까지 적용' }
   ]
@@ -1155,13 +1161,34 @@ function renderNotice(){
 }
 
 /* 수강신청 안내 표. 세 과정이 같은 행 이름을 같은 순서로 쓰고, 없는 행은 넣지 않는다. */
+function infoCell(r){
+  return '<td><p>'+r.main+'</p>'+(r.sub ? '<p class="sub">'+r.sub+'</p>' : '')+'</td>';
+}
+
+/* 하위 행을 가진 항목이 하나라도 있으면 표가 3열이 된다.
+   그때 하위가 없는 행의 머리 칸은 colspan 으로 두 열을 덮는다. 현행 표와 같은 짜임이다. */
 function renderInfo(){
-  document.getElementById("info-body").innerHTML = INFO[course().key].map(function(r){
-    return '<tr><th scope="row">'+esc(r.label)+'</th><td>'
-      + '<p>'+r.main+'</p>'
-      + (r.sub ? '<p class="sub">'+r.sub+'</p>' : '')
-      + '</td></tr>';
+  const rows = INFO[course().key];
+  const deep = rows.some(r => r.rows);
+
+  const body = rows.map(function(r){
+    if (!r.rows){
+      return '<tr><th scope="row"'+(deep ? ' colspan="2"' : '')+'>'+esc(r.label)+'</th>'
+        + infoCell(r) + '</tr>';
+    }
+    return r.rows.map(function(s, i){
+      return '<tr>'
+        + (i === 0 ? '<th scope="row" rowspan="'+r.rows.length+'">'+esc(r.label)+'</th>' : '')
+        + '<th scope="row" class="k2">'+esc(s.label)+'</th>'
+        + infoCell(s) + '</tr>';
+    }).join("");
   }).join("");
+
+  document.getElementById("info-table").innerHTML =
+    (deep
+      ? '<colgroup><col style="width:110px"/><col style="width:150px"/><col/></colgroup>'
+      : '<colgroup><col style="width:216px"/><col/></colgroup>')
+    + '<tbody>' + body + '</tbody>';
 }
 
 /* 사복이 아닌 과정을 보는 동안, 위 히어로가 사복 것임을 밝힌다. */
