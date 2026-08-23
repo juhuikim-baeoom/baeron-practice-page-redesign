@@ -314,8 +314,20 @@
         },
         {
           "label": "수업구성",
-          "main": "온라인 강의 수강 <span class=\"sub\">(1주차~5주차)</span>",
-          "sub": "직접 기관 실습 240시간 / 출석세미나 2회 - 온라인 ZOOM 화상수업으로 진행"
+          "rows": [
+            {
+              "label": "온라인 강의",
+              "main": "온라인 강의 수강 (1주차~5주차까지)"
+            },
+            {
+              "label": "실습시간",
+              "main": "직접 기관 실습 240시간"
+            },
+            {
+              "label": "출석세미나",
+              "main": "2회 출석수업 &gt; 온라인 ZOOM 화상수업으로 진행"
+            }
+          ]
         },
         {
           "label": "실습 전 준비 안내서",
@@ -421,12 +433,11 @@
       "info": [
         {
           "label": "과목 신청 조건",
-          "main": "1,3영역 전공(필수+선택) 8과목(24학점) 이상 이수자 <span class=\"sub\">(1영역은 1과목 이상 포함)</span>"
+          "main": "1,3영역 전공(필수+선택) 8과목(24학점)이상 이수자 <span class=\"sub\">(1영역은 1과목 이상 포함)</span>"
         },
         {
           "label": "제출서류",
-          "main": "선이수과목 성적증명서 <a class=\"link\" href=\"https://www.baeron.com/korean_teacher/k_teacher08.asp\">바로가기 ▶</a>",
-          "sub": "개강 전까지 [나의 강의실 &gt; 선이수과목 서류제출]에 업로드 (배론 이수과목은 제출 불필요)"
+          "main": "개강 전까지 [나의 강의실 &gt; 선이수과목 서류제출] 성적증명서 업로드 <span class=\"sub\">(배론 이수과목은 제출 불필요)</span> <a class=\"link\" href=\"https://www.baeron.com/korean_teacher/k_teacher08.asp\">바로가기 ▶</a>"
         },
         {
           "label": "수업구성",
@@ -441,7 +452,7 @@
             },
             {
               "label": "화상 세미나",
-              "main": "4주 <span class=\"sub\">3시간, 줌(zoom) 실시간 화상 수업 진행. 아래 개설반 안내에서 일정 확인</span>"
+              "main": "4주 <span class=\"sub\">(3시간, 줌(zoom) 실시간 화상 수업 진행, 하단 일정 확인)</span>"
             },
             {
               "label": "모의수업",
