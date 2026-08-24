@@ -215,13 +215,13 @@ body{
   display:flex;flex-direction:column;align-items:center;gap:20px;text-align:center;
 }
 /* 현행 이미지의 제목 짜임을 따른다. 민트 알약 한 줄 + 큰 제목 한 줄. */
-.hero h1{margin:0;display:flex;flex-direction:column;align-items:center;gap:12px;}
+.hero h1{margin:0;display:flex;flex-direction:column;align-items:center;gap:10px;}
 .hero h1 .kicker{
   background:var(--hero-mint);color:var(--hero-mint-ink);border-radius:999px;
-  padding:7px 22px;font-size:clamp(15px,1.9vw,20px);font-weight:700;letter-spacing:-.02em;
+  padding:5px 16px;font-size:clamp(12px,1.35vw,15px);font-weight:700;letter-spacing:-.02em;
 }
 .hero h1 .big{
-  font-size:clamp(30px,5.2vw,50px);font-weight:800;letter-spacing:-.03em;line-height:1.15;
+  font-size:clamp(38px,6.6vw,64px);font-weight:800;letter-spacing:-.03em;line-height:1.12;
 }
 /* 카드는 살구색(#ffeee5)에 어두운 글자, 제목 줄만 한 톤 진하다(#fddecd). 현행 값 그대로다. */
 .hero-cards{display:flex;flex-wrap:wrap;gap:14px;width:100%;}
@@ -261,6 +261,19 @@ body{
   background:var(--hero-card);color:var(--hero-card-ink);
   border-radius:999px;padding:9px 20px;font-size:16px;font-weight:600;
 }
+/* 두 줄짜리 알약. 현행 이미지처럼 윗줄이 설명, 아랫줄이 값이다.
+   두 줄이 되면 알약 모양이 어색하므로 모서리를 둥근 사각으로 낮춘다. */
+.hero-points li.is-stack{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  border-radius:16px;padding:12px 22px;line-height:1.3;
+}
+.hero-points .pt-top{font-weight:500;font-size:14px;opacity:.74;}
+.hero-points .pt-main{font-weight:700;}
+/* 알약 사이의 + 는 구분자일 뿐이라 바탕을 지운다 */
+.hero-points li.sep{
+  background:none;padding:0 2px;font-size:20px;font-weight:700;
+  color:var(--hero-mint);align-self:center;
+}
 .hero h1 .kicker-sub{font-weight:500;font-size:.82em;opacity:.75;}
 
 /* 자주하는 질문 버튼은 짙은 남색 바탕에 민트 글자다 */
@@ -288,14 +301,6 @@ body{
   background:var(--accent);margin-bottom:11px;
 }
 
-/* 과정 비교용 안내. 실제 페이지에는 없다. */
-.course-note{
-  margin:0;padding:9px 14px;border-radius:8px;
-  background:var(--note-bg);border:1px solid var(--note-line);color:var(--note-ink);
-  font-size:13px;line-height:1.6;
-}
-.course-note b{color:var(--note-strong);font-weight:700;}
-
 /* 표·목록을 담는 흰 상자. 현행 페이지는 그림자를 쓰지 않으므로 테두리로만 구분한다. */
 .card{
   background:var(--surface);border:1px solid var(--line);
@@ -313,7 +318,8 @@ body{
 }
 .info tr:last-child th{border-bottom:0;}
 /* 하위 머리 칸. 현행도 같은 녹색 바탕에 흰 글씨다. */
-.info th.k2{width:auto;}
+/* 하위 머리 칸은 PC 에서 줄바꿈하지 않는다. 접히면 주차와 눈높이가 어긋난다. */
+.info th.k2{width:auto;white-space:nowrap;}
 /* 내용 칸은 왼쪽 정렬, 세로는 머리 칸과 같이 가운데다 */
 .info td{
   text-align:left;vertical-align:middle;color:var(--ink-2);padding:15px 18px;
@@ -559,7 +565,7 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
     padding:12px 14px;
   }
   /* 하위 머리 칸은 위 묶음 이름 바로 아래 붙는다 */
-  .info th.k2{padding-top:0;font-size:14px;opacity:.9;}
+  .info th.k2{padding-top:0;font-size:14px;opacity:.9;white-space:normal;}
   .info td{display:block;padding:4px 14px 13px;}
   .cautions{padding:14px;}
 
@@ -690,9 +696,6 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
   <section class="sec">
     <h2>개설반 안내</h2>
 
-    <!-- 확인용. 사복이 아닌 과정을 고른 동안만 나온다. -->
-    <p class="course-note" id="course-note" hidden></p>
-
     <div class="alert" id="notice" hidden></div>
 
     <div>
@@ -726,11 +729,8 @@ const NOTES = {
     '한국사회복지사협회 사회복지현장실습 운영안 발표에 따라 운영방식이 변경될 수 있습니다.'
   ],
   child: [],
-  korean: [
-    '<b>참관수업</b>은 <b>온라인 참관</b>(교육원 자체 참관영상 수강 + 세종학당 참관영상 수강)으로 진행됩니다.',
-    '<b>실시간 화상 모의수업</b>은 조원끼리 날짜를 정하고 ‘1시간 모의수업 시연 + 5시간 모의수업 참관’ 하는 수업입니다.',
-    '국립국어원 지침에 따라 운영방식이 변경될 수 있습니다.'
-  ]
+  /* 참관수업·모의수업 설명은 수강신청 안내 표의 수업구성 행으로 옮겼다. 여기서는 반복하지 않는다. */
+  korean: []
 };
 
 const CAUTIONS = {
@@ -747,9 +747,8 @@ const CAUTIONS = {
     '<b>온라인 세미나 불참 시 학점 취득이 불가</b>합니다.'
   ],
   korean: [
-    '<b>세미나 참석과 실습가능기간은 필수 사항</b>이므로, 일정 확인 후 신청하기 바랍니다.',
+    '<b>강의참관과 모의수업은 필수 사항</b>이므로, 일정 확인 후 신청하기 바랍니다.',
     '양성과정의 학습과목은 선이수과목으로 인정되지 않으므로, 반드시 확인하기 바랍니다.',
-    '실습 진행에 필요한 서류 수발신 등의 <b>행정처리는 오리엔테이션 이후</b> 처리됩니다.',
     '개설 가능 인원 미달 시 폐강될 수 있으며, 출석 수업 일정은 내부 사정에 따라 변동될 수 있습니다.'
   ]
 };
@@ -797,7 +796,8 @@ const HERO = {
     kicker:"한국어교육실습 수강자 수 1위",
     kickerSub:"2016년 ~ 현재까지 (정보공시 누계)",
     big:"한국어교육실습",
-    points:["참관수업 100% 온라인","세미나 단 1회 실시간 화상수업","모의 수업 동영상 제출"]
+    pointsSep:"+",
+    points:[["참관수업","온라인 참관 진행"],["세미나 1회 진행","실시간 화상수업"],["모의 수업","동영상 제출"]]
   }
 };
 
@@ -820,8 +820,16 @@ function renderHero(){
       + '</ul></div>';
   }).join("");
 
+  /* 항목이 배열이면 두 줄짜리다. 현행 이미지의 "참관수업 / 온라인 참관 진행" 짜임이다.
+     pointsSep 을 준 과정은 알약 사이에 그 글자를 끼운다. */
   const points = (h.points || [])
-    .map(t => '<li>'+esc(t)+'</li>').join("");
+    .map(function(p){
+      const ls = Array.isArray(p) ? p : [p];
+      if (ls.length < 2) return '<li>'+esc(ls[0])+'</li>';
+      return '<li class="is-stack"><span class="pt-top">'+esc(ls[0])+'</span>'
+           + '<span class="pt-main">'+esc(ls[1])+'</span></li>';
+    })
+    .join(h.pointsSep ? '<li class="sep" aria-hidden="true">'+esc(h.pointsSep)+'</li>' : "");
 
   document.querySelector(".hero-in").innerHTML =
       '<h1><span class="kicker">'+esc(h.kicker)
@@ -836,7 +844,7 @@ function renderHero(){
 
 /* 수강신청 안내 표. 세 과정이 같은 행 이름을 같은 순서로 쓴다.
    그 과정에 없는 행은 넣지 않는다. 순서는 아래와 같다.
-     과목 신청 조건 / 제출서류 / 실습기관 조건 / 기관실습비 / 수업구성 / 실습 전 준비 안내서 / 확인사항 */
+     과목 신청 조건 / 제출서류 / 실습기관 조건 / 기관실습비 / 수업구성 / 실습 전 준비 안내서 */
 const INFO = {
   social: [
     { label:"과목 신청 조건",
@@ -847,7 +855,7 @@ const INFO = {
     { label:"실습기관 조건",
       main:'한국사회복지사협회 공지사항 ‘실습기관’ 게시물 참조 '
          + '<a class="link" href="https://www.welfare.net/prm/find-training-center/current-stat">바로가기 ▶</a>',
-      sub:'실습기관 소재지에 따라 수강료가 다름 - 위 <b>개설반 안내</b>의 소재지 탭 참조' },
+      sub:'실습기관 소재지에 따라 수강료가 다름 - 아래 <b>개설반 안내</b>의 소재지 탭 참조' },
     { label:"기관실습비",
       main:'기관별로 상이하며, 실습기관에 <b>본인이 직접 납부함</b>' },
     { label:"실습 전 준비 안내서",
@@ -878,18 +886,17 @@ const INFO = {
     { label:"과목 신청 조건",
       main:'1,3영역 전공(필수+선택) 8과목(24학점)이상 이수자 <span class="sub">(1영역은 1과목 이상 포함)</span>' },
     { label:"제출서류",
-      main:'개강 전까지 [나의 강의실 &gt; 선이수과목 서류제출] 성적증명서 업로드 '
-         + '<span class="sub">(배론 이수과목은 제출 불필요)</span> '
-         + '<a class="link" href="https://www.baeron.com/korean_teacher/k_teacher08.asp">바로가기 ▶</a>' },
+      main:'선이수과목 성적증명서 '
+         + '<a class="link" href="https://www.baeron.com/korean_teacher/k_teacher08.asp">바로가기 ▶</a>',
+      sub:'개강 전까지 [나의 강의실 &gt; 선이수과목 서류제출]에 업로드 (배론 이수과목은 제출 불필요)' },
     { label:"수업구성", rows:[
-      { label:"온라인 수업",      main:'1~3주(이론), 10~13주(온라인 모의수업)' },
-      { label:"온라인 강의 참관",  main:'5~9주' },
-      { label:"화상 세미나",      main:'4주 <span class="sub">(3시간, 줌(zoom) 실시간 화상 수업 진행, 하단 일정 확인)</span>' },
-      { label:"모의수업",         main:'10~14주 온라인 모의수업 참관 및 시연',
-        sub:'그룹별로 줌(zoom) 실시간 화상으로 접속하여 모의수업 시연 및 참관을 진행하고 저장한 영상을 제출' }
-    ] },
-    { label:"확인사항",
-      main:'모의수업+참관수업 온라인 진행은 국립국어원 실습과목 운영 권고안에 따라 별도 공지 시까지 적용' }
+      { label:"이론수업(온라인)",        main:'1~3주' },
+      { label:"세미나(화상)",            main:'4주' },
+      { label:"강의참관(온라인)",        main:'5~9주',
+        sub:'교육원 자체 참관영상 수강 + 세종학당 참관영상 수강' },
+      { label:"모의수업(온라인 및 화상)", main:'10~14주',
+        sub:'온라인 참관 및 조원끼리 날짜를 정해 화상으로 ‘1시간 모의수업 시연 + 5시간 모의수업 참관’ 진행 후 영상 녹화본 파일 제출' }
+    ] }
   ]
 };
 
@@ -958,26 +965,30 @@ const COURSES = [
     /* 기관 실습이 없으므로 소재지 대신 진행 방식을 축으로 쓴다.
        2027년부터 오프라인 강의참관·모의수업으로 바뀌므로 그때 탭이 한 장 늘어난다. */
     axis:"실습 진행 방식",
-    regions:[{ cd:"ONLINE", nm:"온라인", desc:"2026.12.31까지 개강분" }],
+    regions:[{ cd:"ONLINE", nm:"온라인", desc:"2026.12.31개강반까지" }],
+    /* 정원은 모든 반이 30명으로 같아 화면에 쓰지 않는다. 데이터에는 quota_nm 으로 남겨둔다. */
     head:["term","course","sim"],
+    /* 분반 이름이 앞면 라벨이고, 일자·시간이 그 분반의 실제 값이다.
+       요일은 분반 이름과 일자가 나눠 갖고, 시간 칸은 시각만 적는다. */
     cols:[
-      { k:"class_nm",   label:"분반" },
-      { k:"seminar_nm", label:"실시간 화상 세미나" },
-      { k:"seminar_dt", label:"세미나 날짜", date:true },
-      { k:"quota_nm",   label:"정원" }
+      { k:"class_nm",   label:"세미나 분반" },
+      { k:"seminar_dt", label:"화상 세미나 일자", date:true },
+      { k:"seminar_tm", label:"시간" }
     ],
+    /* 분반 이름만으로 정렬하면 일자가 다른 반이 같은 이름 사이에 끼어든다. 일자를 먼저 본다. */
+    sort:["seminar_dt","class_nm"],
     classes:[
-      { class_id:"K-0904-1", region_cd:"ONLINE", start_dt:"2026-09-04", course_end_dt:"2026-12-17", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오전반", seminar_nm:"토요일 10~13시", seminar_dt:"2026-09-19", quota_nm:"30명", closed_flag:true },
-      { class_id:"K-0904-2", region_cd:"ONLINE", start_dt:"2026-09-04", course_end_dt:"2026-12-17", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오후반", seminar_nm:"토요일 14~17시", seminar_dt:"2026-09-19", quota_nm:"30명", closed_flag:true },
-      { class_id:"K-0904-3", region_cd:"ONLINE", start_dt:"2026-09-04", course_end_dt:"2026-12-17", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오전반", seminar_nm:"토요일 10~13시", seminar_dt:"2026-09-19", quota_nm:"30명", closed_flag:true },
-      { class_id:"K-0910-1", region_cd:"ONLINE", start_dt:"2026-09-10", course_end_dt:"2026-12-23", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"금요일 오전반", seminar_nm:"금요일 09~12시", seminar_dt:"2026-10-02", quota_nm:"30명", closed_flag:true },
-      { class_id:"K-0910-2", region_cd:"ONLINE", start_dt:"2026-09-10", course_end_dt:"2026-12-23", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"금요일 오후반", seminar_nm:"금요일 13~16시", seminar_dt:"2026-10-02", quota_nm:"30명", closed_flag:true },
-      { class_id:"K-0910-3", region_cd:"ONLINE", start_dt:"2026-09-10", course_end_dt:"2026-12-23", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"금요일 오후반", seminar_nm:"금요일 13~16시", seminar_dt:"2026-10-02", quota_nm:"30명", closed_flag:false },
-      { class_id:"K-0917-1", region_cd:"ONLINE", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오전반", seminar_nm:"토요일 10~13시", seminar_dt:"2026-10-10", quota_nm:"30명", closed_flag:true },
-      { class_id:"K-0917-2", region_cd:"ONLINE", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오후반", seminar_nm:"토요일 14~17시", seminar_dt:"2026-10-10", quota_nm:"30명", closed_flag:true },
-      { class_id:"K-0917-3", region_cd:"ONLINE", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오전반", seminar_nm:"토요일 10~13시", seminar_dt:"2026-10-10", quota_nm:"30명", closed_flag:true },
-      { class_id:"K-0917-4", region_cd:"ONLINE", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오후반", seminar_nm:"토요일 14~17시", seminar_dt:"2026-10-10", quota_nm:"30명", closed_flag:true },
-      { class_id:"K-0917-5", region_cd:"ONLINE", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오전반", seminar_nm:"토요일 10~13시", seminar_dt:"2026-10-17", quota_nm:"30명", closed_flag:false }
+      { class_id:"K-0904-1", region_cd:"ONLINE", start_dt:"2026-09-04", course_end_dt:"2026-12-17", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오전반", seminar_dt:"2026-09-19", seminar_tm:"10~13시", quota_nm:"30명", closed_flag:true },
+      { class_id:"K-0904-2", region_cd:"ONLINE", start_dt:"2026-09-04", course_end_dt:"2026-12-17", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오후반", seminar_dt:"2026-09-19", seminar_tm:"14~17시", quota_nm:"30명", closed_flag:true },
+      { class_id:"K-0904-3", region_cd:"ONLINE", start_dt:"2026-09-04", course_end_dt:"2026-12-17", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오전반", seminar_dt:"2026-09-19", seminar_tm:"10~13시", quota_nm:"30명", closed_flag:true },
+      { class_id:"K-0910-1", region_cd:"ONLINE", start_dt:"2026-09-10", course_end_dt:"2026-12-23", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"금요일 오전반", seminar_dt:"2026-10-02", seminar_tm:"09~12시", quota_nm:"30명", closed_flag:true },
+      { class_id:"K-0910-2", region_cd:"ONLINE", start_dt:"2026-09-10", course_end_dt:"2026-12-23", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"금요일 오후반", seminar_dt:"2026-10-02", seminar_tm:"13~16시", quota_nm:"30명", closed_flag:true },
+      { class_id:"K-0910-3", region_cd:"ONLINE", start_dt:"2026-09-10", course_end_dt:"2026-12-23", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"금요일 오후반", seminar_dt:"2026-10-02", seminar_tm:"13~16시", quota_nm:"30명", closed_flag:false },
+      { class_id:"K-0917-1", region_cd:"ONLINE", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오전반", seminar_dt:"2026-10-10", seminar_tm:"10~13시", quota_nm:"30명", closed_flag:true },
+      { class_id:"K-0917-2", region_cd:"ONLINE", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오후반", seminar_dt:"2026-10-10", seminar_tm:"14~17시", quota_nm:"30명", closed_flag:true },
+      { class_id:"K-0917-3", region_cd:"ONLINE", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오전반", seminar_dt:"2026-10-10", seminar_tm:"10~13시", quota_nm:"30명", closed_flag:true },
+      { class_id:"K-0917-4", region_cd:"ONLINE", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오후반", seminar_dt:"2026-10-10", seminar_tm:"14~17시", quota_nm:"30명", closed_flag:true },
+      { class_id:"K-0917-5", region_cd:"ONLINE", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, sim_nm:"조별 논의하여 결정, 1회 6시간 참여 (zoom 사용)", class_nm:"토요일 오전반", seminar_dt:"2026-10-17", seminar_tm:"10~13시", quota_nm:"30명", closed_flag:false }
     ]
   }
 ];
@@ -1089,10 +1100,17 @@ function tableHead(cols){
 
 /* 표의 행. 개강일 정보는 담지 않는다 - 2단 탭과 공통 정보 줄이 담당한다.
    첫 컬럼이 모바일 카드 앞면이고 나머지는 펼쳤을 때 보인다. */
-function classRows(items, cols){
-  const key = cols[0].k;
+function classRows(items, cols, sort){
+  /* 정렬 키를 따로 주지 않은 과정은 앞면 칸으로 줄을 세운다. */
+  const keys = (sort && sort.length) ? sort : [cols[0].k];
   return items.slice()
-    .sort((a,b) => String(a[key]).localeCompare(String(b[key]), "ko"))
+    .sort(function(a,b){
+      for (const k of keys){
+        const r = String(a[k]).localeCompare(String(b[k]), "ko");
+        if (r) return r;
+      }
+      return 0;
+    })
     .map(function(c){
       const cells = cols.map(function(col, i){
         const val = col.date ? mdw(c[col.k]) : esc(c[col.k]);
@@ -1150,7 +1168,7 @@ function renderPanel(){
     '<table><caption>'+esc(h.term_nm)+' '+esc(c.nm)+(region ? " "+esc(region.nm) : "")
       +' '+kdate(g.start_dt)+' 개강반 목록</caption>'
   + colGroup(c.cols) + tableHead(c.cols)
-  + '<tbody>' + classRows(g.items, c.cols) + '</tbody></table>';
+  + '<tbody>' + classRows(g.items, c.cols, c.sort) + '</tbody></table>';
 }
 
 /* 개강반 공지 */
@@ -1188,24 +1206,15 @@ function renderInfo(){
 
   document.getElementById("info-table").innerHTML =
     (deep
-      ? '<colgroup><col style="width:110px"/><col style="width:150px"/><col/></colgroup>'
+      ? '<colgroup><col style="width:110px"/><col style="width:176px"/><col/></colgroup>'
       : '<colgroup><col style="width:216px"/><col/></colgroup>')
     + '<tbody>' + body + '</tbody>';
-}
-
-/* 사복이 아닌 과정을 보는 동안, 위 히어로가 사복 것임을 밝힌다. */
-function renderCourseNote(){
-  const el = document.getElementById("course-note");
-  if (state.course === 0){ el.hidden = true; return; }
-  el.hidden = false;
-  el.innerHTML = '지금 보고 있는 과정은 <b>'+esc(course().nm)+'</b> 입니다. '
-    + '히어로부터 유의사항까지 이 과정의 값으로 바뀝니다.';
 }
 
 function render(){
   normalizeState(); renderHero(); renderInfo(); renderNotes(); renderCautions();
   renderTabs(); renderSubtabs(); renderPanel();
-  renderNotice(); renderCourseNote();
+  renderNotice();
 }
 
 let toastTimer;
@@ -1379,6 +1388,46 @@ document.getElementById("note-toggle").addEventListener("click", function(e){
   e.target.textContent = open ? "설명 접기" : "설명 펼치기";
 });
 
+/* ── 공통 정보 줄 전제 확인 (설계문서 §5.5) ──
+   공통 정보 줄은 묶음의 첫 반 값 하나를 그 개강일 전체의 값으로 쓴다.
+   같은 개강일인데 반마다 값이 갈리면 경고 없이 틀린 값이 나가므로,
+   학기 데이터를 갈아끼울 때 콘솔에서 잡히도록 확인한다. 화면에는 영향이 없다. */
+const HEAD_FIELDS = {
+  term:      ["term_nm"],
+  course:    ["course_end_dt"],
+  practicum: ["practicum_start_dt", "practicum_end_dt"],
+  sim:       ["sim_nm"]
+};
+
+function checkHeadAssumption(){
+  COURSES.forEach(function(c){
+    /* 수강료는 head 에 없어도 항상 공통 정보 줄에 붙는다. */
+    const fields = c.head.reduce((a, k) => a.concat(HEAD_FIELDS[k] || []), ["fee"]);
+    const cds = c.regions ? c.regions.map(r => r.cd) : [null];
+
+    cds.forEach(function(cd){
+      const rows = c.regions ? c.classes.filter(x => x.region_cd === cd) : c.classes;
+      const groups = new Map();
+      rows.forEach(function(x){
+        if (!groups.has(x.start_dt)) groups.set(x.start_dt, []);
+        groups.get(x.start_dt).push(x);
+      });
+
+      groups.forEach(function(items, start_dt){
+        fields.forEach(function(f){
+          const vals = [...new Set(items.map(x => String(x[f])))];
+          if (vals.length > 1){
+            console.warn("[공통 정보 줄] " + c.nm + (cd ? " " + cd : "") + " " + start_dt
+              + " 개강 묶음에서 " + f + " 가 갈립니다: " + vals.join(" / ")
+              + " → 첫 반의 값만 화면에 나옵니다.");
+          }
+        });
+      });
+    });
+  });
+}
+
+checkHeadAssumption();
 render();
 </script>
 </body>
