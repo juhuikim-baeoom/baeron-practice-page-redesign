@@ -905,7 +905,7 @@ const COURSES = [
     ],
     head:["term","course","practicum"],
     cols:[
-      { k:"seminar_nm", label:"세미나" },
+      { k:"seminar_nm", label:"세미나 요일·시간" },
       { k:"target_nm",  label:"대상" },
       { k:"ot_dt",      label:"오리엔테이션", date:true },
       { k:"midterm_dt", label:"중간평가회",   date:true },
@@ -933,7 +933,7 @@ const COURSES = [
     regions:[{ cd:"NATIONWIDE", nm:"전국권", desc:"전국(섬 및 산간지역 제외)" }],
     head:["term","course","practicum"],
     cols:[
-      { k:"seminar_nm", label:"세미나" },
+      { k:"seminar_nm", label:"세미나 요일·시간" },
       { k:"ot_dt",      label:"오리엔테이션", date:true },
       { k:"final_dt",   label:"최종평가회",   date:true }
     ],
@@ -951,7 +951,7 @@ const COURSES = [
     /* 기관 실습이 없으므로 소재지 대신 진행 방식을 축으로 쓴다.
        2027년부터 오프라인 강의참관·모의수업으로 바뀌므로 그때 탭이 한 장 늘어난다. */
     axis:"실습 진행 방식",
-    regions:[{ cd:"ONLINE", nm:"온라인", desc:"2026.12.31개강반까지" }],
+    regions:[{ cd:"ONLINE", nm:"온라인", desc:"26.12.31개강반까지" }],
     /* 정원은 모든 반이 30명으로 같아 화면에 쓰지 않는다. 데이터에는 quota_nm 으로 남겨둔다. */
     head:["term","course","sim"],
     /* 분반 이름이 앞면 라벨이고, 일자·시간이 그 분반의 실제 값이다.
