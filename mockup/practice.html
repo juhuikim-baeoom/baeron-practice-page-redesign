@@ -760,7 +760,9 @@ const HERO = {
   child: {
     kicker:"실습 가능 지역 전국 확대!",
     big:"보육실습",
-    points:["온라인 출석","이론, 대면, 실습 전과목 보유","다년간의 실습 운영 노하우"]
+    points:["온라인 출석","이론, 대면, 실습 전과목 보유","다년간의 실습 운영 노하우"],
+    /* 사복과 같은 실습 FAQ 분류(gubun=6)다. 그 안에 세 실습이 함께 있다. */
+    faq:{ txt:"보육실습 자주하는 질문", href:"https://www.baeron.com/customer/cs_faq.asp?gubun=6" }
   },
 
   korean: {
@@ -1195,6 +1197,15 @@ function renderInfo(){
       ? '<colgroup><col style="width:110px"/><col style="width:176px"/><col/></colgroup>'
       : '<colgroup><col style="width:216px"/><col/></colgroup>')
     + '<tbody>' + body + '</tbody>';
+
+  /* 바깥 사이트로 나가거나 파일을 받는 링크는 새 창으로 연다.
+     같은 창에서 열면 고르던 소재지·개강일이 사라져 처음부터 다시 골라야 한다.
+     행마다 적지 않고 여기서 한 번에 거는 이유는, 행이 늘 때 빠뜨리지 않기 위해서다. */
+  document.querySelectorAll("#info-table a.link").forEach(function(a){
+    a.target = "_blank";
+    a.rel = "noreferrer";
+    a.title = "새창열림";
+  });
 }
 
 function render(){
