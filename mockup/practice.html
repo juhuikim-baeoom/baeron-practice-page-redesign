@@ -14,8 +14,8 @@
 :root{
   --bg:#ffffff;
   --surface:#ffffff;
-  /* 탭 띠 바탕. 색 세트가 accent 를 갈아끼우면 이 값도 따라간다.
-     고정색으로 두면 어떤 세트를 골라도 이 띠만 초록으로 남는다. */
+  /* 탭 띠 바탕. 과정 스위치가 accent 를 갈아끼우면 이 값도 따라간다.
+     고정색으로 두면 어떤 과정을 골라도 이 띠만 초록으로 남는다. */
   --surface-2:color-mix(in srgb, var(--accent) 6%, #ffffff);
   --band:#d5f2e9;
   --band-ink:#0b7350;
@@ -53,7 +53,7 @@
   --shadow:0 1px 2px rgba(20,40,32,.05), 0 8px 24px rgba(20,40,32,.07);
 }
 @media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
+  :root{
     --bg:#0e1512;
     --surface:#161f1b;
     --surface-2:color-mix(in srgb, var(--accent) 12%, #0e1512);
@@ -83,36 +83,6 @@
     --toast-ink:#b7c8d3;
     --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.32);
   }
-}
-:root[data-theme="dark"]{
-  --bg:#0e1512;
-  --surface:#161f1b;
-  --surface-2:color-mix(in srgb, var(--accent) 12%, #0e1512);
-  --band:#12362a;
-  --band-ink:#7fd9b8;
-  --ink:#e6eeea;
-  --ink-2:#a6b5ae;
-  --ink-3:#7e8f87;
-  --line:#28352f;
-  --line-soft:#202b26;
-  --accent:#4cc79c;
-  --accent-ink:#042117;
-  --accent-hover:#7ddcb9;
-  --cta:#ff7a4d;
-  --cta-ink:#2a0f04;
-  --cta-hover:#ff9b78;
-  --warn:#ef8478;
-  --note-bg:#211c12;
-  --note-card-bg:#2a2418;
-  --note-line:#473b25;
-  --note-ink:#cec3ab;
-  --note-ink-3:#9d9077;
-  --note-strong:#f4eedf;
-  --note-badge:#d9ab35;
-  --note-badge-ink:#1b1404;
-  --toast-bg:#101a20;
-  --toast-ink:#b7c8d3;
-  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.32);
 }
 
 *{box-sizing:border-box;}
@@ -188,7 +158,7 @@ body{
 .note-card .rowlab{
   font-weight:700;color:var(--note-strong);min-width:52px;
 }
-/* 색 세트 - 누르면 토큰 한 벌이 통째로 바뀐다 */
+/* 과정 스위치 버튼 - 누르면 그 과정의 값과 색이 통째로 얹힌다 */
 .note-card .set{
   appearance:none;cursor:pointer;font:inherit;font-size:12px;font-weight:600;
   color:var(--note-ink);background:var(--note-card-bg);
@@ -637,26 +607,31 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
   <div class="note">
     <div class="note-head">
       <span class="tag">개편 목업</span>
-      <span class="title">개설반 영역 - 표 8개를 2단 탭 + 표 1개로</span>
+      <span class="title">실습 안내 페이지 - 세 과정을 같은 구성으로</span>
       <button type="button" class="note-toggle" id="note-toggle" aria-expanded="false" aria-controls="note-body">설명 펼치기</button>
     </div>
 
     <!-- 목업을 볼 때 방해가 되지 않도록 접힌 상태로 시작한다 -->
     <div class="note-body" id="note-body" hidden>
       <div class="note-card">
-        <h3>무엇을 바꿨나 <span>현행 <code>practice_socialwork.asp</code> 대비</span></h3>
+        <h3>무엇을 바꿨나 <span>현행 사회복지 · 보육 · 한국어교육 안내 페이지 대비</span></h3>
         <ul>
           <li>개설반 <b>표 8개 · 소제목 4개</b>를 <b>2단 탭 + 표 1개</b>로 접음 - 1단은 실습기관 소재지, 2단은 개강일</li>
           <li>소재지 범위는 <b>1단 탭 안에 부연</b>으로 - 탭을 고르기 전에 판단 근거가 보여야 하므로</li>
-          <li>개강반 표마다 반복되던 <b>※ 안내 3줄</b>은 표 아래 한 번만</li>
-          <li>수강신청 안내와 유의사항은 <b>현행 그대로</b> - 실습기관 행의 소재지 정의만 탭으로 넘김</li>
+          <li>같은 개강일이면 늘 같은 값(수강기간 · 실습가능기간 · 수강료)은 <b>표 위 공통 정보 줄</b>로 올려 행마다 반복하지 않음</li>
+          <li>개강반 표마다 반복되던 <b>※ 안내</b>는 표 아래 한 번만</li>
+          <li>수강신청 안내 표의 <b>행 이름과 순서를 세 과정이 공통</b>으로 - 과목 신청 조건 / 제출서류 / 수업구성 / 실습기관 조건 / 기관실습비 / 실습 전 준비 안내서</li>
+          <li><b>수업구성</b>을 주차 순서대로 풀어 적음 - 사회복지는 없던 것을 새로, 보육 · 한국어교육은 흩어져 있던 것을 정리</li>
+          <li>히어로를 <b>이미지 대신 글자</b>로 - 현행은 통째로 이미지라 화면낭독기와 검색에 잡히지 않음</li>
         </ul>
       </div>
       <div class="note-card">
-        <h3>보는 방법 <span>데이터는 2026.08.20 기준 실제 개설반 10건</span></h3>
+        <h3>보는 방법 <span>데이터는 2026.08.20 기준 실제 개설반</span></h3>
         <ul>
+          <li>위 <b>과정</b> 스위치로 세 과정을 오갈 수 있음 - 사회복지 10건 · 보육 3건 · 한국어교육 11건</li>
           <li>신청 · 다운로드 버튼은 동작하지 않음</li>
           <li>폭을 <b>768px 이하</b>로 줄이면 1줄 카드 + 일정 펼치기로 바뀜</li>
+          <li>운영체제가 어두운 화면이면 그에 맞춰 나옴</li>
         </ul>
       </div>
     </div>
@@ -666,15 +641,10 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
       <div class="row">
         <label><input type="checkbox" id="sw-login"/> 로그인 상태로 보기</label>
         <label><input type="checkbox" id="sw-empty"/> 개설반 0건 상태 보기</label>
-        <label><input type="checkbox" id="sw-dark"/> 어두운 화면으로 보기</label>
       </div>
 
       <div class="row" id="courses">
         <span class="rowlab">과정</span>
-      </div>
-
-      <div class="row" id="sets">
-        <span class="rowlab">색 세트</span>
       </div>
     </div>
   </div>
@@ -1282,9 +1252,10 @@ document.addEventListener("click", function(e){
 document.getElementById("sw-login").addEventListener("change", function(e){ state.logged_in = e.target.checked; });
 document.getElementById("sw-empty").addEventListener("change", function(e){ state.force_empty = e.target.checked; render(); });
 
-/* ── 색 세트 ── 실제 페이지에는 없다.
-   앞의 셋은 현행 세 실습 페이지에서 그대로 measured 한 값이고, 뒤의 둘은 제안이다.
-   신청 버튼 주황(#d94100)은 세 페이지가 모두 같이 쓰므로 세트마다 바꾸지 않는다. */
+/* ── 과정별 색 ── 현행 세 실습 페이지에서 그대로 measured 한 값이다.
+   과정 스위치가 얹으며, 고르는 UI 는 따로 두지 않는다.
+   신청 버튼 주황(#d94100)은 세 페이지가 모두 같이 쓰므로 과정마다 바꾸지 않는다.
+   검토용 제안이던 중립·딥그린 세트는 설계문서에만 두고 여기서 뺐다. */
 const PRESETS = [
   { nm:"사회복지", note:"현행",
     v:{ "--accent":"#0d855d", "--band":"#d5f2e9", "--band-ink":"#0b7350", "--hero-bg":"#188a6e", "--cta":"#d94100",
@@ -1293,11 +1264,7 @@ const PRESETS = [
   { nm:"보육", note:"현행",
     v:{ "--accent":"#554d72", "--band":"#e0ddf0", "--band-ink":"#554d72", "--hero-bg":"#d44d51", "--cta":"#d94100" } },
   { nm:"한국어교육", note:"현행",
-    v:{ "--accent":"#1f6699", "--band":"#e6f0ff", "--band-ink":"#1f6699", "--hero-bg":"#3535b2", "--cta":"#d94100" } },
-  { nm:"중립", note:"추천",
-    v:{ "--accent":"#333f45", "--band":"#eceff1", "--band-ink":"#333f45", "--hero-bg":"#2b3a41", "--cta":"#d94100" } },
-  { nm:"딥그린", note:"추천",
-    v:{ "--accent":"#125c43", "--band":"#e3efe9", "--band-ink":"#125c43", "--hero-bg":"#0f5140", "--cta":"#d94100" } }
+    v:{ "--accent":"#1f6699", "--band":"#e6f0ff", "--band-ink":"#1f6699", "--hero-bg":"#3535b2", "--cta":"#d94100" } }
 ];
 
 const root = document.documentElement;
@@ -1341,29 +1308,9 @@ function applyPreset(i){
     "--hero-guide-ink": brightness(hero) > .35 ? darken(hero, .82) : lighten(hero, .86)
   };
   Object.keys(derived).forEach(k => root.style.setProperty(k, p.v[k] || derived[k]));
-  document.querySelectorAll("#sets .set").forEach(function(b, j){
-    b.setAttribute("aria-pressed", String(j === i));
-  });
 }
 
-function buildPresets(){
-  const box = document.getElementById("sets");
-  PRESETS.forEach(function(p, i){
-    const b = document.createElement("button");
-    b.type = "button";
-    b.className = "set";
-    b.setAttribute("aria-pressed", "false");
-    b.innerHTML = '<span class="chips">'
-      + ['--hero-bg','--accent','--band'].map(k => '<i style="background:'+p.v[k]+'"></i>').join('')
-      + '</span>' + esc(p.nm) + ' <span style="opacity:.6">' + esc(p.note) + '</span>';
-    b.addEventListener("click", () => applyPreset(i));
-    box.appendChild(b);
-  });
-  /* 스타일시트에 적힌 기본값이 사복 세트이므로 처음부터 눌린 상태로 둔다. */
-  box.querySelector(".set").setAttribute("aria-pressed", "true");
-}
-
-/* 과정 스위치. 과정을 고르면 그 과정의 색 세트도 같이 얹는다. */
+/* 과정 스위치. 과정을 고르면 그 과정의 색도 같이 얹는다. */
 function buildCourses(){
   const box = document.getElementById("courses");
   COURSES.forEach(function(c, i){
@@ -1388,11 +1335,6 @@ function buildCourses(){
   });
 }
 
-document.getElementById("sw-dark").addEventListener("change", function(e){
-  root.setAttribute("data-theme", e.target.checked ? "dark" : "light");
-});
-
-buildPresets();
 buildCourses();
 
 /* 설명 접기 - 확인용 스위치는 설명이 아니므로 접어도 남는다. */
