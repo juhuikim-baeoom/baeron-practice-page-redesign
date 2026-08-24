@@ -14,7 +14,9 @@
 :root{
   --bg:#ffffff;
   --surface:#ffffff;
-  --surface-2:#f4faf7;
+  /* 탭 띠 바탕. 색 세트가 accent 를 갈아끼우면 이 값도 따라간다.
+     고정색으로 두면 어떤 세트를 골라도 이 띠만 초록으로 남는다. */
+  --surface-2:color-mix(in srgb, var(--accent) 6%, #ffffff);
   --band:#d5f2e9;
   --band-ink:#0b7350;
   --ink:#333333;
@@ -54,7 +56,7 @@
   :root:not([data-theme="light"]){
     --bg:#0e1512;
     --surface:#161f1b;
-    --surface-2:#1c2723;
+    --surface-2:color-mix(in srgb, var(--accent) 12%, #0e1512);
     --band:#12362a;
     --band-ink:#7fd9b8;
     --ink:#e6eeea;
@@ -85,7 +87,7 @@
 :root[data-theme="dark"]{
   --bg:#0e1512;
   --surface:#161f1b;
-  --surface-2:#1c2723;
+  --surface-2:color-mix(in srgb, var(--accent) 12%, #0e1512);
   --band:#12362a;
   --band-ink:#7fd9b8;
   --ink:#e6eeea;
@@ -319,7 +321,7 @@ body{
 .info tr:last-child th{border-bottom:0;}
 /* 하위 머리 칸. 현행도 같은 녹색 바탕에 흰 글씨다. */
 /* 하위 머리 칸은 PC 에서 줄바꿈하지 않는다. 접히면 주차와 눈높이가 어긋난다. */
-.info th.k2{width:auto;white-space:nowrap;}
+.info th.k2{width:auto;white-space:nowrap;border-left:1px solid rgba(255,255,255,.22);}
 /* 내용 칸은 왼쪽 정렬, 세로는 머리 칸과 같이 가운데다 */
 .info td{
   text-align:left;vertical-align:middle;color:var(--ink-2);padding:15px 18px;
@@ -561,7 +563,7 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
   .info colgroup{display:none;}
   /* 머리 칸이 내용 위에 얹히는 줄이 되므로 가운데 정렬을 풀고 왼쪽에 맞춘다 */
   .info th{
-    display:block;width:auto;text-align:left;border-bottom:0;
+    display:block;width:auto;text-align:left;border-bottom:0;border-left:0;
     padding:12px 14px;
   }
   /* 하위 머리 칸은 위 묶음 이름 바로 아래 붙는다 */
@@ -855,7 +857,7 @@ const INFO = {
       sub:'개강전까지 [나의강의실 &gt; 사회복지현장실습 강의실 &gt; 선이수과목 서류제출]에 제출' },
     { label:"수업구성", rows:[
       { label:"이론수업(온라인)",   main:'2~7주, 9~14주' },
-      { label:"세미나(온라인/화상)", main:'1, 8, 15주 <span class="sub">(신법 - 화상, 구법 - 온라인)</span>' },
+      { label:"세미나(오프라인)",  main:'1, 8, 15주 <span class="sub">(구법은 온라인)</span>' },
       { label:"실습시간",          main:'160시간 <span class="sub">(구법 120시간)</span>' }
     ] },
     { label:"실습기관 조건",
