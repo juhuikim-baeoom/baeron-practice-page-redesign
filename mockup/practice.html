@@ -944,9 +944,25 @@ const COURSES = [
   {
     key:"korean", nm:"한국어교육실습", set:2, notice_txt:"",
     /* 기관 실습이 없으므로 소재지 대신 진행 방식을 축으로 쓴다.
-       2027년부터 오프라인 강의참관·모의수업으로 바뀌므로 그때 탭이 한 장 늘어난다. */
+       2027년 오프라인 전환기에는 두 방식이 함께 열리므로 탭도 두 장이다.
+       온라인 개강분이 끝나면 ONLINE 한 줄을 빼면 되고, 탭 줄은 한 장이 되면
+       스스로 감춰지므로 그때 손댈 것이 거의 없다.
+
+       오프라인은 교육장이 반을 가르는 축이라 컬럼이 하나 더 필요하다.
+       탭이 cols·head 를 따로 정할 수 있게 두고, 정하지 않은 탭은 과정 것을 쓴다. */
     axis:"실습 진행 방식",
-    regions:[{ cd:"ONLINE", nm:"온라인", desc:"26.12.31개강반까지" }],
+    regions:[
+      { cd:"ONLINE",  nm:"온라인",  desc:"26.12.31개강반까지" },
+      /* 오프라인은 활동마다 장소가 붙고 그 장소가 반마다 갈리므로, 컬럼을 활동 축으로 잡는다.
+         강의참관과 모의수업이 같은 곳에서 열린다면 두 칸을 한 칸으로 합치는 게 낫다. */
+      { cd:"OFFLINE", nm:"오프라인", desc:"27.1.1개강반부터",
+        cols:[
+          { k:"seminar_dt", label:"세미나 요일·시간",
+            fmt: c => mdw(c.seminar_dt) + " " + esc(c.seminar_tm) },
+          { k:"observe_nm", label:"강의참관" },
+          { k:"sim_nm",     label:"모의수업" }
+        ] }
+    ],
     /* 정원은 모든 반이 30명으로 같아 화면에 쓰지 않는다. 데이터에는 quota_nm 으로 남겨둔다. */
     head:["term","course"],
     /* 반마다 갈리는 값이 세미나 일시 하나뿐이라, 컬럼은 그 하나를 나눠 담는다.
@@ -972,7 +988,16 @@ const COURSES = [
       { class_id:"K-0917-2", region_cd:"ONLINE", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, class_nm:"토요일 오후반", seminar_dt:"2026-10-10", seminar_tm:"14~17시", quota_nm:"30명", closed_flag:true },
       { class_id:"K-0917-3", region_cd:"ONLINE", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, class_nm:"토요일 오전반", seminar_dt:"2026-10-10", seminar_tm:"10~13시", quota_nm:"30명", closed_flag:true },
       { class_id:"K-0917-4", region_cd:"ONLINE", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, class_nm:"토요일 오후반", seminar_dt:"2026-10-10", seminar_tm:"14~17시", quota_nm:"30명", closed_flag:true },
-      { class_id:"K-0917-5", region_cd:"ONLINE", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, class_nm:"토요일 오전반", seminar_dt:"2026-10-17", seminar_tm:"10~13시", quota_nm:"30명", closed_flag:false }
+      { class_id:"K-0917-5", region_cd:"ONLINE", start_dt:"2026-09-17", course_end_dt:"2026-12-30", term_nm:"26년 2학기", fee:500000, class_nm:"토요일 오전반", seminar_dt:"2026-10-17", seminar_tm:"10~13시", quota_nm:"30명", closed_flag:false },
+
+      /* ── 오프라인 (임의 데이터) ──
+         2027년 전환 뒤 화면이 어떻게 되는지 보기 위한 값이다. 실제 개설반이 아니다.
+         개강일·교육장·수강료는 확정되면 갈아끼운다. */
+      { class_id:"K-2701-1", region_cd:"OFFLINE", start_dt:"2027-01-07", course_end_dt:"2027-04-22", term_nm:"27년 1학기", fee:550000, class_nm:"토요일 오전반", seminar_dt:"2027-01-23", seminar_tm:"10~13시", observe_nm:"서울 강서 세종학당", sim_nm:"서울 강서 교육장", quota_nm:"25명", closed_flag:false },
+      { class_id:"K-2701-2", region_cd:"OFFLINE", start_dt:"2027-01-07", course_end_dt:"2027-04-22", term_nm:"27년 1학기", fee:550000, class_nm:"토요일 오후반", seminar_dt:"2027-01-23", seminar_tm:"14~17시", observe_nm:"서울 강서 세종학당", sim_nm:"서울 강서 교육장", quota_nm:"25명", closed_flag:false },
+      { class_id:"K-2701-3", region_cd:"OFFLINE", start_dt:"2027-01-07", course_end_dt:"2027-04-22", term_nm:"27년 1학기", fee:550000, class_nm:"토요일 오전반", seminar_dt:"2027-01-23", seminar_tm:"10~13시", observe_nm:"경기 수원 세종학당", sim_nm:"경기 수원 교육장", quota_nm:"25명", closed_flag:true },
+      { class_id:"K-2703-1", region_cd:"OFFLINE", start_dt:"2027-03-04", course_end_dt:"2027-06-17", term_nm:"27년 1학기", fee:550000, class_nm:"목요일 오후반", seminar_dt:"2027-03-20", seminar_tm:"13~16시", observe_nm:"서울 강서 세종학당", sim_nm:"서울 강서 교육장", quota_nm:"25명", closed_flag:false },
+      { class_id:"K-2703-2", region_cd:"OFFLINE", start_dt:"2027-03-04", course_end_dt:"2027-06-17", term_nm:"27년 1학기", fee:550000, class_nm:"토요일 오전반", seminar_dt:"2027-03-20", seminar_tm:"10~13시", observe_nm:"부산 서면 세종학당", sim_nm:"부산 서면 교육장", quota_nm:"25명", closed_flag:false }
     ]
   }
 ];
@@ -1097,7 +1122,8 @@ function classRows(items, cols, sort){
     })
     .map(function(c){
       const cells = cols.map(function(col, i){
-        const val = col.date ? mdw(c[col.k]) : esc(c[col.k]);
+        /* fmt 를 준 컬럼은 값 두 개를 한 칸에 합친다 (세미나 일자 + 시간). */
+        const val = col.fmt ? col.fmt(c) : (col.date ? mdw(c[col.k]) : esc(c[col.k]));
         if (i === 0){
           return '<td class="col-seminar" data-label="'+esc(col.label)+'"><span>'+val+'</span>'
             + '<button type="button" class="btn-more" aria-expanded="false" aria-label="나머지 일정 보기"><span class="chev">▾</span></button></td>';
@@ -1137,11 +1163,17 @@ function renderPanel(){
     return;
   }
 
+  /* 진행 방식이 갈리면 반을 고르는 근거도 갈린다. 온라인은 세미나 일시뿐이지만
+     오프라인은 교육장이 붙는다. 그래서 1단 탭이 컬럼을 따로 정할 수 있게 둔다.
+     탭이 따로 정하지 않으면 과정 것을 그대로 쓴다. */
+  const cols = (region && region.cols) || c.cols;
+  const head = (region && region.head) || c.head;
+
   const h = g.head;
   headEl.hidden = false;
   /* 소재지는 1단 탭이 담당하므로 여기서 다시 쓰지 않는다.
      학기는 개강일마다 다를 수 있으므로 이 줄이 담는다. */
-  headEl.innerHTML = c.head.map(function(k){
+  headEl.innerHTML = head.map(function(k){
     const [label, val] = HEAD_ITEMS[k](h);
     return '<span class="meta"><span class="k">'+esc(label)+'</span><b>'+val+'</b></span>';
   }).join("")
@@ -1150,8 +1182,8 @@ function renderPanel(){
   body.innerHTML =
     '<table><caption>'+esc(h.term_nm)+' '+esc(c.nm)+(region ? " "+esc(region.nm) : "")
       +' '+kdate(g.start_dt)+' 개강반 목록</caption>'
-  + colGroup(c.cols) + tableHead(c.cols)
-  + '<tbody>' + classRows(g.items, c.cols, c.sort) + '</tbody></table>';
+  + colGroup(cols) + tableHead(cols)
+  + '<tbody>' + classRows(g.items, cols, c.sort) + '</tbody></table>';
 }
 
 /* 개강반 공지 */
