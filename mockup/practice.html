@@ -953,14 +953,17 @@ const COURSES = [
     axis:"실습 진행 방식",
     regions:[
       { cd:"ONLINE",  nm:"온라인",  desc:"26.12.31개강반까지" },
-      /* 오프라인은 활동마다 장소가 붙고 그 장소가 반마다 갈리므로, 컬럼을 활동 축으로 잡는다.
-         강의참관과 모의수업이 같은 곳에서 열린다면 두 칸을 한 칸으로 합치는 게 낫다. */
+      /* 오프라인은 직접 가야 하므로 언제 가는지가 반을 고르는 근거다.
+         강의참관·모의수업 일자는 개강일에서 계산한다. 같은 개강일이면 값이 같으므로,
+         반마다 일정을 다르게 잡는다면 그때는 반 데이터로 받아야 한다. */
       { cd:"OFFLINE", nm:"오프라인", desc:"27.1.1개강반부터",
         cols:[
           { k:"seminar_dt", label:"세미나 요일·시간",
             fmt: c => mdw(c.seminar_dt) + " " + esc(c.seminar_tm) },
-          { k:"observe_nm", label:"강의참관" },
-          { k:"sim_nm",     label:"모의수업" }
+          { k:"start_dt", label:"강의참관 (4~9주)",
+            fmt: c => wkSpan(c.start_dt, 4, 9) },
+          { k:"start_dt", label:"모의수업 (10~14주)",
+            fmt: c => wkSpan(c.start_dt, 10, 14) }
         ] }
     ],
     /* 정원은 모든 반이 30명으로 같아 화면에 쓰지 않는다. 데이터에는 quota_nm 으로 남겨둔다. */
@@ -993,11 +996,11 @@ const COURSES = [
       /* ── 오프라인 (임의 데이터) ──
          2027년 전환 뒤 화면이 어떻게 되는지 보기 위한 값이다. 실제 개설반이 아니다.
          개강일·교육장·수강료는 확정되면 갈아끼운다. */
-      { class_id:"K-2701-1", region_cd:"OFFLINE", start_dt:"2027-01-07", course_end_dt:"2027-04-22", term_nm:"27년 1학기", fee:550000, class_nm:"토요일 오전반", seminar_dt:"2027-01-23", seminar_tm:"10~13시", observe_nm:"서울 강서 세종학당", sim_nm:"서울 강서 교육장", quota_nm:"25명", closed_flag:false },
-      { class_id:"K-2701-2", region_cd:"OFFLINE", start_dt:"2027-01-07", course_end_dt:"2027-04-22", term_nm:"27년 1학기", fee:550000, class_nm:"토요일 오후반", seminar_dt:"2027-01-23", seminar_tm:"14~17시", observe_nm:"서울 강서 세종학당", sim_nm:"서울 강서 교육장", quota_nm:"25명", closed_flag:false },
-      { class_id:"K-2701-3", region_cd:"OFFLINE", start_dt:"2027-01-07", course_end_dt:"2027-04-22", term_nm:"27년 1학기", fee:550000, class_nm:"토요일 오전반", seminar_dt:"2027-01-23", seminar_tm:"10~13시", observe_nm:"경기 수원 세종학당", sim_nm:"경기 수원 교육장", quota_nm:"25명", closed_flag:true },
-      { class_id:"K-2703-1", region_cd:"OFFLINE", start_dt:"2027-03-04", course_end_dt:"2027-06-17", term_nm:"27년 1학기", fee:550000, class_nm:"목요일 오후반", seminar_dt:"2027-03-20", seminar_tm:"13~16시", observe_nm:"서울 강서 세종학당", sim_nm:"서울 강서 교육장", quota_nm:"25명", closed_flag:false },
-      { class_id:"K-2703-2", region_cd:"OFFLINE", start_dt:"2027-03-04", course_end_dt:"2027-06-17", term_nm:"27년 1학기", fee:550000, class_nm:"토요일 오전반", seminar_dt:"2027-03-20", seminar_tm:"10~13시", observe_nm:"부산 서면 세종학당", sim_nm:"부산 서면 교육장", quota_nm:"25명", closed_flag:false }
+      { class_id:"K-2701-1", region_cd:"OFFLINE", start_dt:"2027-01-07", course_end_dt:"2027-04-22", term_nm:"27년 1학기", fee:550000, class_nm:"토요일 오전반", seminar_dt:"2027-01-23", seminar_tm:"10~13시", quota_nm:"25명", closed_flag:false },
+      { class_id:"K-2701-2", region_cd:"OFFLINE", start_dt:"2027-01-07", course_end_dt:"2027-04-22", term_nm:"27년 1학기", fee:550000, class_nm:"토요일 오후반", seminar_dt:"2027-01-23", seminar_tm:"14~17시", quota_nm:"25명", closed_flag:false },
+      { class_id:"K-2701-3", region_cd:"OFFLINE", start_dt:"2027-01-07", course_end_dt:"2027-04-22", term_nm:"27년 1학기", fee:550000, class_nm:"토요일 오전반", seminar_dt:"2027-01-23", seminar_tm:"10~13시", quota_nm:"25명", closed_flag:true },
+      { class_id:"K-2703-1", region_cd:"OFFLINE", start_dt:"2027-03-04", course_end_dt:"2027-06-17", term_nm:"27년 1학기", fee:550000, class_nm:"목요일 오후반", seminar_dt:"2027-03-20", seminar_tm:"13~16시", quota_nm:"25명", closed_flag:false },
+      { class_id:"K-2703-2", region_cd:"OFFLINE", start_dt:"2027-03-04", course_end_dt:"2027-06-17", term_nm:"27년 1학기", fee:550000, class_nm:"토요일 오전반", seminar_dt:"2027-03-20", seminar_tm:"10~13시", quota_nm:"25명", closed_flag:false }
     ]
   }
 ];
@@ -1014,6 +1017,13 @@ const mdw  = s => md(s)+"("+DAY[d(s).getDay()]+")";
 /* 기간은 연도를 두 자리로 줄여 쓴다 - 26.09.04(금) */
 const ymdw = s => String(d(s).getFullYear()).slice(2)+"."+mdw(s);
 const kdate= s => (d(s).getMonth()+1)+"월 "+d(s).getDate()+"일";
+/* 개강일에서 n주차의 시작일·종료일을 낸다. 1주차는 개강일 당일부터다.
+   주차별 일정은 데이터로 따로 받지 않고 개강일에서 계산한다 - 둘이 어긋날 자리를 만들지 않는다. */
+const addD = (s, n) => { const x = d(s); x.setDate(x.getDate() + n); return x; };
+const iso  = x => x.getFullYear()+"-"+p2(x.getMonth()+1)+"-"+p2(x.getDate());
+const wkFr = (s, n) => iso(addD(s, (n - 1) * 7));
+const wkTo = (s, n) => iso(addD(s, n * 7 - 1));
+const wkSpan = (s, a, b) => mdw(wkFr(s, a)) + " ~ " + mdw(wkTo(s, b));
 const won  = n => n.toLocaleString("ko-KR")+"원";
 const esc  = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
