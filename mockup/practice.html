@@ -953,10 +953,11 @@ const COURSES = [
     axis:"실습 진행 방식",
     regions:[
       { cd:"ONLINE",  nm:"온라인",  desc:"26.12.31개강반까지" },
-      /* 오프라인은 직접 가야 하므로 언제 가는지가 반을 고르는 근거다.
+      /* 확정된 값이 없어 일단 hidden 으로 감춰 둔다. 다시 열 때는 hidden:true 만 지운다.
+         오프라인은 직접 가야 하므로 언제 가는지가 반을 고르는 근거다.
          강의참관·모의수업 일자는 개강일에서 계산한다. 같은 개강일이면 값이 같으므로,
          반마다 일정을 다르게 잡는다면 그때는 반 데이터로 받아야 한다. */
-      { cd:"OFFLINE", nm:"오프라인", desc:"27.1.1개강반부터",
+      { cd:"OFFLINE", nm:"오프라인", desc:"27.1.1개강반부터", hidden:true,
         cols:[
           { k:"seminar_dt", label:"세미나 요일·시간",
             fmt: c => mdw(c.seminar_dt) + " " + esc(c.seminar_tm) },
@@ -1033,6 +1034,10 @@ function applyCell(cls){
   return '<button type="button" class="btn-apply" data-id="'+esc(cls.class_id)+'">신청하기</button>';
 }
 
+/* hidden 을 준 탭은 화면에 내지 않는다. 데이터는 그대로 두고 감추기만 하므로,
+   다시 열 때는 그 한 줄만 지우면 된다. */
+function regionsOf(c){ return (c.regions || []).filter(r => !r.hidden); }
+
 /* 1단 축이 없는 과정은 전체가 한 묶음이다. */
 function axisRows(cd){
   const c = course();
@@ -1056,7 +1061,7 @@ function startDates(cd){
 function normalizeState(){
   const c = course();
   if (!c.regions) state.region_cd = null;
-  else if (!c.regions.some(r => r.cd === state.region_cd)) state.region_cd = c.regions[0].cd;
+  else if (!regionsOf(c).some(r => r.cd === state.region_cd)) state.region_cd = regionsOf(c)[0].cd;
 
   const dates = startDates(state.region_cd).map(g => g.start_dt);
   if (!dates.length){ state.start_dt = null; return; }
@@ -1070,7 +1075,7 @@ function renderTabs(){
   if (!c.regions){ el.innerHTML = ""; el.hidden = true; return; }
   el.hidden = false;
   el.setAttribute("aria-label", c.axis);
-  el.innerHTML = c.regions.map(function(r){
+  el.innerHTML = regionsOf(c).map(function(r){
     const on = r.cd === state.region_cd;
     return '<button type="button" class="tab" role="tab" aria-selected="'+on+'" data-region="'+r.cd+'">'
          + '<span class="nm">'+esc(r.nm)+'</span>'
@@ -1164,7 +1169,7 @@ function renderPanel(){
 
   if (!g){
     headEl.hidden = true;
-    const other = c.regions ? c.regions.find(r => r.cd !== state.region_cd) : null;
+    const other = regionsOf(c).find(r => r.cd !== state.region_cd) || null;
     body.innerHTML = '<div class="empty">'
       + '<strong>현재 '+(region ? esc(region.nm)+" " : "")+'개설반이 없습니다.</strong>'
       + '다음 학기 일정은 공지사항에서 안내드립니다.'
@@ -1408,7 +1413,7 @@ function checkHeadAssumption(){
   COURSES.forEach(function(c){
     /* 수강료는 head 에 없어도 항상 공통 정보 줄에 붙는다. */
     const fields = c.head.reduce((a, k) => a.concat(HEAD_FIELDS[k] || []), ["fee"]);
-    const cds = c.regions ? c.regions.map(r => r.cd) : [null];
+    const cds = c.regions ? regionsOf(c).map(r => r.cd) : [null];
 
     cds.forEach(function(cd){
       const rows = c.regions ? c.classes.filter(x => x.region_cd === cd) : c.classes;
