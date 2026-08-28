@@ -14,9 +14,12 @@
 :root{
   --bg:#ffffff;
   --surface:#ffffff;
-  /* 탭 띠 바탕. 과정 스위치가 accent 를 갈아끼우면 이 값도 따라간다.
+  /* 2단 탭 띠 바탕과 표 행 hover. 과정 스위치가 accent 를 갈아끼우면 이 값도 따라간다.
      고정색으로 두면 어떤 과정을 골라도 이 띠만 초록으로 남는다. */
   --surface-2:color-mix(in srgb, var(--accent) 6%, #ffffff);
+  /* 1단 탭 띠 전용. surface-2 를 진하게 올리면 2단 띠와 표 행 hover 까지 무거워지므로
+     선택 탭이 떠오를 만큼의 대비는 이 토큰으로만 만든다. */
+  --tabstrip:color-mix(in srgb, var(--accent) 20%, #ffffff);
   --band:#d5f2e9;
   --band-ink:#0b7350;
   --ink:#333333;
@@ -57,6 +60,7 @@
     --bg:#0e1512;
     --surface:#161f1b;
     --surface-2:color-mix(in srgb, var(--accent) 12%, #0e1512);
+    --tabstrip:color-mix(in srgb, var(--accent) 22%, #0e1512);
     --band:#12362a;
     --band-ink:#7fd9b8;
     --ink:#e6eeea;
@@ -346,28 +350,38 @@ body{
 /* 1단 탭 - 지역.
    소재지 범위를 탭 안 두 번째 줄에 둔다. 탭을 고르기 전에 판단 근거가 보여야 한다.
    탭 2개가 패널 폭을 반씩 나눠 가지므로 탭 줄 자체가 패널의 머리가 된다. */
-/* 페이지 배경이 흰색이므로 탭 줄에 옅은 면을 깔아야 선택된 탭이 드러난다 */
+/* 선택된 탭이 패널과 한 덩어리로 보이게 한다.
+   띠를 확실히 어둡게 깔고 선택 탭만 흰 면을 갖게 해야 "떠오르는" 대비가 생긴다.
+   미선택 탭은 이미 회색(--ink-3)이므로 더 흐리게 하지 않는다 - 명도 대비가 3:1 아래로 떨어진다. */
 .tabs{
-  display:flex;gap:4px;align-items:stretch;
-  background:var(--surface-2);
+  display:flex;gap:0;align-items:stretch;
+  background:var(--tabstrip);
   border:1px solid var(--line);border-bottom:0;border-radius:8px 8px 0 0;
-  padding:0;
+  padding:5px 5px 0;
 }
 .tab{
-  appearance:none;border:0;background:none;cursor:pointer;font:inherit;
+  appearance:none;background:none;cursor:pointer;font:inherit;
   font-weight:700;font-size:16px;
   color:var(--ink-3);padding:10px 18px 9px;min-height:52px;flex:1 1 0;
-  border-radius:10px 10px 0 0;
+  border:1px solid transparent;border-bottom:0;
+  border-radius:9px 9px 0 0;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
   text-align:center;line-height:1.3;
-  border-bottom:3px solid transparent;
 }
 .tab .nm{display:flex;align-items:center;gap:8px;}
 .tab .desc{font-size:12px;font-weight:400;letter-spacing:0;color:var(--ink-3);}
 .tab:hover{color:var(--ink);}
 .tab:focus-visible{outline:2px solid var(--accent);outline-offset:-3px;}
+/* 강조 막대는 위쪽에 둔다. 아래에 두면 곧바로 흰 패널이 이어져
+   그 선이 탭에 붙은 건지 패널 머리인지 읽히지 않는다.
+   margin-bottom 의 -1px 은 패널 위 테두리를 덮어 이음새를 지운다. */
 .tab[aria-selected="true"]{
-  color:var(--accent);background:var(--surface);border-bottom-color:var(--accent);
+  position:relative;z-index:1;
+  color:var(--accent);
+  background:var(--surface);
+  border-color:var(--line);
+  margin-bottom:-1px;
+  box-shadow:inset 0 3px 0 var(--accent);
 }
 .tab[aria-selected="true"] .desc{color:var(--ink-2);}
 
@@ -535,7 +549,7 @@ tr.is-open .btn-more .chev{transform:rotate(180deg);}
   .info td{display:block;padding:4px 14px 13px;}
   .cautions{padding:14px;}
 
-  .tabs{position:sticky;top:0;z-index:20;padding-top:2px;}
+  .tabs{position:sticky;top:0;z-index:20;padding:4px 4px 0;}
   .tab{padding:9px 6px 8px;font-size:15px;min-height:50px;}
   .tab .desc{font-size:12px;line-height:1.35;}
   .panel-body{overflow-x:visible;}
